@@ -52,3 +52,7 @@ build/classes/basicbackbonegame2d/BasicBackboneGame2D$gameMouseListener.class
 *.class
 manifest.mf
 *.properties
+/dist/
+build/classes/basicbackbonegame2d/Scenes/Scene1/Scene1.jpg
+build/classes/basicbackbonegame2d/Scenes/Scene2/Scene2.jpg
+build/classes/basicbackbonegame2d/Scenes/Scene1/Scene1_1/Scene1_1.jpg
