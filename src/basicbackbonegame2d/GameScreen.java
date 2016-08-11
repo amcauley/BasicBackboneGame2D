@@ -33,7 +33,7 @@ public class GameScreen extends JPanel {
                 File imgFile = new File(imgPath);
                 img = ImageIO.read(imgFile);
             } catch (IOException e) {
-                //Exception handling goes here
+                System.out.println("Error loading " + imgPath);
             }
         }
     }
@@ -47,6 +47,7 @@ public class GameScreen extends JPanel {
     
     public void addImg(String imgPath, int x, int y){
         images.add(new imageContainer(imgPath, x, y));
+        System.out.println(images.size() + " images");
     }
     
     public void clearImgs(){

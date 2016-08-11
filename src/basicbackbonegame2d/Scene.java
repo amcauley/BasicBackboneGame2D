@@ -4,23 +4,21 @@ package basicbackbonegame2d;
 import java.util.List;
 import java.util.ArrayList;
 
-public class Scene {
+public abstract class Scene {
 
-    //TODO: make abstract - derived classes for recangular, circular scenes, etc. ?
-    
     /* Screen on which all scenes will draw */
     static public GameScreen screen = new GameScreen();
     
-    private String sceneId = "default";
+    public String sceneId = "default";
     
-    private int xLoc;       //x location (ex top left corner for rectangular scenes)
-    private int yLoc;       //y location
-    private int width;      //width
-    private int height;     //height
-    private String imgPath; //file location of this scene's image
+    public int xLoc;       //x location (ex top left corner for rectangular scenes)
+    public int yLoc;       //y location
+    public int width;      //width
+    public int height;     //height
+    public String imgPath; //file location of this scene's image
     
     /* Dynamic array of any subscenes */
-    private List<Scene> subScenes = new ArrayList<Scene>();
+    public List<Scene> subScenes = new ArrayList<Scene>();
     
     /* Default scene constructor */
     public Scene(){
@@ -42,7 +40,7 @@ public class Scene {
     
     /* Actually update screen with the image in this scene, as well as any images
        from any subscenes. */
-    public void updateScreen(){
+    final public void updateScreen(){
         screen.addImg(imgPath, xLoc, yLoc);
         
         for (Scene scn : subScenes) {
@@ -56,7 +54,7 @@ public class Scene {
     
     /* In case a scene needs to be added during runtime instead of allocated at
        compile time, use this method. */
-    public void addSubScene(Scene subScene){
+    final public void addSubScene(Scene subScene){
         subScenes.add(subScene);
     }
     
@@ -69,7 +67,7 @@ public class Scene {
     }    
     
     /* Default action handler - subclasses should probably override this. */
-    public void actionHandler(int evtType, int evtX, int evtY) {
+    public void actionHandler(BasicBackboneGame2D g, int evtType, int evtX, int evtY) {
         //TODO: convert evtType into enum
         
         /* Handle the event. */ 
@@ -78,7 +76,7 @@ public class Scene {
         /* Check if any subscenes are hit and handle it if they are. */
         for (Scene ss : subScenes) {
             if (ss.isHit(evtX, evtY)) {
-                ss.actionHandler(evtType, evtX, evtY);
+                ss.actionHandler(g, evtType, evtX, evtY);
             }
         }
     }
