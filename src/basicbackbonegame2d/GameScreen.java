@@ -11,11 +11,14 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-
 public class GameScreen extends JPanel {
     
+    public enum CursorType{
+        INVALID, DEFAULT, INSPECTION, TRANSITION
+    }    
+    
     /* currently used cursor type */
-    private int activeCursorType;
+    private CursorType activeCursorType;
     
     /* Inner class for storing image info, including location and the actual buffered
        image data. */
@@ -46,7 +49,7 @@ public class GameScreen extends JPanel {
     private List<imageContainer> images = new ArrayList<>();
     
     public GameScreen() {
-        activeCursorType = -1; //init to invalid so we'll update at first chance
+        activeCursorType = CursorType.INVALID; //init to invalid so we'll update at first chance
         setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
     }
     
@@ -68,17 +71,16 @@ public class GameScreen extends JPanel {
     }
     
     /* Update mouse cursor if it doen't match the currently active cursor type. */
-    //TODO: use enum instead of int
-    public void updateCursor(int cursorType){
+    public void updateCursor(CursorType cursorType){
         if (activeCursorType != cursorType){
             switch(cursorType){
-                case 0: //Default cursor
+                case DEFAULT: //Default cursor
                     setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                     break;
-                case 1: //Inspection
+                case INSPECTION: //Inspection
                     setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                     break;
-                case 2: //Transition
+                case TRANSITION: //Transition
                     setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
                     break;
                 default:

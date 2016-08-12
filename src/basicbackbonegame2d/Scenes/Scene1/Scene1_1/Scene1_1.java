@@ -17,7 +17,10 @@ public class Scene1_1 extends Scene{
     }    
     
     @Override
-    public void uniqueActionHandler(BasicBackboneGame2D g, int evtType, int evtX, int evtY) {
-    
-    }    
+    public void uniqueActionHandler( BasicBackboneGame2D g, 
+                                     BasicBackboneGame2D.MouseActions evtType, 
+                                     int evtX, 
+                                     int evtY) {
+      
+    }   
 }

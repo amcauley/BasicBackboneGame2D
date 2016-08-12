@@ -4,6 +4,7 @@ package basicbackbonegame2d.Scenes.Scene1;
 import basicbackbonegame2d.BasicBackboneGame2D;
 import basicbackbonegame2d.Scene;
 import basicbackbonegame2d.Scenes.Scene1.Scene1_1.Scene1_1;
+import basicbackbonegame2d.Scenes.SceneSwitcher.SceneList;
 
 public class Scene1 extends Scene{
     
@@ -20,15 +21,17 @@ public class Scene1 extends Scene{
         
         addSubScene(new Scene1_1());
         
-        addTransition(new Transition(1, 350, 0, 50, 400));
-        //addTransition(new Transition(1,   0, 0, 50, 400));
+        addTransition(new Transition(SceneList.SCENE2, 350, 0, 50, 400));
         
         updateScreen();
         draw();
     }
     
     @Override
-    public void uniqueActionHandler(BasicBackboneGame2D g, int evtType, int evtX, int evtY) {
+    public void uniqueActionHandler( BasicBackboneGame2D g, 
+                                     BasicBackboneGame2D.MouseActions evtType, 
+                                     int evtX, 
+                                     int evtY) {
       
     }
 }

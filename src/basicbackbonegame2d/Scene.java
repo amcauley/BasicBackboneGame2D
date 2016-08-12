@@ -1,8 +1,8 @@
 
 package basicbackbonegame2d;
 
-import basicbackbonegame2d.Scenes.Scene1.Scene1;
-import basicbackbonegame2d.Scenes.Scene2.Scene2;
+import basicbackbonegame2d.Scenes.SceneSwitcher;
+import basicbackbonegame2d.Scenes.SceneSwitcher.SceneList;
 import static java.awt.MouseInfo.getPointerInfo;
 import java.awt.Point;
 import java.util.List;
@@ -49,7 +49,10 @@ public abstract class Scene {
         if (!isSubscene){
             Point mouseLoc = getPointerInfo().getLocation();
             Point screenLoc = screen.getLocationOnScreen();
-            actionHandler(g, 1, mouseLoc.x-screenLoc.x, mouseLoc.y-screenLoc.y);
+            actionHandler(  g, 
+                            BasicBackboneGame2D.MouseActions.MOVEMENT, 
+                            mouseLoc.x-screenLoc.x, 
+                            mouseLoc.y-screenLoc.y);
         }
     }
     
@@ -75,6 +78,7 @@ public abstract class Scene {
         return (x >= 0) && (x < width) &&
                (y >= 0) && (y < height);
     }    
+      
     
     /* Transition inner class - has isHit() and activate(). isHit() will return true
        if the input (x,y) coords are within the transition object. activate() will
@@ -83,7 +87,7 @@ public abstract class Scene {
     */
     public class Transition{
         
-        int sceneId;
+        SceneList sceneId;
         int xLoc;
         int yLoc;
         int width;
@@ -93,7 +97,7 @@ public abstract class Scene {
            any scenes that call for the transition. Possible area of cleanup/simplification
            later on.
         */
-        public Transition(int sId, int x, int y, int w, int h){
+        public Transition(SceneList sId, int x, int y, int w, int h){
             sceneId = sId;
             xLoc = x;
             yLoc = y;
@@ -110,45 +114,43 @@ public abstract class Scene {
         }
         
         public void activate(){
-            switch(sceneId){
-                case 0: //Scene1
-                    g.topLvlScene = new Scene1();
-                    break;
-                case 1: //Scene2
-                    g.topLvlScene = new Scene2();
-                    break;
-                default:
-                    System.out.println("Invalid sceneId " + sceneId);
-                    break;
-            }
+            /* Scene switching duty is handled within the SceneSwitcher.java file in order
+               to keep all scene enums and handoffs in one location. Makes manual editing
+               easier. */
+            SceneSwitcher.switchScene(g, sceneId);
         }
     }
     
     /* This will be overridden by each individual scene to provide custom action handling. */
-    public void uniqueActionHandler(BasicBackboneGame2D g, int evtType, int evtX, int evtY){
+    public void uniqueActionHandler(BasicBackboneGame2D g, 
+                                    BasicBackboneGame2D.MouseActions evtType, 
+                                    int evtX, 
+                                    int evtY){
         
     }
     
     /* Base action handler, common to all scenens */
-    public void actionHandler(BasicBackboneGame2D g, int evtType, int evtX, int evtY) {
-        //TODO: convert evtType into enum
-        
+    public void actionHandler(  BasicBackboneGame2D g, 
+                                BasicBackboneGame2D.MouseActions evtType, 
+                                int evtX, 
+                                int evtY) {
+
         /* Handle the event. */ 
-        //System.out.println(sceneName + ": evt " + evtType + ", (" + evtX + "," + evtY + ")");   
+        System.out.println(sceneName + ": evt " + evtType + ", (" + evtX + "," + evtY + ")");   
         
         boolean hit = false; //Flag indicating if any subscene or transition returned true on their
                              //isHit() methods. If not, we'll use the default cursor.
         
         for (Transition t : transitions){
             if(t.isHit(evtX, evtY)){
-                if (evtType == 0){
+                if (evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON){
                     t.activate();
                     /* scene has switched, don't process any more in this scene. */
                     return; 
                 }
-                else {
+                else if (evtType == BasicBackboneGame2D.MouseActions.MOVEMENT) {
                     if (!isSubscene){
-                        screen.updateCursor(2);
+                        screen.updateCursor(GameScreen.CursorType.TRANSITION);
                     }
                 }
                 hit = true;
@@ -160,14 +162,14 @@ public abstract class Scene {
             if (ss.isHit(evtX, evtY)) {
                 ss.actionHandler(g, evtType, evtX, evtY);
                 if (!isSubscene){
-                    screen.updateCursor(1);
+                    screen.updateCursor(GameScreen.CursorType.INSPECTION);
                 }
                 hit = true;
             }
         }
         
         if ((!hit) && (!isSubscene)){
-            screen.updateCursor(0);
+            screen.updateCursor(GameScreen.CursorType.DEFAULT);
         }
         
         /* Custom handling for this scene. */
