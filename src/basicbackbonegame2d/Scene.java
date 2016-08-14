@@ -1,8 +1,8 @@
 
 package basicbackbonegame2d;
 
-import basicbackbonegame2d.Scenes.SceneSwitcher;
-import basicbackbonegame2d.Scenes.SceneSwitcher.SceneList;
+import basicbackbonegame2d.Scenes.SceneManager;
+import basicbackbonegame2d.Scenes.SceneManager.SceneList;
 import static java.awt.MouseInfo.getPointerInfo;
 import java.awt.Point;
 import java.util.List;
@@ -25,15 +25,20 @@ public abstract class Scene {
     public int height;          //height
     public String imgPath;      //file location of this scene's image
     
-    /* Dynamic array of any subscenes */
-    public List<Scene> subScenes = new ArrayList<>();
+    /* Array of subscenes */
+    public Scene subScenes[];
+    public int numSubScenes;
     
     /* Dynamic array of Transitions */
     public List<Transition> transitions = new ArrayList<>();
     
+    /* State information for this scene. Derived classes should also have a 
+       StateMap enum to help map info to helpful names. */
+    public StateInfo stateInfo;
+    
     /* Default scene constructor */
     public Scene(){
-        
+        numSubScenes = 0;
     }
     
     /* Actually update screen with the image in this scene, as well as any images
@@ -41,8 +46,8 @@ public abstract class Scene {
     final public void updateScreen(){
         screen.addImg(imgPath, xLoc, yLoc);
         
-        for (Scene scn : subScenes) {
-            scn.updateScreen();
+        for (int scnIdx = 0; scnIdx < numSubScenes ; scnIdx++) {
+            subScenes[scnIdx].updateScreen();
         }
         
         /* Update cursor as well by issuing a dummy movement event at the current location. */
@@ -58,12 +63,6 @@ public abstract class Scene {
     
     public void draw(){
         screen.repaint();
-    }
-    
-    /* In case a scene needs to be added during runtime instead of allocated at
-       compile time, use this method. */
-    final public void addSubScene(Scene subScene){
-        subScenes.add(subScene);
     }
     
     /* Add a transition to this scene. */
@@ -114,10 +113,10 @@ public abstract class Scene {
         }
         
         public void activate(){
-            /* Scene switching duty is handled within the SceneSwitcher.java file in order
+            /* Scene switching duty is handled within the SceneManager.java file in order
                to keep all scene enums and handoffs in one location. Makes manual editing
                easier. */
-            SceneSwitcher.switchScene(g, sceneId);
+            SceneManager.switchScene(g, sceneId);
         }
     }
     
@@ -137,6 +136,11 @@ public abstract class Scene {
 
         /* Handle the event. */ 
         System.out.println(sceneName + ": evt " + evtType + ", (" + evtX + "," + evtY + ")");   
+       
+        
+        /* Custom handling for this scene. This gives each scene a chance to custom handle events
+           before falling back on the default behavior. */
+        uniqueActionHandler(g, evtType, evtX, evtY);
         
         boolean hit = false; //Flag indicating if any subscene or transition returned true on their
                              //isHit() methods. If not, we'll use the default cursor.
@@ -158,7 +162,8 @@ public abstract class Scene {
         }
         
         /* Check if any subscenes are hit and handle it if they are. */
-        for (Scene ss : subScenes) {
+        for (int scnIdx = 0; scnIdx < numSubScenes ; scnIdx++) {
+            Scene ss = subScenes[scnIdx];
             if (ss.isHit(evtX, evtY)) {
                 ss.actionHandler(g, evtType, evtX, evtY);
                 if (!isSubscene){
@@ -171,8 +176,6 @@ public abstract class Scene {
         if ((!hit) && (!isSubscene)){
             screen.updateCursor(GameScreen.CursorType.DEFAULT);
         }
-        
-        /* Custom handling for this scene. */
-        uniqueActionHandler(g, evtType, evtX, evtY);
+       
     }
 }

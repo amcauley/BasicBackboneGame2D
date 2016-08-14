@@ -7,6 +7,7 @@ import basicbackbonegame2d.Scene;
 public class Scene1_1 extends Scene{
 
     public Scene1_1(){
+        /* Basic initialization params */         
         sceneName = "Scene1_1";
         imgPath = "src\\basicbackbonegame2d\\Scenes\\Scene1\\Scene1_1\\Scene1_1.jpg";
         isSubscene = true;
@@ -14,6 +15,14 @@ public class Scene1_1 extends Scene{
         yLoc = 250;
         width = 100;
         height = 50;
+        
+        /* Reset screen - if top level scene */        
+                
+        /* Create any subscenes and add to array */
+
+        /* Add any starting transitions */        
+        
+        /* Standard scene drawing routines for top level scenes */           
     }    
     
     @Override
