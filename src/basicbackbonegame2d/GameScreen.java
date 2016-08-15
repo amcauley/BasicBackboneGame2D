@@ -55,7 +55,7 @@ public class GameScreen extends JPanel {
     
     public void addImg(String imgPath, int x, int y){
         images.add(new imageContainer(imgPath, x, y));
-        System.out.println(images.size() + " images");
+        //System.out.println(images.size() + " images");
     }
     
     public void clearImgs(){
@@ -65,7 +65,8 @@ public class GameScreen extends JPanel {
     @Override
     public void paint(Graphics g) {
         /* Draw all images in the current screen. */
-        for (imageContainer ic : images) {
+        for (int icIdx = 0; icIdx < images.size(); icIdx++) {
+            imageContainer ic = images.get(icIdx);
             g.drawImage(ic.img, ic.x, ic.y, null);
         }
     }

@@ -2,6 +2,7 @@
 package basicbackbonegame2d;
 
 import basicbackbonegame2d.Scenes.Scene1.Scene1;
+import basicbackbonegame2d.Scenes.SceneManager;
 import java.awt.event.MouseEvent;
 import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputAdapter;
@@ -10,6 +11,8 @@ import javax.swing.event.MouseInputAdapter;
 public class BasicBackboneGame2D {
 
     GameFrame gameFrame = new GameFrame();
+    
+    public SceneManager sm = new SceneManager();
     
     /* Top level scene */
     public Scene topLvlScene;

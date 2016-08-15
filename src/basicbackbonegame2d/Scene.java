@@ -32,10 +32,6 @@ public abstract class Scene {
     /* Dynamic array of Transitions */
     public List<Transition> transitions = new ArrayList<>();
     
-    /* State information for this scene. Derived classes should also have a 
-       StateMap enum to help map info to helpful names. */
-    public StateInfo stateInfo;
-    
     /* Default scene constructor */
     public Scene(){
         numSubScenes = 0;
@@ -135,7 +131,7 @@ public abstract class Scene {
                                 int evtY) {
 
         /* Handle the event. */ 
-        System.out.println(sceneName + ": evt " + evtType + ", (" + evtX + "," + evtY + ")");   
+        //System.out.println(sceneName + ": evt " + evtType + ", (" + evtX + "," + evtY + ")");   
        
         
         /* Custom handling for this scene. This gives each scene a chance to custom handle events
@@ -145,10 +141,11 @@ public abstract class Scene {
         boolean hit = false; //Flag indicating if any subscene or transition returned true on their
                              //isHit() methods. If not, we'll use the default cursor.
         
-        for (Transition t : transitions){
-            if(t.isHit(evtX, evtY)){
+        for (int tIdx = 0; tIdx < transitions.size(); tIdx++){
+            Transition tt = transitions.get(tIdx);
+            if(tt.isHit(evtX, evtY)){
                 if (evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON){
-                    t.activate();
+                    tt.activate();
                     /* scene has switched, don't process any more in this scene. */
                     return; 
                 }

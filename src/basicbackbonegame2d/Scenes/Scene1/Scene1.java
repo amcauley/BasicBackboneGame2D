@@ -9,6 +9,12 @@ import basicbackbonegame2d.Scenes.Scene1.Scene1_1.Scene1_1;
 
 public class Scene1 extends Scene{
     
+    static StateInfo stateInfo = new StateInfo_Scene1();
+    
+    public static StateInfo getStateInfo(){
+        return stateInfo;
+    }
+    
     /* Enum for tracking/defining state info for this scene. */
     enum StateMap{
         STATE_INFO0(0);
@@ -39,10 +45,11 @@ public class Scene1 extends Scene{
 
         @Override
         public String saveState(){
-            return "";
+            String strOut = String.valueOf(stateInfo.vals[StateMap.STATE_INFO0.val]);
+            return strOut;
         }        
 
-    }
+    }    
     
     /* Use an enum to better track subscenes of this scene */ 
     enum SubSceneMap{
@@ -87,8 +94,9 @@ public class Scene1 extends Scene{
                                      int evtX, 
                                      int evtY) {
         
-        if (subScenes[SubSceneMap.SCENE1_1.val].isHit(evtX, evtY)){
-            
+        if ( (evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON) && 
+             subScenes[SubSceneMap.SCENE1_1.val].isHit(evtX, evtY) ){
+            g.sm.saveState();
         }
       
     }
