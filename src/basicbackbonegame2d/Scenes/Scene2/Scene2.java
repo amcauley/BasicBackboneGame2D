@@ -83,7 +83,7 @@ public class Scene2 extends Scene{
     }    
     
     public Scene2(){
-        /* Basic initialization params */        
+        /* Basic initialization params */     
         sceneName = "Scene2";
         isSubscene = false;
         xLoc = 0;
@@ -136,6 +136,8 @@ public class Scene2 extends Scene{
             screen.clearImgs();
             updateScreen();
             draw();
+            
+            g.sm.saveState();
         }        
         
     }

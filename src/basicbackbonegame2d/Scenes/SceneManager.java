@@ -5,6 +5,7 @@ import basicbackbonegame2d.BasicBackboneGame2D;
 import basicbackbonegame2d.StateInfo;
 import basicbackbonegame2d.Scenes.Scene1.Scene1;
 import basicbackbonegame2d.Scenes.Scene2.Scene2;  
+import basicbackbonegame2d.Top;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -18,13 +19,16 @@ public class SceneManager{
     
     /* Currently only need to list top-level scenes. */
     public enum SceneList{
-        SCENE1(Scene1.getStateInfo()),
-        SCENE2(Scene2.getStateInfo());
+        TOP(0, Top.getStateInfo()),        //Pseudo-scene for top level management
+        SCENE1(1, Scene1.getStateInfo()),
+        SCENE2(2, Scene2.getStateInfo());
         
-        /* Each scene can have state associated with it. */
+        /* Each scene can have state associated with it. It also stores its index. */
+        public int idx;
         public StateInfo state;
         
-        SceneList(StateInfo si){
+        SceneList(int i, StateInfo si){
+            idx = i;
             state = si;
         }
     }    
@@ -39,6 +43,7 @@ public class SceneManager{
             BufferedReader br = new BufferedReader(fr);
         ) {
             while ((thisLn = br.readLine()) != null) {
+                System.out.println("loading state idx " + thisIdx);
                 sl[thisIdx++].state.loadState(thisLn);
             }
         }        
@@ -79,5 +84,8 @@ public class SceneManager{
                 System.out.println("Invalid sceneId " + sceneId);
                 break;
             }
+        
+        /* Update top level state. */
+        SceneList.TOP.state.vals[Top.StateMap.LAST_SCENE_ID.idx] = sceneId.idx;
     }
 }

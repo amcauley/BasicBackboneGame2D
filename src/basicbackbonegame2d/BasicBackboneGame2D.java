@@ -1,8 +1,10 @@
 
 package basicbackbonegame2d;
 
+import static basicbackbonegame2d.Scene.g;
 import basicbackbonegame2d.Scenes.Scene1.Scene1;
 import basicbackbonegame2d.Scenes.SceneManager;
+import static basicbackbonegame2d.Top.stateInfo;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -65,9 +67,6 @@ public class BasicBackboneGame2D {
         /* Register game object to scene. */
         Scene.g = this;
         
-        /* Load game state from file */
-        sm.loadState();
-        
         /* Add the static screen to this JFrame-based object. */
         gameFrame.add(Scene.screen);
         gameFrame.setVisible(true);    
@@ -75,7 +74,12 @@ public class BasicBackboneGame2D {
         /* Add this after screen is added and setVisible, since scene creation calls
            updateScreen(), which calls getLocationOnScreen() for screen, and it must
            already be drawn on the screen or we hit a runtime error. */
-        topLvlScene = new Scene1();
+        //topLvlScene = new Scene1();
+        
+        /* Load game state from file, and set topLvlScene to the stored scene. */
+        sm.loadState();
+        SceneManager.switchScene(this, SceneManager.SceneList.values()[stateInfo.vals[Top.StateMap.LAST_SCENE_ID.idx]]);
+        
         
         /* Mouse listener references topLvlScene, so this should come after topLvlScene
            is initialized. */
