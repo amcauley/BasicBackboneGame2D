@@ -23,7 +23,9 @@ public abstract class Scene {
     public int yLoc;            //y location
     public int width;           //width
     public int height;          //height
-    public String imgPath;      //file location of this scene's image
+    
+    /* File location of this scene's active image. */
+    public String imagePath;
     
     /* Array of subscenes */
     public Scene subScenes[];
@@ -40,7 +42,7 @@ public abstract class Scene {
     /* Actually update screen with the image in this scene, as well as any images
        from any subscenes. */
     final public void updateScreen(){
-        screen.addImg(imgPath, xLoc, yLoc);
+        screen.addImg(imagePath, xLoc, yLoc);
         
         for (int scnIdx = 0; scnIdx < numSubScenes ; scnIdx++) {
             subScenes[scnIdx].updateScreen();
@@ -59,6 +61,10 @@ public abstract class Scene {
     
     public void draw(){
         screen.repaint();
+    }
+    
+    public void swapImage(String newImagePath){
+        imagePath = newImagePath;
     }
     
     /* Add a transition to this scene. */

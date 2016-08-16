@@ -17,12 +17,13 @@ public class Scene1 extends Scene{
     
     /* Enum for tracking/defining state info for this scene. */
     enum StateMap{
-        STATE_INFO0(0);
+        STATE_INFO0(0),
+        STATE_INFO1(1);
         
-        int val;
+        int idx;
         
-        StateMap(int v){
-            val = v;
+        StateMap(int i){
+            idx = i;
         }
     }    
     
@@ -33,21 +34,29 @@ public class Scene1 extends Scene{
             vals = new int[StateMap.values().length];
             
             /* Initialize state values. */
-            vals[StateMap.STATE_INFO0.val] = 42;
+            vals[StateMap.STATE_INFO0.idx] = 42;
+            vals[StateMap.STATE_INFO1.idx] = 7;
         }
+        
+        @Override
+        public String saveState(){
+            String strOut = "";
+            for (StateMap st : StateMap.values()){
+                strOut += String.valueOf(stateInfo.vals[st.idx]) + " ";
+            }
+            return strOut;
+        }           
         
         
         /* Use stateMap enum to map in values from input string */
         @Override
         public void loadState(String str){
-
-        }        
-
-        @Override
-        public String saveState(){
-            String strOut = String.valueOf(stateInfo.vals[StateMap.STATE_INFO0.val]);
-            return strOut;
-        }        
+            String[] strVals = str.split(" ");
+            int idx = 0;
+            for (StateMap st : StateMap.values()){
+                stateInfo.vals[st.idx] = Integer.valueOf(strVals[idx++]);
+            }
+        }             
 
     }    
     
@@ -55,22 +64,35 @@ public class Scene1 extends Scene{
     enum SubSceneMap{
         SCENE1_1(0);
         
-        int val;
+        int idx;
         
-        SubSceneMap(int v){
-            val = v;
+        SubSceneMap(int i){
+            idx = i;
         }
     }    
+    
+    /* Enum of avilable images for this scene */
+    public enum imagePathMap{
+        IMAGE_0("src\\basicbackbonegame2d\\Scenes\\Scene1\\Scene1.jpg");
+        
+        public String str;
+        
+        imagePathMap(String s){
+            str = s;
+        }
+    }
     
     public Scene1(){
         /* Basic initialization params */
         sceneName = "Scene1";
-        imgPath = "src\\basicbackbonegame2d\\Scenes\\Scene1\\Scene1.jpg";
         isSubscene = false;
         xLoc = 0;
         yLoc = 0;
         width = 400;
         height = 400;
+        
+        /* Initialize this scene's image */
+        imagePath = imagePathMap.IMAGE_0.str;        
         
         /* Reset screen */
         screen.clearImgs();
@@ -78,7 +100,7 @@ public class Scene1 extends Scene{
         /* Create any subscenes and add to array */
         numSubScenes = SubSceneMap.values().length;
         subScenes = new Scene[numSubScenes];
-        subScenes[SubSceneMap.SCENE1_1.val] = new Scene1_1();
+        subScenes[SubSceneMap.SCENE1_1.idx] = new Scene1_1();
         
         /* Add any starting transitions */
         addTransition(new Transition(SceneList.SCENE2, 350, 0, 50, 400));
@@ -95,7 +117,7 @@ public class Scene1 extends Scene{
                                      int evtY) {
         
         if ( (evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON) && 
-             subScenes[SubSceneMap.SCENE1_1.val].isHit(evtX, evtY) ){
+             subScenes[SubSceneMap.SCENE1_1.idx].isHit(evtX, evtY) ){
             g.sm.saveState();
         }
       

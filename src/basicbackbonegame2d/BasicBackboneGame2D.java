@@ -4,6 +4,9 @@ package basicbackbonegame2d;
 import basicbackbonegame2d.Scenes.Scene1.Scene1;
 import basicbackbonegame2d.Scenes.SceneManager;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputAdapter;
 
@@ -56,14 +59,14 @@ public class BasicBackboneGame2D {
     
     }
     
-    public void run(){
+    public void run() throws IOException{
         gameFrame.init();
         
         /* Register game object to scene. */
         Scene.g = this;
         
-        gameMouseListener mouseListener = new gameMouseListener();
-        topLvlScene.screen.registerMouseListener(mouseListener);
+        /* Load game state from file */
+        sm.loadState();
         
         /* Add the static screen to this JFrame-based object. */
         gameFrame.add(Scene.screen);
@@ -71,17 +74,25 @@ public class BasicBackboneGame2D {
         
         /* Add this after screen is added and setVisible, since scene creation calls
            updateScreen(), which calls getLocationOnScreen() for screen, and it must
-           already be drawn on the screen or we hit a runtime error.
-        */
+           already be drawn on the screen or we hit a runtime error. */
         topLvlScene = new Scene1();
+        
+        /* Mouse listener references topLvlScene, so this should come after topLvlScene
+           is initialized. */
+        gameMouseListener mouseListener = new gameMouseListener();
+        topLvlScene.screen.registerMouseListener(mouseListener);        
     }
     
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        BasicBackboneGame2D game = new BasicBackboneGame2D();
-        game.run();
+        try {
+            BasicBackboneGame2D game = new BasicBackboneGame2D();
+            game.run();
+        } catch (IOException ex) {
+            Logger.getLogger(BasicBackboneGame2D.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }

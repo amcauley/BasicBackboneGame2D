@@ -5,6 +5,8 @@ import basicbackbonegame2d.BasicBackboneGame2D;
 import basicbackbonegame2d.StateInfo;
 import basicbackbonegame2d.Scenes.Scene1.Scene1;
 import basicbackbonegame2d.Scenes.Scene2.Scene2;  
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -28,8 +30,18 @@ public class SceneManager{
     }    
     
     /* Load saved state from file into each scene's state */
-    public void loadState(){
-        
+    public void loadState() throws IOException{
+        SceneList[] sl = SceneList.values();
+        String thisLn;
+        int thisIdx = 0;
+        try (
+            FileReader fr = new FileReader("Z:\\Documents\\NetBeansProjects\\BasicBackboneGame2D\\src\\basicbackbonegame2d\\Saves\\Save0.txt");
+            BufferedReader br = new BufferedReader(fr);
+        ) {
+            while ((thisLn = br.readLine()) != null) {
+                sl[thisIdx++].state.loadState(thisLn);
+            }
+        }        
     }
     
     /* Save state to file. */
