@@ -1,14 +1,14 @@
 
-package basicbackbonegame2d.Scenes.Scene1.Scene1_1;
+package basicbackbonegame2d.Scenes.S_Room1.S_Key;
 
 import basicbackbonegame2d.BasicBackboneGame2D;
 import basicbackbonegame2d.Scene;
 
-public class Scene1_1 extends Scene{
+public class S_Key extends Scene{
 
     /* Enum of avilable images for this scene */
     public enum imagePathMap{
-        IMAGE_0("src\\basicbackbonegame2d\\Scenes\\Scene1\\Scene1_1\\Scene1_1.jpg");
+        KEY("src\\basicbackbonegame2d\\Scenes\\S_Room1\\S_Key\\Key.jpg");
         
         public String str;
         
@@ -17,17 +17,17 @@ public class Scene1_1 extends Scene{
         }
     }       
     
-    public Scene1_1(){
+    public S_Key(){
         /* Basic initialization params */         
-        sceneName = "Scene1_1";
+        sceneName = "S_Key";
         isSubscene = true;
-        xLoc = 75;
-        yLoc = 250;
-        width = 100;
-        height = 50;
+        xLoc = 73;
+        yLoc = 235;
+        width = 51;
+        height = 30;
          
         /* Initialize this scene's image */
-        imagePath = imagePathMap.IMAGE_0.str;         
+        imagePath = imagePathMap.KEY.str;         
         
         /* Reset screen - if top level scene */        
                 
@@ -37,12 +37,5 @@ public class Scene1_1 extends Scene{
         
         /* Standard scene drawing routines for top level scenes */           
     }    
-    
-    @Override
-    public void uniqueActionHandler( BasicBackboneGame2D g, 
-                                     BasicBackboneGame2D.MouseActions evtType, 
-                                     int evtX, 
-                                     int evtY) {
-      
-    }   
+  
 }

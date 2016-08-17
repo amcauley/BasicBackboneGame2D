@@ -1,24 +1,22 @@
 
-package basicbackbonegame2d.Scenes.Scene1;
+package basicbackbonegame2d.Scenes.S_Win;
 
 import basicbackbonegame2d.BasicBackboneGame2D;
 import basicbackbonegame2d.Scene;
 import basicbackbonegame2d.Scenes.SceneManager.SceneList;
 import basicbackbonegame2d.StateInfo;
-import basicbackbonegame2d.Scenes.Scene1.Scene1_1.Scene1_1;
 
-public class Scene1 extends Scene{
+public class S_Win extends Scene{
     
-    static StateInfo stateInfo = new StateInfo_Scene1();
+    static StateInfo stateInfo = new S_Win.StateInfo_Win();
     
     public static StateInfo getStateInfo(){
         return stateInfo;
-    }
+    }    
     
     /* Enum for tracking/defining state info for this scene. */
     enum StateMap{
-        STATE_INFO0(0),
-        STATE_INFO1(1);
+        RESERVED(0);    //Win doesn't need any actual state for now
         
         int idx;
         
@@ -27,15 +25,14 @@ public class Scene1 extends Scene{
         }
     }    
     
-    public static class StateInfo_Scene1 extends StateInfo{
+    public static class StateInfo_Win extends StateInfo{
     
-        public StateInfo_Scene1(){
+        public StateInfo_Win(){
             /* Allocate memory for state */
             vals = new int[StateMap.values().length];
             
             /* Initialize state values. */
-            vals[StateMap.STATE_INFO0.idx] = 42;
-            vals[StateMap.STATE_INFO1.idx] = 7;
+            vals[StateMap.RESERVED.idx] = 0;
         }
         
         @Override
@@ -56,35 +53,35 @@ public class Scene1 extends Scene{
             for (StateMap st : StateMap.values()){
                 stateInfo.vals[st.idx] = Integer.valueOf(strVals[idx++]);
             }
-        }             
+        }          
 
     }    
     
     /* Use an enum to better track subscenes of this scene */ 
-    enum SubSceneMap{
-        SCENE1_1(0);
-        
-        int idx;
-        
-        SubSceneMap(int i){
-            idx = i;
-        }
-    }    
+    //enum SubSceneMap{
+    //    RESERVED(0);    //Currently no subscenes
+    //    
+    //    int idx;
+    //    
+    //    SubSceneMap(int i){
+    //        idx = i;
+    //    }
+    //}   
     
     /* Enum of avilable images for this scene */
     public enum imagePathMap{
-        IMAGE_0("src\\basicbackbonegame2d\\Scenes\\Scene1\\Scene1.jpg");
+        WIN("src\\basicbackbonegame2d\\Scenes\\S_Win\\Win.jpg");
         
         public String str;
         
         imagePathMap(String s){
             str = s;
         }
-    }
+    }    
     
-    public Scene1(){
-        /* Basic initialization params */
-        sceneName = "Scene1";
+    public S_Win(){
+        /* Basic initialization params */     
+        sceneName = "S_Win";
         isSubscene = false;
         xLoc = 0;
         yLoc = 0;
@@ -92,34 +89,20 @@ public class Scene1 extends Scene{
         height = 400;
         
         /* Initialize this scene's image */
-        imagePath = imagePathMap.IMAGE_0.str;        
+        imagePath = imagePathMap.WIN.str;         
         
-        /* Reset screen */
+        /* Reset screen */        
         screen.clearImgs();
-        
+                
         /* Create any subscenes and add to array */
-        numSubScenes = SubSceneMap.values().length;
-        subScenes = new Scene[numSubScenes];
-        subScenes[SubSceneMap.SCENE1_1.idx] = new Scene1_1();
+        //No subscenes for this scene        
         
         /* Add any starting transitions */
-        addTransition(new Transition(SceneList.SCENE2, 350, 0, 50, 400));
+        //No transitions
         
-        /* Standard scene drawing routines for top level scenes */
+        /* Standard scene drawing routines for top level scenes */        
         updateScreen();
         draw();
     }
     
-    @Override
-    public void uniqueActionHandler( BasicBackboneGame2D g, 
-                                     BasicBackboneGame2D.MouseActions evtType, 
-                                     int evtX, 
-                                     int evtY) {
-        
-        if ( (evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON) && 
-             subScenes[SubSceneMap.SCENE1_1.idx].isHit(evtX, evtY) ){
-            g.sm.saveState();
-        }
-      
-    }
 }

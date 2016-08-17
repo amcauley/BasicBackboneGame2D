@@ -23,6 +23,7 @@ public abstract class Scene {
     public int yLoc;            //y location
     public int width;           //width
     public int height;          //height
+    boolean isActive;           //should this subscene be drawn?
     
     /* File location of this scene's active image. */
     public String imagePath;
@@ -37,15 +38,19 @@ public abstract class Scene {
     /* Default scene constructor */
     public Scene(){
         numSubScenes = 0;
+        isActive = true;
     }
     
+
     /* Actually update screen with the image in this scene, as well as any images
        from any subscenes. */
     final public void updateScreen(){
         screen.addImg(imagePath, xLoc, yLoc);
         
         for (int scnIdx = 0; scnIdx < numSubScenes ; scnIdx++) {
-            subScenes[scnIdx].updateScreen();
+            if (subScenes[scnIdx].isActive()){
+                subScenes[scnIdx].updateScreen();   
+            }
         }
         
         /* Update cursor as well by issuing a dummy movement event at the current location. */
@@ -63,6 +68,14 @@ public abstract class Scene {
         screen.repaint();
     }
     
+    public void setActiveState(boolean b){
+        isActive = b;
+    }
+    
+    public boolean isActive(){
+        return isActive;
+    }
+    
     public void swapImage(String newImagePath){
         imagePath = newImagePath;
     }
@@ -76,7 +89,8 @@ public abstract class Scene {
     public boolean isHit(int x, int y){
         x -= xLoc;
         y -= yLoc;
-        return (x >= 0) && (x < width) &&
+        return isActive() &&
+               (x >= 0) && (x < width) &&
                (y >= 0) && (y < height);
     }    
       
@@ -107,6 +121,7 @@ public abstract class Scene {
             
         }
 
+        /* isHit will return false if the (sub)scene is inactive. */
         public boolean isHit(int x, int y){
             x -= xLoc;
             y -= yLoc;
@@ -122,12 +137,13 @@ public abstract class Scene {
         }
     }
     
-    /* This will be overridden by each individual scene to provide custom action handling. */
-    public void uniqueActionHandler(BasicBackboneGame2D g, 
+    /* This will be overridden by each individual scene to provide custom action handling.
+       return value indicates of further action processing should be stopped. */
+    public int uniqueActionHandler(BasicBackboneGame2D g, 
                                     BasicBackboneGame2D.MouseActions evtType, 
                                     int evtX, 
                                     int evtY){
-        
+        return 0;
     }
     
     /* Base action handler, common to all scenens */
@@ -138,11 +154,12 @@ public abstract class Scene {
 
         /* Handle the event. */ 
         //System.out.println(sceneName + ": evt " + evtType + ", (" + evtX + "," + evtY + ")");   
-       
         
-        /* Custom handling for this scene. This gives each scene a chance to custom handle events
-           before falling back on the default behavior. */
-        uniqueActionHandler(g, evtType, evtX, evtY);
+        /* Handling order:
+                1) Transitions
+                2) Custom Scene Handling
+                3) Recurse Through Subscenes
+        */
         
         boolean hit = false; //Flag indicating if any subscene or transition returned true on their
                              //isHit() methods. If not, we'll use the default cursor.
@@ -152,7 +169,8 @@ public abstract class Scene {
             if(tt.isHit(evtX, evtY)){
                 if (evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON){
                     tt.activate();
-                    /* scene has switched, don't process any more in this scene. */
+                    /* Scene has switched, don't process any more in this scene. Do save, though. */
+                    g.sm.saveState();
                     return; 
                 }
                 else if (evtType == BasicBackboneGame2D.MouseActions.MOVEMENT) {
@@ -162,6 +180,14 @@ public abstract class Scene {
                 }
                 hit = true;
             }
+        }
+        
+        /* Custom handling for this scene. This gives each scene a chance to custom handle events
+           before falling back on the default handling (other than transitions, which are handled first). */
+        if (uniqueActionHandler(g, evtType, evtX, evtY) != 0)
+        {
+            /* If return int is non-zero, further recursion/processing should be skipped. */
+            return;
         }
         
         /* Check if any subscenes are hit and handle it if they are. */
@@ -178,6 +204,11 @@ public abstract class Scene {
         
         if ((!hit) && (!isSubscene)){
             screen.updateCursor(GameScreen.CursorType.DEFAULT);
+        }
+        
+        /* Save after handling any left clicks, which could have updated state. */
+        if((evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON) && (!isSubscene)){
+            g.sm.saveState();
         }
        
     }

@@ -1,9 +1,6 @@
 
 package basicbackbonegame2d;
 
-import static basicbackbonegame2d.Scene.g;
-import basicbackbonegame2d.Scenes.SceneManager;
-
 /* Pseudo-scene for top level management. */
 public class Top extends Scene{
     
@@ -15,7 +12,9 @@ public class Top extends Scene{
     
     /* Enum for tracking/defining state info for this scene. */
     public enum StateMap{
-        LAST_SCENE_ID(0);
+        LAST_SCENE_ID(0),   //Stores the last active scene
+        HAS_KEY(1),         //Player has the key
+        ROOM2_HAS_PWR(2);   //Room2 scene is powered
         
         public int idx;
         
@@ -31,7 +30,9 @@ public class Top extends Scene{
             vals = new int[StateMap.values().length];
             
             /* Initialize state values. */
-            vals[StateMap.LAST_SCENE_ID.idx] = 1;
+            vals[StateMap.LAST_SCENE_ID.idx]    = 1;    //Default scene is Room1
+            vals[StateMap.HAS_KEY.idx]          = 0;    //No key yet
+            vals[StateMap.ROOM2_HAS_PWR.idx]    = 0;    //Not yet powered
         }
         
         @Override

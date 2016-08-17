@@ -3,8 +3,9 @@ package basicbackbonegame2d.Scenes;
 
 import basicbackbonegame2d.BasicBackboneGame2D;
 import basicbackbonegame2d.StateInfo;
-import basicbackbonegame2d.Scenes.Scene1.Scene1;
-import basicbackbonegame2d.Scenes.Scene2.Scene2;  
+import basicbackbonegame2d.Scenes.S_Room1.S_Room1;
+import basicbackbonegame2d.Scenes.S_Room2.S_Room2;  
+import basicbackbonegame2d.Scenes.S_Win.S_Win;
 import basicbackbonegame2d.Top;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -19,9 +20,10 @@ public class SceneManager{
     
     /* Currently only need to list top-level scenes. */
     public enum SceneList{
-        TOP(0, Top.getStateInfo()),        //Pseudo-scene for top level management
-        SCENE1(1, Scene1.getStateInfo()),
-        SCENE2(2, Scene2.getStateInfo());
+        TOP(0, Top.getStateInfo()),         //Pseudo-scene for top level management
+        S_ROOM1(1, S_Room1.getStateInfo()), //Room1
+        S_ROOM2(2, S_Room2.getStateInfo()), //Room2
+        S_WIN(3, S_Win.getStateInfo());     //Win screen
         
         /* Each scene can have state associated with it. It also stores its index. */
         public int idx;
@@ -53,14 +55,14 @@ public class SceneManager{
     public void saveState(){
         String fileName = "Z:\\Documents\\NetBeansProjects\\BasicBackboneGame2D\\src\\basicbackbonegame2d\\Saves\\Save0.txt";
         try (PrintWriter out = new PrintWriter(fileName)) {
-            System.out.println("Saving to file " + fileName);
+            //System.out.println("Saving to file " + fileName);
             
             /* Iterate over scenes and write their save state info out to file, one line per scene in the
                same order the scenes were declared (important to have fixed order for when we want to load
                state from this file later. */
             for (SceneList s : SceneList.values()){
                 //For debugging: print out save info
-                System.out.println(s.state.saveState());
+                //System.out.println(s.state.saveState());
                 /* Write to file */
                 out.println(s.state.saveState());  
             }    
@@ -74,11 +76,14 @@ public class SceneManager{
     public static void switchScene(BasicBackboneGame2D g, SceneList sceneId){
         
         switch(sceneId){
-            case SCENE1: //Scene1
-                g.topLvlScene = new Scene1();
+            case S_ROOM1:   //Room1
+                g.topLvlScene = new S_Room1();
                 break;
-            case SCENE2: //Scene2
-                g.topLvlScene = new Scene2();
+            case S_ROOM2:   //Room2
+                g.topLvlScene = new S_Room2();
+                break;
+            case S_WIN:     //End of game
+                g.topLvlScene = new S_Win();
                 break;
             default:
                 System.out.println("Invalid sceneId " + sceneId);

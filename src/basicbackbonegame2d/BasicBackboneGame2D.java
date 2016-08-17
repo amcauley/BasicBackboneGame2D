@@ -2,7 +2,7 @@
 package basicbackbonegame2d;
 
 import static basicbackbonegame2d.Scene.g;
-import basicbackbonegame2d.Scenes.Scene1.Scene1;
+import basicbackbonegame2d.Scenes.S_Room1.S_Room1;
 import basicbackbonegame2d.Scenes.SceneManager;
 import static basicbackbonegame2d.Top.stateInfo;
 import java.awt.event.MouseEvent;
@@ -74,7 +74,7 @@ public class BasicBackboneGame2D {
         /* Add this after screen is added and setVisible, since scene creation calls
            updateScreen(), which calls getLocationOnScreen() for screen, and it must
            already be drawn on the screen or we hit a runtime error. */
-        //topLvlScene = new Scene1();
+        //topLvlScene = new S_Room1();
         
         /* Load game state from file, and set topLvlScene to the stored scene. */
         sm.loadState();
