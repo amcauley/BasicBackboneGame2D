@@ -2,6 +2,7 @@
 package basicbackbonegame2d.Scenes.S_Win;
 
 import basicbackbonegame2d.BasicBackboneGame2D;
+import basicbackbonegame2d.Jukebox;
 import basicbackbonegame2d.Scene;
 import basicbackbonegame2d.Scenes.SceneManager.SceneList;
 import basicbackbonegame2d.StateInfo;
@@ -99,6 +100,10 @@ public class S_Win extends Scene{
         
         /* Add any starting transitions */
         //No transitions
+        
+        /* Victory music. */
+        g.jukebox.stopAll();
+        g.jukebox.play(Jukebox.Sounds.VICTORY, false);
         
         /* Standard scene drawing routines for top level scenes */        
         updateScreen();

@@ -2,6 +2,7 @@
 package basicbackbonegame2d.Scenes.S_Room2;
 
 import basicbackbonegame2d.BasicBackboneGame2D;
+import basicbackbonegame2d.Jukebox;
 import basicbackbonegame2d.Scene;
 import basicbackbonegame2d.Scenes.S_Room2.S_Key_In_Door.S_Key_In_Door;
 import basicbackbonegame2d.Scenes.SceneManager;
@@ -112,13 +113,16 @@ public class S_Room2 extends Scene{
             if (stateInfo.vals[StateMap.KEY_IN_DOOR.idx] == 1){
                 //subScenes[SubSceneMap.KEY_IN_DOOR.idx].swapImage(S_Key_In_Door.imagePathMap.KEY_IN_DOOR.str);
                 subScenes[SubSceneMap.KEY_IN_DOOR.idx].setActiveState(false);
-                addTransition(new Transition(SceneList.S_WIN, 193, 164, 76, 122));
+                addTransition(new Transition(SceneList.S_WIN, 193, 164, 76, 122, Jukebox.Sounds.NONE));
             }            
             
         }        
         
         /* Add any starting transitions */        
-        addTransition(new Transition(SceneList.S_ROOM1, 20, 168, 53, 180));
+        addTransition(new Transition(SceneList.S_ROOM1, 20, 168, 53, 180, Jukebox.Sounds.DOOR0));
+        
+        /* Start BG music. */
+        g.jukebox.play(Jukebox.Sounds.BG_MUSIC0, true);        
         
         /* Standard scene drawing routines for top level scenes */        
         updateScreen();
@@ -143,7 +147,7 @@ public class S_Room2 extends Scene{
                can't be interacted with any more. */
             subScenes[SubSceneMap.KEY_IN_DOOR.idx].setActiveState(false);
             
-            addTransition(new Transition(SceneList.S_WIN, 193, 164, 76, 122)); 
+            addTransition(new Transition(SceneList.S_WIN, 193, 164, 76, 122, Jukebox.Sounds.NONE)); 
             
             screen.clearImgs();
             updateScreen(); 

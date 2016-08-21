@@ -2,6 +2,7 @@
 package basicbackbonegame2d.Scenes.S_Room1;
 
 import basicbackbonegame2d.BasicBackboneGame2D;
+import basicbackbonegame2d.Jukebox;
 import basicbackbonegame2d.Scene;
 import basicbackbonegame2d.Scenes.SceneManager.SceneList;
 import basicbackbonegame2d.StateInfo;
@@ -118,7 +119,10 @@ public class S_Room1 extends Scene{
         }
         
         /* Add any starting transitions */
-        addTransition(new Transition(SceneList.S_ROOM2, 325, 165, 53, 180));
+        addTransition(new Transition(SceneList.S_ROOM2, 325, 165, 53, 180, Jukebox.Sounds.DOOR0));
+        
+        /* Start BG music. */
+        g.jukebox.play(Jukebox.Sounds.BG_MUSIC0, true);
         
         /* Standard scene drawing routines for top level scenes */
         updateScreen();

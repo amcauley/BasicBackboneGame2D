@@ -108,17 +108,20 @@ public abstract class Scene {
         int width;
         int height;
         
+        /* Sound to play on click activation. Set to NONE for no sound. */
+        Jukebox.Sounds sound;
+        
         /* Currently sceneId is only defined here and referenced as a magic number from
            any scenes that call for the transition. Possible area of cleanup/simplification
            later on.
         */
-        public Transition(SceneList sId, int x, int y, int w, int h){
+        public Transition(SceneList sId, int x, int y, int w, int h, Jukebox.Sounds s){
             sceneId = sId;
             xLoc = x;
             yLoc = y;
             width = w;
             height = h;
-            
+            sound = s;
         }
 
         /* isHit will return false if the (sub)scene is inactive. */
@@ -130,6 +133,10 @@ public abstract class Scene {
         }
         
         public void activate(){
+            /* Play sound, no looping. */
+            g.jukebox.play(sound, false);
+            
+            
             /* Scene switching duty is handled within the SceneManager.java file in order
                to keep all scene enums and handoffs in one location. Makes manual editing
                easier. */

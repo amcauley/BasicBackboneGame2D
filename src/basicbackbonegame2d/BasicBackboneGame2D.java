@@ -1,8 +1,6 @@
 
 package basicbackbonegame2d;
 
-import static basicbackbonegame2d.Scene.g;
-import basicbackbonegame2d.Scenes.S_Room1.S_Room1;
 import basicbackbonegame2d.Scenes.SceneManager;
 import static basicbackbonegame2d.Top.stateInfo;
 import java.awt.event.MouseEvent;
@@ -18,6 +16,9 @@ public class BasicBackboneGame2D {
     GameFrame gameFrame = new GameFrame();
     
     public SceneManager sm = new SceneManager();
+    
+    /* Register jukebox for music control */
+    public Jukebox jukebox = new Jukebox();
     
     /* Top level scene */
     public Scene topLvlScene;
