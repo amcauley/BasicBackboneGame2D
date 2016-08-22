@@ -50,7 +50,7 @@ public class GameScreen extends JPanel {
     
     public GameScreen() {
         activeCursorType = CursorType.INVALID; //init to invalid so we'll update at first chance
-        setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+        setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));        
     }
     
     public void addImg(String imgPath, int x, int y){
@@ -63,11 +63,28 @@ public class GameScreen extends JPanel {
     }
     
     @Override
-    public void paint(Graphics g) {
+    public void paint(Graphics g) { 
+        
+        //System.out.println("painting GameScreen");
+        
+        float scale = GameFrame.scale;
+                
         /* Draw all images in the current screen. */
         for (int icIdx = 0; icIdx < images.size(); icIdx++) {
             imageContainer ic = images.get(icIdx);
-            g.drawImage(ic.img, ic.x, ic.y, null);
+            //g.drawImage(ic.img, ic.x, ic.y, null);
+            
+            int startX = (int)(ic.x*scale) + GameFrame.xPad;
+            int startY = (int)(ic.y*scale) + GameFrame.yPad;
+            int startWidth = ic.img.getWidth();
+            int startHeight = ic.img.getHeight();
+            
+            g.drawImage(ic.img,
+                        startX, startY,
+                        startX + (int)(startWidth*scale), startY + (int)(startHeight*scale),
+                        0, 0,
+                        startWidth, startHeight,
+                        null);
         }
     }
     

@@ -65,6 +65,7 @@ public abstract class Scene {
     }
     
     public void draw(){
+        System.out.println("Draw");
         screen.repaint();
     }
     
@@ -87,8 +88,15 @@ public abstract class Scene {
     
     /* Is the (x,y) location within this scene? */
     public boolean isHit(int x, int y){
+        
+        /* Undo any scaling/padding on the locations - all checks are based on nominal scaling. */
+        x = (int)((float)(x-GameFrame.xPad)/GameFrame.scale);
+        y = (int)((float)(y-GameFrame.yPad)/GameFrame.scale);
+        
+        /* x/y locations were based on nominal scaling, so no conversion needed. */
         x -= xLoc;
         y -= yLoc;
+        
         return isActive() &&
                (x >= 0) && (x < width) &&
                (y >= 0) && (y < height);
@@ -126,6 +134,11 @@ public abstract class Scene {
 
         /* isHit will return false if the (sub)scene is inactive. */
         public boolean isHit(int x, int y){
+            /* Undo any scaling on the locations - all checks are based on nominal scaling. */
+            x = (int)((float)(x-GameFrame.xPad)/GameFrame.scale);
+            y = (int)((float)(y-GameFrame.yPad)/GameFrame.scale);            
+
+            /* x/y locations were based on nominal scaling, so no conversion needed. */
             x -= xLoc;
             y -= yLoc;
             return (x >= 0) && (x < width) &&
