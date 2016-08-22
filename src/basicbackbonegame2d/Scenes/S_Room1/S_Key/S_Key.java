@@ -1,14 +1,13 @@
 
 package basicbackbonegame2d.Scenes.S_Room1.S_Key;
 
-import basicbackbonegame2d.BasicBackboneGame2D;
 import basicbackbonegame2d.Scene;
 
 public class S_Key extends Scene{
 
     /* Enum of avilable images for this scene */
     public enum imagePathMap{
-        KEY("src\\basicbackbonegame2d\\Scenes\\S_Room1\\S_Key\\Key.jpg");
+        KEY("src\\basicbackbonegame2d\\Scenes\\S_Room1\\S_Key\\Key.png");
         
         public String str;
         

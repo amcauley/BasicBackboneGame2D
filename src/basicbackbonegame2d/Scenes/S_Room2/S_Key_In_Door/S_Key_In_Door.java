@@ -21,10 +21,10 @@ public class S_Key_In_Door extends Scene{
         /* Basic initialization params */         
         sceneName = "S_Key_In_Door";
         isSubscene = true;
-        xLoc = 197;
-        yLoc = 225;
-        width = 24;
-        height = 24;
+        xLoc = 198;
+        yLoc = 227;
+        width = 20;
+        height = 18;
          
         /* Initialize this scene's image */
         imagePath = imagePathMap.NO_KEY.str;

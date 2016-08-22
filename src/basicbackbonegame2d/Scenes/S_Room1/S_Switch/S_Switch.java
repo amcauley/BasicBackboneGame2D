@@ -8,8 +8,8 @@ public class S_Switch extends Scene{
 
     /* Enum of avilable images for this scene */
     public enum imagePathMap{
-        DOWN("src\\basicbackbonegame2d\\Scenes\\S_Room1\\S_Switch\\Switch_down.jpg"),
-        UP("src\\basicbackbonegame2d\\Scenes\\S_Room1\\S_Switch\\Switch_up.jpg");
+        DOWN("src\\basicbackbonegame2d\\Scenes\\S_Room1\\S_Switch\\Switch_down.png"),
+        UP("src\\basicbackbonegame2d\\Scenes\\S_Room1\\S_Switch\\Switch_up.png");
         public String str;
         
         imagePathMap(String s){
