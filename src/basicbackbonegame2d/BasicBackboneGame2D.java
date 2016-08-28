@@ -13,7 +13,7 @@ import javax.swing.event.MouseInputAdapter;
 
 public class BasicBackboneGame2D {
 
-    GameFrame gameFrame = new GameFrame();
+    public GameFrame gameFrame = new GameFrame();
     
     public SceneManager sm = new SceneManager();
     
@@ -22,7 +22,9 @@ public class BasicBackboneGame2D {
     
     /* Top level scene */
     public Scene topLvlScene;
-
+    /* Index of top lvl scene. Update when we update topLvlScene itself. */
+    public int topLvlSceneIdx;
+    
     public enum MouseActions{
         LEFT_BUTTON, RIGHT_BUTTON, MOVEMENT
     }    
@@ -38,14 +40,19 @@ public class BasicBackboneGame2D {
         @Override
         public void mousePressed(MouseEvent me) { 
             if (SwingUtilities.isLeftMouseButton(me)) {
-                topLvlScene.actionHandler(BasicBackboneGame2D.this, 
+                topLvlScene.actionHandler(  BasicBackboneGame2D.this, 
                                             MouseActions.LEFT_BUTTON, 
                                             me.getX(), me.getY());                
             }
             else if (SwingUtilities.isRightMouseButton(me)) {
-                topLvlScene.actionHandler(BasicBackboneGame2D.this, 
-                                            MouseActions.RIGHT_BUTTON, 
-                                            me.getX(), me.getY());                
+                
+                /* Enter menu */
+                SceneManager.switchScene(   BasicBackboneGame2D.this, 
+                                            SceneManager.SceneList.MENU);
+                
+                //topLvlScene.actionHandler(BasicBackboneGame2D.this, 
+                //                            MouseActions.RIGHT_BUTTON, 
+                //                            me.getX(), me.getY());                
             }
             
         }
@@ -79,7 +86,8 @@ public class BasicBackboneGame2D {
         
         /* Load game state from file, and set topLvlScene to the stored scene. */
         sm.loadState();
-        SceneManager.switchScene(this, SceneManager.SceneList.values()[stateInfo.vals[Top.StateMap.LAST_SCENE_ID.idx]]);
+        topLvlSceneIdx = stateInfo.vals[Top.StateMap.LAST_SCENE_ID.idx];
+        SceneManager.switchScene(this, SceneManager.SceneList.values()[topLvlSceneIdx]);
         
         
         /* Mouse listener references topLvlScene, so this should come after topLvlScene

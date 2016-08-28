@@ -2,6 +2,7 @@
 package basicbackbonegame2d.Scenes.S_Room1;
 
 import basicbackbonegame2d.BasicBackboneGame2D;
+import basicbackbonegame2d.GameFrame;
 import basicbackbonegame2d.Jukebox;
 import basicbackbonegame2d.Scene;
 import basicbackbonegame2d.Scenes.SceneManager.SceneList;
@@ -91,8 +92,8 @@ public class S_Room1 extends Scene{
         isSubscene = false;
         xLoc = 0;
         yLoc = 0;
-        width = 400;
-        height = 400;
+        width = GameFrame.NOMINAL_WIDTH;
+        height = GameFrame.NOMINAL_HEIGHT;
         
         /* Initialize this scene's image */
         imagePath = imagePathMap.ROOM1.str;        

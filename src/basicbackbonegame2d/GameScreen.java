@@ -1,6 +1,7 @@
 
 package basicbackbonegame2d;
 
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -66,6 +67,11 @@ public class GameScreen extends JPanel {
     public void paint(Graphics g) { 
         
         //System.out.println("painting GameScreen");
+        
+        /* Draw background across entire drawable area. This will form the border between the
+           window frame and the scene itself. */
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, GameFrame.width, GameFrame.height); 
         
         float scale = GameFrame.scale;
                 

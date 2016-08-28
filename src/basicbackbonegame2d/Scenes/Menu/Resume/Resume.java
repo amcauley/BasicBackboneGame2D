@@ -1,14 +1,14 @@
 
-package basicbackbonegame2d.Scenes.S_Room1.S_Switch;
+package basicbackbonegame2d.Scenes.Menu.Resume;
 
 import basicbackbonegame2d.Scene;
 
-public class S_Switch extends Scene{
+public class Resume extends Scene{
 
     /* Enum of avilable images for this scene */
     public enum imagePathMap{
-        DOWN("src\\basicbackbonegame2d\\Scenes\\S_Room1\\S_Switch\\Switch_down.png"),
-        UP("src\\basicbackbonegame2d\\Scenes\\S_Room1\\S_Switch\\Switch_up.png");
+        RESUME("src\\basicbackbonegame2d\\Scenes\\Menu\\Resume\\Resume.jpg");
+        
         public String str;
         
         imagePathMap(String s){
@@ -16,17 +16,17 @@ public class S_Switch extends Scene{
         }
     }       
     
-    public S_Switch(){
+    public Resume(){
         /* Basic initialization params */         
-        sceneName = "S_Switch";
+        sceneName = "Resume";
         isSubscene = true;
-        xLoc = 223;
-        yLoc = 186;
-        width = 37;
-        height = 41;
+        xLoc = 51;
+        yLoc = 26;
+        width = 98;
+        height = 48;
          
-        /* Initialize this scene's image - switch is down */
-        imagePath = imagePathMap.DOWN.str;         
+        /* Initialize this scene's image */
+        imagePath = imagePathMap.RESUME.str;
         
         /* Reset screen - if top level scene */        
                 
@@ -36,5 +36,5 @@ public class S_Switch extends Scene{
         
         /* Standard scene drawing routines for top level scenes */           
     }    
- 
+    
 }

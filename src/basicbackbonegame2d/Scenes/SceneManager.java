@@ -2,6 +2,7 @@
 package basicbackbonegame2d.Scenes;
 
 import basicbackbonegame2d.BasicBackboneGame2D;
+import basicbackbonegame2d.Scenes.Menu.Menu;
 import basicbackbonegame2d.StateInfo;
 import basicbackbonegame2d.Scenes.S_Room1.S_Room1;
 import basicbackbonegame2d.Scenes.S_Room2.S_Room2;  
@@ -14,6 +15,8 @@ import java.io.PrintWriter;
 
 public class SceneManager{    
     
+    public static final String AUTOSAVE_FILENAME = "src\\basicbackbonegame2d\\Saves\\AutoSave.txt";
+    
     public SceneManager(){
         
     }
@@ -21,9 +24,10 @@ public class SceneManager{
     /* Currently only need to list top-level scenes. */
     public enum SceneList{
         TOP(0, Top.getStateInfo()),         //Pseudo-scene for top level management
-        S_ROOM1(1, S_Room1.getStateInfo()), //Room1
-        S_ROOM2(2, S_Room2.getStateInfo()), //Room2
-        S_WIN(3, S_Win.getStateInfo());     //Win screen
+        MENU(1, Menu.getStateInfo()),       //Menu "Scene"
+        S_ROOM1(2, S_Room1.getStateInfo()), //Room1
+        S_ROOM2(3, S_Room2.getStateInfo()), //Room2
+        S_WIN(4, S_Win.getStateInfo());     //Win screen
         
         /* Each scene can have state associated with it. It also stores its index. */
         public int idx;
@@ -33,15 +37,15 @@ public class SceneManager{
             idx = i;
             state = si;
         }
-    }    
+    }        
     
     /* Load saved state from file into each scene's state */
-    public void loadState() throws IOException{
+    public void loadState(String fileName) throws IOException{
         SceneList[] sl = SceneList.values();
         String thisLn;
         int thisIdx = 0;
         try (
-            FileReader fr = new FileReader("Z:\\Documents\\NetBeansProjects\\BasicBackboneGame2D\\src\\basicbackbonegame2d\\Saves\\Save0.txt");
+            FileReader fr = new FileReader(fileName);
             BufferedReader br = new BufferedReader(fr);
         ) {
             while ((thisLn = br.readLine()) != null) {
@@ -51,11 +55,21 @@ public class SceneManager{
         }        
     }
     
+    /* If no filename specified, use autosave file. */
+    public void loadState() throws IOException{
+            loadState(AUTOSAVE_FILENAME);     
+    }    
+    
     /* Save state to file. */
-    public void saveState(){
-        String fileName = "Z:\\Documents\\NetBeansProjects\\BasicBackboneGame2D\\src\\basicbackbonegame2d\\Saves\\Save0.txt";
+    public void saveState(String fileName){
+        /* Add .txt suffix if not already present. */
+        String fEnd = fileName.substring(fileName.length()-4);
+        if (!fEnd.equals(".txt")){
+            fileName += ".txt";
+        }
+        
         try (PrintWriter out = new PrintWriter(fileName)) {
-            //System.out.println("Saving to file " + fileName);
+            System.out.println("Saving to file " + fileName);
             
             /* Iterate over scenes and write their save state info out to file, one line per scene in the
                same order the scenes were declared (important to have fixed order for when we want to load
@@ -73,9 +87,28 @@ public class SceneManager{
 
     }
     
+    /* If no filename specified, use autosave file. */
+    public void saveState(){
+        saveState(AUTOSAVE_FILENAME);
+    }
+    
     public static void switchScene(BasicBackboneGame2D g, SceneList sceneId){
         
         switch(sceneId){
+            case MENU:      //Menu "Scene"
+                /* Store the scene we're leaving. */
+                //System.out.println("Lathing LAST_SCENE, old " + 
+                //                   SceneList.MENU.state.vals[Menu.StateMap.LAST_SCENE.idx] +
+                //                   ", new " + g.topLvlSceneIdx);
+                
+                /* If the current scene is already the menu, for example if the program previously
+                   exited from the menu screen, don't latch menu into LAST_SCENE, or else we'll not
+                   be able to resume from the menu screen. */
+                if (g.topLvlSceneIdx != SceneList.MENU.idx){
+                    SceneList.MENU.state.vals[Menu.StateMap.LAST_SCENE.idx] = g.topLvlSceneIdx;   
+                }
+                g.topLvlScene = new Menu();
+                break;
             case S_ROOM1:   //Room1
                 g.topLvlScene = new S_Room1();
                 break;
@@ -89,6 +122,9 @@ public class SceneManager{
                 System.out.println("Invalid sceneId " + sceneId);
                 break;
             }
+        
+        /* Latch new topLvlSceneIdx */
+        g.topLvlSceneIdx = sceneId.idx;
         
         /* Update top level state. */
         SceneList.TOP.state.vals[Top.StateMap.LAST_SCENE_ID.idx] = sceneId.idx;

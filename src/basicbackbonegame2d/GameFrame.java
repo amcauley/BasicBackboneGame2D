@@ -14,8 +14,8 @@ public class GameFrame extends JFrame{
     
     /* Store the actual, current width and height. */
     //TODO: maybe use getters and setters for these
-    int width;
-    int height;
+    public static int width;
+    public static int height;
     public static float scale;
     
     /* Horizontal padding. Amount of padding on the left of drawable image. */
@@ -37,13 +37,13 @@ public class GameFrame extends JFrame{
         xPad = (int)((scaleX - scale)*NOMINAL_WIDTH*0.5);
         yPad = (int)((scaleY - scale)*NOMINAL_HEIGHT*0.5);  
         
-        System.out.println("Frame " + width + "x" + height + ", scale " + scale + 
-                           ", xPad " + xPad + ", yPad " + yPad);        
+        //System.out.println("Frame " + width + "x" + height + ", scale " + scale + 
+        //                   ", xPad " + xPad + ", yPad " + yPad);        
     }
         
     public GameFrame(){
         
-        width = 800;
+        width = 1000;
         height = 800;
   
         scaleComp();
@@ -86,8 +86,8 @@ public class GameFrame extends JFrame{
                 height = getContentPane().getHeight();
                 scaleComp();
                 
-                System.out.println("Frame resized: " + getContentPane().getWidth() + "x" + 
-                                   getContentPane().getHeight());                
+                //System.out.println("Frame resized: " + getContentPane().getWidth() + "x" + 
+                //                   getContentPane().getHeight());                
                 
                 Scene.screen.repaint();
             }

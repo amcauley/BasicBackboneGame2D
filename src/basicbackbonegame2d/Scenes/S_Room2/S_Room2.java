@@ -2,6 +2,7 @@
 package basicbackbonegame2d.Scenes.S_Room2;
 
 import basicbackbonegame2d.BasicBackboneGame2D;
+import basicbackbonegame2d.GameFrame;
 import basicbackbonegame2d.Jukebox;
 import basicbackbonegame2d.Scene;
 import basicbackbonegame2d.Scenes.S_Room2.S_Key_In_Door.S_Key_In_Door;
@@ -90,8 +91,8 @@ public class S_Room2 extends Scene{
         isSubscene = false;
         xLoc = 0;
         yLoc = 0;
-        width = 400;
-        height = 400;
+        width = GameFrame.NOMINAL_WIDTH;
+        height = GameFrame.NOMINAL_HEIGHT;
         
         /* Reset screen */        
         screen.clearImgs();
