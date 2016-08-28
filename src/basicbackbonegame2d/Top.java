@@ -14,7 +14,8 @@ public class Top extends Scene{
     public enum StateMap{
         LAST_SCENE_ID(0),   //Stores the last active scene
         HAS_KEY(1),         //Player has the key
-        ROOM2_HAS_PWR(2);   //Room2 scene is powered
+        ROOM2_HAS_PWR(2),   //Room2 scene is powered
+        HAS_BAUBLE(3);      //Useless item just for testing
         
         public int idx;
         
@@ -33,6 +34,7 @@ public class Top extends Scene{
             vals[StateMap.LAST_SCENE_ID.idx]    = 1;    //Default scene is Room1
             vals[StateMap.HAS_KEY.idx]          = 0;    //No key yet
             vals[StateMap.ROOM2_HAS_PWR.idx]    = 0;    //Not yet powered
+            vals[StateMap.HAS_BAUBLE.idx]       = 0;    //Not collected
         }
         
         @Override

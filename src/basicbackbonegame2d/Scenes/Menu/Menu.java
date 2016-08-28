@@ -4,6 +4,8 @@ package basicbackbonegame2d.Scenes.Menu;
 import basicbackbonegame2d.BasicBackboneGame2D;
 import basicbackbonegame2d.GameFrame;
 import basicbackbonegame2d.Scene;
+import basicbackbonegame2d.Scenes.Menu.ItemSlot0.ItemSlot0;
+import basicbackbonegame2d.Scenes.Menu.ItemSlot1.ItemSlot1;
 import basicbackbonegame2d.Scenes.Menu.Load.Load;
 import basicbackbonegame2d.Scenes.Menu.New_Game.New_Game;
 import basicbackbonegame2d.Scenes.Menu.Resume.Resume;
@@ -18,6 +20,8 @@ public class Menu extends Scene{
     
     public static final String SAVE_DIRECTORY = "src\\basicbackbonegame2d\\Saves\\UserSaves";
     public static final String NEW_GAME_FILENAME = "src\\basicbackbonegame2d\\Saves\\NewGameTemplate.txt";
+    
+    static final int NUM_ITEM_SLOTS = 2;
     
     static StateInfo stateInfo = new Menu.StateInfo_Menu();
     
@@ -73,7 +77,9 @@ public class Menu extends Scene{
         RESUME(0),
         SAVE(1),
         LOAD(2),
-        NEW_GAME(3);
+        NEW_GAME(3),
+        ITEM_SLOT0(4),  //Put item slots in order at the end of scene map
+        ITEM_SLOT1(5);        
         
         int idx;
         
@@ -82,13 +88,15 @@ public class Menu extends Scene{
         }
     }   
     
-    /* Enum of avilable images for this scene */
-    public enum imagePathMap{
-        MENU("src\\basicbackbonegame2d\\Scenes\\Menu\\Menu.jpg");
+    /* Enum of avilable images for this scene (or subscenes) */
+    public enum ImagePathMap{
+        MENU("src\\basicbackbonegame2d\\Scenes\\Menu\\Menu.jpg"),
+        KEY_ICON("src\\basicbackbonegame2d\\Items\\KeyIcon.png"),
+        BAUBLE_ICON("src\\basicbackbonegame2d\\Items\\BaubleIcon.png");
         
         public String str;
         
-        imagePathMap(String s){
+        ImagePathMap(String s){
             str = s;
         }
     }    
@@ -103,7 +111,7 @@ public class Menu extends Scene{
         height = GameFrame.NOMINAL_HEIGHT;
         
         /* Initialize this scene's image */
-        imagePath = imagePathMap.MENU.str;         
+        imagePath = ImagePathMap.MENU.str;         
         
         /* Reset screen */        
         screen.clearImgs();
@@ -117,11 +125,39 @@ public class Menu extends Scene{
         subScenes[SubSceneMap.LOAD.idx] = new Load();
         subScenes[SubSceneMap.NEW_GAME.idx] = new New_Game();
         
+        /* Populate item slots */
+        assert(SubSceneMap.values().length - SubSceneMap.ITEM_SLOT0.idx == NUM_ITEM_SLOTS);
+        
+        int cntCheck = 0; //Just to help check that all item slots are accounted for in our copy/pasting.
+        
+        subScenes[SubSceneMap.ITEM_SLOT0.idx] = new ItemSlot0(); 
+        subScenes[SubSceneMap.ITEM_SLOT0.idx].setActiveState(false); cntCheck++;
+        subScenes[SubSceneMap.ITEM_SLOT1.idx] = new ItemSlot1(); 
+        subScenes[SubSceneMap.ITEM_SLOT1.idx].setActiveState(false); cntCheck++;
+        
+        assert(cntCheck == NUM_ITEM_SLOTS);
+        
+        /* Now add in all the items that the player has. */
+        
+        cntCheck = SubSceneMap.ITEM_SLOT0.idx;
+        
+        if (SceneManager.SceneList.TOP.state.vals[Top.StateMap.HAS_KEY.idx] != 0){
+            subScenes[cntCheck].swapImage(ImagePathMap.KEY_ICON.str);
+            subScenes[cntCheck++].setActiveState(true);
+        }
+        if (SceneManager.SceneList.TOP.state.vals[Top.StateMap.HAS_BAUBLE.idx] != 0){
+            subScenes[cntCheck].swapImage(ImagePathMap.BAUBLE_ICON.str);
+            subScenes[cntCheck++].setActiveState(true);
+        }
+        
+        assert(cntCheck - SubSceneMap.ITEM_SLOT0.idx <= NUM_ITEM_SLOTS);
+        
+        
         /* Add any starting transitions */
         //No transitions
         
-        /* No music for now. */
-        g.jukebox.stopAll();
+        /* Music handling (if any) */
+        //g.jukebox.stopAll();
         
         System.out.println("Menu last scene ID: " + stateInfo.vals[StateMap.LAST_SCENE.idx]);
         

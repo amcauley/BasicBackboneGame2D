@@ -226,8 +226,8 @@ public abstract class Scene {
             screen.updateCursor(GameScreen.CursorType.DEFAULT);
         }
         
-        /* Save after handling any left clicks, which could have updated state. */
-        if((evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON) && (!isSubscene)){
+        /* Save after handling any left clicks that hit something, which could have updated state. */
+        if(hit && (evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON) && (!isSubscene)){
             g.sm.saveState();
         }
        
