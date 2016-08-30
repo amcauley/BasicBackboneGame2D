@@ -1,7 +1,6 @@
 
 package basicbackbonegame2d;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -17,9 +16,9 @@ public class Jukebox {
     /* Enum of available sound files */
     public enum Sounds{
         NONE(""),   //Can use this as a flag that no sound is expected
-        BG_MUSIC0("src\\basicbackbonegame2d\\SoundFiles\\BG_Music0.wav"),
-        DOOR0("src\\basicbackbonegame2d\\SoundFiles\\StringDoor.wav"),
-        VICTORY("src\\basicbackbonegame2d\\SoundFiles\\Victory.wav");
+        BG_MUSIC0("resources/sounds/BG_Music0.wav"),
+        DOOR0("resources/sounds/StringDoor.wav"),
+        VICTORY("resources/sounds/Victory.wav");
         
         String fileName;
         
@@ -89,8 +88,8 @@ public class Jukebox {
         
         try {
             Clip newClip = AudioSystem.getClip();
-            File audioFile = new File(sound.fileName);
-            AudioInputStream inputStream = AudioSystem.getAudioInputStream(audioFile);
+            AudioInputStream inputStream = 
+                    AudioSystem.getAudioInputStream(getClass().getClassLoader().getResource(sound.fileName));
             newClip.open(inputStream);
             
             if (loop){

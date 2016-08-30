@@ -7,7 +7,7 @@ public class Save extends Scene{
 
     /* Enum of avilable images for this scene */
     public enum imagePathMap{
-        SAVE("src\\basicbackbonegame2d\\Scenes\\Menu\\Save\\Save.jpg");
+        SAVE("resources/images/Save.jpg");
         
         public String str;
         

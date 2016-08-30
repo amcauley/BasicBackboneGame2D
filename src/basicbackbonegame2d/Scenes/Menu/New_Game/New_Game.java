@@ -7,7 +7,7 @@ public class New_Game extends Scene{
 
     /* Enum of avilable images for this scene */
     public enum imagePathMap{
-        NEW_GAME("src\\basicbackbonegame2d\\Scenes\\Menu\\New_Game\\New_Game.jpg");
+        NEW_GAME("resources/images/New_Game.jpg");
         
         public String str;
         

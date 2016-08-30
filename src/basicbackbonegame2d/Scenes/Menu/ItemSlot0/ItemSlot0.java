@@ -9,7 +9,7 @@ public class ItemSlot0 extends Scene{
     public enum imagePathMap{
         /* Menu will use the scene's swapImage and setActiveState to control which
            image, if any, is drwan for this item. */
-        DEFAULT("src\\basicbackbonegame2d\\Items\\KeyIcon.png");
+        DEFAULT("resources/images/KeyIcon.png");
         
         public String str;
         

@@ -1,14 +1,13 @@
 
 package basicbackbonegame2d.Scenes.S_Room2.S_Key_In_Door;
 
-import basicbackbonegame2d.BasicBackboneGame2D;
 import basicbackbonegame2d.Scene;
 
 public class S_Key_In_Door extends Scene{
 
     /* Enum of avilable images for this scene */
     public enum imagePathMap{
-        NO_KEY("src\\basicbackbonegame2d\\Scenes\\S_Room2\\S_Key_In_Door\\No_Key.jpg");
+        NO_KEY("resources/images/No_Key.jpg");
         
         public String str;
         

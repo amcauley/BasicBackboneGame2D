@@ -22,6 +22,7 @@ public class BasicBackboneGame2D {
     
     /* Top level scene */
     public Scene topLvlScene;
+    
     /* Index of top lvl scene. Update when we update topLvlScene itself. */
     public int topLvlSceneIdx;
     
@@ -82,11 +83,16 @@ public class BasicBackboneGame2D {
         /* Add this after screen is added and setVisible, since scene creation calls
            updateScreen(), which calls getLocationOnScreen() for screen, and it must
            already be drawn on the screen or we hit a runtime error. */
-        //topLvlScene = new S_Room1();
         
         /* Load game state from file, and set topLvlScene to the stored scene. */
         sm.loadState();
         topLvlSceneIdx = stateInfo.vals[Top.StateMap.LAST_SCENE_ID.idx];
+        
+        /* Overwrite top level scene for now until AutoSave file handling for JAR
+           distribution is figured out. Just load to room 0. */
+        sm.switchScene(this, SceneManager.SceneList.S_ROOM1);
+        
+        
         SceneManager.switchScene(this, SceneManager.SceneList.values()[topLvlSceneIdx]);
         
         

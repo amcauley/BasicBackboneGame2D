@@ -7,7 +7,7 @@ public class Load extends Scene{
 
     /* Enum of avilable images for this scene */
     public enum imagePathMap{
-        LOAD("src\\basicbackbonegame2d\\Scenes\\Menu\\Load\\Load.jpg");
+        LOAD("resources/images/Load.jpg");
         
         public String str;
         

@@ -77,7 +77,7 @@ public class S_Room1 extends Scene{
     
     /* Enum of avilable images for this scene */
     public enum imagePathMap{
-        ROOM1("src\\basicbackbonegame2d\\Scenes\\S_Room1\\Room1.jpg");
+        ROOM1("resources/images/Room1.jpg");
         
         public String str;
         

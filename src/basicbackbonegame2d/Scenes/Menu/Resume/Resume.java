@@ -7,7 +7,7 @@ public class Resume extends Scene{
 
     /* Enum of avilable images for this scene */
     public enum imagePathMap{
-        RESUME("src\\basicbackbonegame2d\\Scenes\\Menu\\Resume\\Resume.jpg");
+        RESUME("resources/images/Resume.jpg");
         
         public String str;
         

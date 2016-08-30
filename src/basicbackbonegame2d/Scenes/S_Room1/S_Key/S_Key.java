@@ -7,7 +7,7 @@ public class S_Key extends Scene{
 
     /* Enum of avilable images for this scene */
     public enum imagePathMap{
-        KEY("src\\basicbackbonegame2d\\Scenes\\S_Room1\\S_Key\\Key.png");
+        KEY("resources/images/Key.png");
         
         public String str;
         

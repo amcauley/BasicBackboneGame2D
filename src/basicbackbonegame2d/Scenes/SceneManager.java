@@ -11,11 +11,12 @@ import basicbackbonegame2d.Top;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
 public class SceneManager{    
     
-    public static final String AUTOSAVE_FILENAME = "src\\basicbackbonegame2d\\Saves\\AutoSave.txt";
+    //public static final String AUTOSAVE_FILENAME = "AutoSave.txt";
     
     public SceneManager(){
         
@@ -55,9 +56,26 @@ public class SceneManager{
         }        
     }
     
+    public void loadStateResource(String resourceName) throws IOException{
+        SceneList[] sl = SceneList.values();
+        String thisLn;
+        int thisIdx = 0;
+        try (
+            BufferedReader br = 
+                    new BufferedReader(
+                            new InputStreamReader(getClass().getClassLoader().getResourceAsStream(resourceName)));
+        ) {
+            while ((thisLn = br.readLine()) != null) {
+                System.out.println("loading state idx " + thisIdx);
+                sl[thisIdx++].state.loadState(thisLn);
+            }
+        }         
+    }
+    
     /* If no filename specified, use autosave file. */
     public void loadState() throws IOException{
-            loadState(AUTOSAVE_FILENAME);     
+            //TBD need to work out how to handle this in distributed JAR
+            //loadState(AUTOSAVE_FILENAME);     
     }    
     
     /* Save state to file. */
@@ -89,7 +107,8 @@ public class SceneManager{
     
     /* If no filename specified, use autosave file. */
     public void saveState(){
-        saveState(AUTOSAVE_FILENAME);
+        //TBD need to work out how to handle this in distributed JAR
+        //saveState(AUTOSAVE_FILENAME);
     }
     
     public static void switchScene(BasicBackboneGame2D g, SceneList sceneId){

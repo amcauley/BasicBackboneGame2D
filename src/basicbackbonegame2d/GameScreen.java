@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,10 +37,11 @@ public class GameScreen extends JPanel {
             y = yy;
             
             try {
-                File imgFile = new File(imgPath);
-                img = ImageIO.read(imgFile);
+                System.out.println("Loading " + imgPath);
+                img = ImageIO.read(getClass().getClassLoader().getResource(imgPath));
             } catch (IOException e) {
-                System.out.println("Error loading " + imgPath);
+                System.out.println("Error loading " + imgPath + ":");
+                System.out.println(e.getMessage());
             }
         }
     }

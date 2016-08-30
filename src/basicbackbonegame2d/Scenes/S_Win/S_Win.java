@@ -1,11 +1,9 @@
 
 package basicbackbonegame2d.Scenes.S_Win;
 
-import basicbackbonegame2d.BasicBackboneGame2D;
 import basicbackbonegame2d.GameFrame;
 import basicbackbonegame2d.Jukebox;
 import basicbackbonegame2d.Scene;
-import basicbackbonegame2d.Scenes.SceneManager.SceneList;
 import basicbackbonegame2d.StateInfo;
 
 public class S_Win extends Scene{
@@ -72,7 +70,7 @@ public class S_Win extends Scene{
     
     /* Enum of avilable images for this scene */
     public enum imagePathMap{
-        WIN("src\\basicbackbonegame2d\\Scenes\\S_Win\\Win.jpg");
+        WIN("resources/images/Win.jpg");
         
         public String str;
         

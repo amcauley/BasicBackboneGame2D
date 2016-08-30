@@ -17,14 +17,18 @@ import java.io.IOException;
 import javax.swing.JFileChooser;
 
 public class Menu extends Scene{
+   
+    /* Directory constants */
+    static final String SAVE_DIRECTORY = "C:";
+    static final String NEW_GAME_FILENAME = "resources/txt/NewGameTemplate.txt";
     
-    public static final String SAVE_DIRECTORY = "src\\basicbackbonegame2d\\Saves\\UserSaves";
-    public static final String NEW_GAME_FILENAME = "src\\basicbackbonegame2d\\Saves\\NewGameTemplate.txt";
-    
+    /* Number of item slots supported */
     static final int NUM_ITEM_SLOTS = 2;
     
+    /* This holds the state info for Menu */
     static StateInfo stateInfo = new Menu.StateInfo_Menu();
     
+    /* Return state info (to SceneManager) */
     public static StateInfo getStateInfo(){
         return stateInfo;
     }    
@@ -89,10 +93,10 @@ public class Menu extends Scene{
     }   
     
     /* Enum of avilable images for this scene (or subscenes) */
-    public enum ImagePathMap{
-        MENU("src\\basicbackbonegame2d\\Scenes\\Menu\\Menu.jpg"),
-        KEY_ICON("src\\basicbackbonegame2d\\Items\\KeyIcon.png"),
-        BAUBLE_ICON("src\\basicbackbonegame2d\\Items\\BaubleIcon.png");
+    enum ImagePathMap{
+        MENU("resources/images/Menu.jpg"),
+        KEY_ICON("resources/images/KeyIcon.png"),
+        BAUBLE_ICON("resources/images/BaubleIcon.png");
         
         public String str;
         
@@ -219,7 +223,7 @@ public class Menu extends Scene{
               subScenes[SubSceneMap.NEW_GAME.idx].isHit(evtX, evtY) ){
            
             try {
-                g.sm.loadState(NEW_GAME_FILENAME);
+                g.sm.loadStateResource(NEW_GAME_FILENAME);
                 /* State is loaded, now update topLvlScene based on loaded state. */
                 g.topLvlSceneIdx = stateInfo.vals[Top.StateMap.LAST_SCENE_ID.idx];
                 SceneManager.switchScene(g, SceneManager.SceneList.values()[g.topLvlSceneIdx]);
@@ -229,6 +233,18 @@ public class Menu extends Scene{
             }            
    
         }        
+        else if ( (evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON) && 
+              subScenes[SubSceneMap.ITEM_SLOT0.idx].isHit(evtX, evtY) ){
+            
+            /* Stop further action processing, which will also prevent game being saved. */
+            return 1;
+        }
+         else if ( (evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON) && 
+              subScenes[SubSceneMap.ITEM_SLOT1.idx].isHit(evtX, evtY) ){
+            
+            /* Stop further action processing, which will also prevent game being saved. */
+            return 1;
+        }               
         
         /* No further processing. */
         return 0;

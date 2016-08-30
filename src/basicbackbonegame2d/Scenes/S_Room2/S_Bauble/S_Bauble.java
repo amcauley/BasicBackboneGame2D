@@ -1,15 +1,13 @@
 
-package basicbackbonegame2d.Scenes.Menu.ItemSlot1;
+package basicbackbonegame2d.Scenes.S_Room2.S_Bauble;
 
 import basicbackbonegame2d.Scene;
 
-public class ItemSlot1 extends Scene{
+public class S_Bauble extends Scene{
 
     /* Enum of avilable images for this scene */
     public enum imagePathMap{
-        /* Menu will use the scene's swapImage and setActiveState to control which
-           image, if any, is drwan for this item. */
-        DEFAULT("resources/images/KeyIcon.png");
+        BAUBLE("resources/images/Bauble.png");
         
         public String str;
         
@@ -18,17 +16,17 @@ public class ItemSlot1 extends Scene{
         }
     }       
     
-    public ItemSlot1(){
+    public S_Bauble(){
         /* Basic initialization params */         
-        sceneName = "ItemSlot1";
+        sceneName = "S_Bauble";
         isSubscene = true;
-        xLoc = 300;
-        yLoc = 200;
-        width = 50;
-        height = 50;
+        xLoc = 117;
+        yLoc = 293;
+        width = 25;
+        height = 25;
          
         /* Initialize this scene's image */
-        imagePath = imagePathMap.DEFAULT.str;
+        imagePath = imagePathMap.BAUBLE.str;
         
         /* Reset screen - if top level scene */        
                 
