@@ -83,6 +83,7 @@ public class S_Win extends Scene{
         /* Basic initialization params */     
         sceneName = "S_Win";
         isSubscene = false;
+        animationType = Scene.AnimationType.NO_ANIMATION;
         xLoc = 0;
         yLoc = 0;
         width = GameFrame.NOMINAL_WIDTH;
@@ -105,7 +106,7 @@ public class S_Win extends Scene{
         g.jukebox.play(Jukebox.Sounds.VICTORY, false);
         
         /* Standard scene drawing routines for top level scenes */        
-        updateScreen();
+        updateScreen(false);
         draw();
     }
     

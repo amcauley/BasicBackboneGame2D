@@ -166,7 +166,7 @@ public class Menu extends Scene{
         System.out.println("Menu last scene ID: " + stateInfo.vals[StateMap.LAST_SCENE.idx]);
         
         /* Standard scene drawing routines for top level scenes */        
-        updateScreen();
+        updateScreen(false);
         draw();
     }
    

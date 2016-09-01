@@ -5,6 +5,7 @@ import basicbackbonegame2d.BasicBackboneGame2D;
 import basicbackbonegame2d.GameFrame;
 import basicbackbonegame2d.Jukebox;
 import basicbackbonegame2d.Scene;
+import basicbackbonegame2d.Scenes.S_Room1.S_Clock.S_Clock;
 import basicbackbonegame2d.Scenes.SceneManager.SceneList;
 import basicbackbonegame2d.StateInfo;
 import basicbackbonegame2d.Scenes.S_Room1.S_Key.S_Key;
@@ -66,7 +67,8 @@ public class S_Room1 extends Scene{
     /* Use an enum to better track subscenes of this scene */ 
     enum SubSceneMap{
         KEY(0),
-        SWITCH(1);
+        SWITCH(1),
+        CLOCK(2);
         
         int idx;
         
@@ -90,6 +92,7 @@ public class S_Room1 extends Scene{
         /* Basic initialization params */
         sceneName = "S_Room1";
         isSubscene = false;
+        animationType = Scene.AnimationType.NO_ANIMATION;
         xLoc = 0;
         yLoc = 0;
         width = GameFrame.NOMINAL_WIDTH;
@@ -119,6 +122,9 @@ public class S_Room1 extends Scene{
             subScenes[SubSceneMap.SWITCH.idx].swapImage(S_Switch.imagePathMap.UP.str);
         }
         
+        /* Clock animation. */
+        subScenes[SubSceneMap.CLOCK.idx] = new S_Clock();
+        
         /* Add any starting transitions */
         addTransition(new Transition(SceneList.S_ROOM2, 325, 165, 53, 180, Jukebox.Sounds.DOOR0));
         
@@ -126,7 +132,7 @@ public class S_Room1 extends Scene{
         g.jukebox.play(Jukebox.Sounds.BG_MUSIC0, true);
         
         /* Standard scene drawing routines for top level scenes */
-        updateScreen();
+        updateScreen(false);
         draw();
     }
     
@@ -147,7 +153,7 @@ public class S_Room1 extends Scene{
             
             /* Refresh the screen. */
             screen.clearImgs();
-            updateScreen();
+            updateScreen(false);
             draw();
         }
         
@@ -164,7 +170,7 @@ public class S_Room1 extends Scene{
                     S_Switch.imagePathMap.DOWN.str);
             
             screen.clearImgs();
-            updateScreen();
+            updateScreen(false);
             draw();            
         }
         

@@ -20,6 +20,7 @@ public class S_Key extends Scene{
         /* Basic initialization params */         
         sceneName = "S_Key";
         isSubscene = true;
+        animationType = Scene.AnimationType.NO_ANIMATION;
         xLoc = 73;
         yLoc = 235;
         width = 51;

@@ -1,13 +1,13 @@
 
-package basicbackbonegame2d.Scenes.S_Room2.S_Key_In_Door;
+package basicbackbonegame2d.Scenes.S_Room1.S_Clock;
 
 import basicbackbonegame2d.Scene;
 
-public class S_Key_In_Door extends Scene{
+public class S_Clock extends Scene{
 
     /* Enum of avilable images for this scene */
     public enum imagePathMap{
-        NO_KEY("resources/images/No_Key.jpg");
+        CLOCK("resources/images/Clock.png");
         
         public String str;
         
@@ -16,18 +16,18 @@ public class S_Key_In_Door extends Scene{
         }
     }       
     
-    public S_Key_In_Door(){
+    public S_Clock(){
         /* Basic initialization params */         
-        sceneName = "S_Key_In_Door";
+        sceneName = "S_Clock";
         isSubscene = true;
-        animationType = Scene.AnimationType.NO_ANIMATION;
-        xLoc = 198;
-        yLoc = 227;
-        width = 20;
-        height = 18;
+        animationType = Scene.AnimationType.ANIMATED_WITH_LOOP;
+        xLoc = 135;
+        yLoc = 135;
+        width = 25; /* For animations, this is the size of a single frame. */
+        height = 25;
          
         /* Initialize this scene's image */
-        imagePath = imagePathMap.NO_KEY.str;
+        imagePath = imagePathMap.CLOCK.str;         
         
         /* Reset screen - if top level scene */        
                 
@@ -37,5 +37,5 @@ public class S_Key_In_Door extends Scene{
         
         /* Standard scene drawing routines for top level scenes */           
     }    
-    
+  
 }

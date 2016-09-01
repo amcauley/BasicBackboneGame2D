@@ -3,22 +3,41 @@ package basicbackbonegame2d;
 
 import basicbackbonegame2d.Scenes.SceneManager;
 import static basicbackbonegame2d.Top.stateInfo;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.event.MouseInputAdapter;
 
 
-public class BasicBackboneGame2D {
+/* TODO:
 
+    08/31/17 - needs a lot of cleanup / better implementation for Animations. In order
+               to help prevent resetting animation anytime a subscene updates, modify addImage
+               and addAnimation methods to form of images/animations we want to run after calling
+               a separate commitImageUpdate/Animation method. This method compares what's already
+               latched (images and Animations) in the screen, and only adds or removes as needed
+               compared to newly latched list. This prevents modifying/resetting any already
+               running animations.
+*/
+
+public class BasicBackboneGame2D implements ActionListener {
+    
     public GameFrame gameFrame = new GameFrame();
     
     public SceneManager sm = new SceneManager();
     
     /* Register jukebox for music control */
     public Jukebox jukebox = new Jukebox();
+    
+    /* Swing timer (not just regular util timer) for all our timing needs. Swing timer
+       operates from event dispatch thread, so same context as other event handling, therefore
+       no race conditions. */
+    public Timer timer;
     
     /* Top level scene */
     public Scene topLvlScene;
@@ -39,7 +58,10 @@ public class BasicBackboneGame2D {
         }
     
         @Override
-        public void mousePressed(MouseEvent me) { 
+        public void mousePressed(MouseEvent me) {
+            
+            //System.out.println("mouse evt");
+            
             if (SwingUtilities.isLeftMouseButton(me)) {
                 topLvlScene.actionHandler(  BasicBackboneGame2D.this, 
                                             MouseActions.LEFT_BUTTON, 
@@ -80,6 +102,9 @@ public class BasicBackboneGame2D {
         gameFrame.add(Scene.screen);
         gameFrame.setVisible(true);    
         
+        timer = new Timer(1000/GameScreen.FRAMES_PER_SEC, this);
+        Scene.screen.registerTimer(timer);        
+        
         /* Add this after screen is added and setVisible, since scene creation calls
            updateScreen(), which calls getLocationOnScreen() for screen, and it must
            already be drawn on the screen or we hit a runtime error. */
@@ -99,7 +124,19 @@ public class BasicBackboneGame2D {
         /* Mouse listener references topLvlScene, so this should come after topLvlScene
            is initialized. */
         gameMouseListener mouseListener = new gameMouseListener();
-        topLvlScene.screen.registerMouseListener(mouseListener);        
+        topLvlScene.screen.registerMouseListener(mouseListener); 
+       
+    }
+    
+    /* Swing timer, runs in same context (event dispatch thread) as rest of code, so no
+       worries about race conditions. */
+    public void actionPerformed(ActionEvent e) {
+        //System.out.println("Timer triggered");
+        
+        topLvlScene.screen.fromTick = true;
+        topLvlScene.screen.clearStillImgs();
+        topLvlScene.updateScreen(true);
+        topLvlScene.draw();
     }
     
     /**

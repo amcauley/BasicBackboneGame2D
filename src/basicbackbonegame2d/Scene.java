@@ -10,6 +10,10 @@ import java.util.ArrayList;
 
 public abstract class Scene {
 
+    public enum AnimationType{
+        NO_ANIMATION, ANIMATED_NO_LOOP, ANIMATED_WITH_LOOP;
+    }
+    
     /* Reference to top level game object. Used by Transition class to switch topLvlScene. */
     static public BasicBackboneGame2D g;
     
@@ -23,6 +27,8 @@ public abstract class Scene {
     public int yLoc;            //y location
     public int width;           //width
     public int height;          //height
+    public AnimationType animationType;  //flag indicating the scene is an animation    
+    
     boolean isActive;           //should this subscene be drawn?
     
     /* File location of this scene's active image. */
@@ -44,12 +50,16 @@ public abstract class Scene {
 
     /* Actually update screen with the image in this scene, as well as any images
        from any subscenes. */
-    final public void updateScreen(){
-        screen.addImg(imagePath, xLoc, yLoc);
+    final public void updateScreen(boolean skipAnimated){
         
+        if ((animationType != Scene.AnimationType.NO_ANIMATION) && (!skipAnimated)){
+            screen.addAnimation(imagePath, xLoc, yLoc, width, height, animationType);
+        } else if (animationType == Scene.AnimationType.NO_ANIMATION){
+            screen.addImg(imagePath, xLoc, yLoc);
+        }
         for (int scnIdx = 0; scnIdx < numSubScenes ; scnIdx++) {
             if (subScenes[scnIdx].isActive()){
-                subScenes[scnIdx].updateScreen();   
+                subScenes[scnIdx].updateScreen(skipAnimated);   
             }
         }
         

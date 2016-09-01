@@ -135,7 +135,7 @@ public class S_Room2 extends Scene{
         g.jukebox.play(Jukebox.Sounds.BG_MUSIC0, true);        
         
         /* Standard scene drawing routines for top level scenes */        
-        updateScreen();
+        updateScreen(false);
         draw();
     }
     
@@ -160,7 +160,7 @@ public class S_Room2 extends Scene{
             addTransition(new Transition(SceneList.S_WIN, 193, 164, 76, 122, Jukebox.Sounds.NONE)); 
             
             screen.clearImgs();
-            updateScreen(); 
+            updateScreen(false); 
             draw();             
             
             /* Cease further processing to prevent cursor type from changing again in original
@@ -179,7 +179,7 @@ public class S_Room2 extends Scene{
             
             /* Refresh the screen. */
             screen.clearImgs();
-            updateScreen();
+            updateScreen(false);
             draw();
         }        
 
