@@ -25,7 +25,7 @@ public class S_Switch extends Scene{
         yLoc = 186;
         width = 37;
         height = 41;
-         
+
         /* Initialize this scene's image - switch is down */
         imagePath = imagePathMap.DOWN.str;         
         

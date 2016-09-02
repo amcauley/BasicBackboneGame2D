@@ -66,8 +66,8 @@ public class GameFrame extends JFrame{
         /* Now that frame exists, we can check what the extra border padding values are. Possibly
            there's a better way to do this. Register resize listener after this, since this is required
            info for proper resizing. */
-        framePadX = getContentPane().getWidth() - width;
-        framePadY = getContentPane().getHeight() - height;
+        framePadX = width - getContentPane().getWidth();
+        framePadY = height - getContentPane().getHeight();
         
         System.out.println("framePadX " + framePadX + ", framePadY " + framePadY);
         

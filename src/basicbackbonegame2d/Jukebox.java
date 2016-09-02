@@ -67,7 +67,7 @@ public class Jukebox {
         while(it.hasNext()){
             ClipInfo ci = it.next();
             if (!ci.clip.isActive()){
-                System.out.println("Removing inactive clip " + ci.fileName);
+                //System.out.println("Removing inactive clip " + ci.fileName);
                 it.remove();
             }
         }
@@ -81,7 +81,7 @@ public class Jukebox {
            such as a flag to restart if already playing vs just ignoring new request. */
         for (ClipInfo c : clips){
             if (c.fileName.equals(sound.fileName)){
-                System.out.println(sound.fileName + " already active");
+                //System.out.println(sound.fileName + " already active");
                 return;
             }
         }
@@ -99,7 +99,7 @@ public class Jukebox {
                 newClip.start();
             }
             
-            System.out.println("Playing " + sound.fileName);
+            //System.out.println("Playing " + sound.fileName);
             clips.add(new ClipInfo(sound.fileName, newClip));
             
         } catch (Exception ex){

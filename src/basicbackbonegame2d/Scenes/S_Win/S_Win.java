@@ -91,9 +91,6 @@ public class S_Win extends Scene{
         
         /* Initialize this scene's image */
         imagePath = imagePathMap.WIN.str;         
-        
-        /* Reset screen */        
-        screen.clearImgs();
                 
         /* Create any subscenes and add to array */
         //No subscenes for this scene        
@@ -106,8 +103,7 @@ public class S_Win extends Scene{
         g.jukebox.play(Jukebox.Sounds.VICTORY, false);
         
         /* Standard scene drawing routines for top level scenes */        
-        updateScreen(false);
-        draw();
+        refresh();
     }
     
 }

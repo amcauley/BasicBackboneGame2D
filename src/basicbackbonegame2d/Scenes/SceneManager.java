@@ -50,7 +50,7 @@ public class SceneManager{
             BufferedReader br = new BufferedReader(fr);
         ) {
             while ((thisLn = br.readLine()) != null) {
-                System.out.println("loading state idx " + thisIdx);
+                //System.out.println("loading state idx " + thisIdx);
                 sl[thisIdx++].state.loadState(thisLn);
             }
         }        
@@ -66,7 +66,7 @@ public class SceneManager{
                             new InputStreamReader(getClass().getClassLoader().getResourceAsStream(resourceName)));
         ) {
             while ((thisLn = br.readLine()) != null) {
-                System.out.println("loading state idx " + thisIdx);
+                //System.out.println("loading state idx " + thisIdx);
                 sl[thisIdx++].state.loadState(thisLn);
             }
         }         

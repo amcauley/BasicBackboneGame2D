@@ -100,10 +100,13 @@ public class BasicBackboneGame2D implements ActionListener {
         
         /* Add the static screen to this JFrame-based object. */
         gameFrame.add(Scene.screen);
-        gameFrame.setVisible(true);    
         
         timer = new Timer(1000/GameScreen.FRAMES_PER_SEC, this);
         Scene.screen.registerTimer(timer);        
+        
+        System.out.println("Setting frame visible...");
+        
+        gameFrame.setVisible(true);            
         
         /* Add this after screen is added and setVisible, since scene creation calls
            updateScreen(), which calls getLocationOnScreen() for screen, and it must
@@ -134,7 +137,6 @@ public class BasicBackboneGame2D implements ActionListener {
         //System.out.println("Timer triggered");
         
         topLvlScene.screen.fromTick = true;
-        topLvlScene.screen.clearStillImgs();
         topLvlScene.updateScreen(true);
         topLvlScene.draw();
     }

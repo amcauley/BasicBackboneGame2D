@@ -101,9 +101,6 @@ public class S_Room1 extends Scene{
         /* Initialize this scene's image */
         imagePath = imagePathMap.ROOM1.str;        
         
-        /* Reset screen */
-        screen.clearImgs();
-        
         /* Create any subscenes and add to array */
         numSubScenes = SubSceneMap.values().length;
         subScenes = new Scene[numSubScenes];
@@ -132,8 +129,7 @@ public class S_Room1 extends Scene{
         g.jukebox.play(Jukebox.Sounds.BG_MUSIC0, true);
         
         /* Standard scene drawing routines for top level scenes */
-        updateScreen(false);
-        draw();
+        refresh();
     }
     
     @Override
@@ -152,9 +148,7 @@ public class S_Room1 extends Scene{
             SceneManager.SceneList.TOP.state.vals[Top.StateMap.HAS_KEY.idx] = 1;
             
             /* Refresh the screen. */
-            screen.clearImgs();
-            updateScreen(false);
-            draw();
+            refresh();
         }
         
         /* Handle light switch */
@@ -169,9 +163,7 @@ public class S_Room1 extends Scene{
                     S_Switch.imagePathMap.UP.str:
                     S_Switch.imagePathMap.DOWN.str);
             
-            screen.clearImgs();
-            updateScreen(false);
-            draw();            
+            refresh();          
         }
         
         return 0;

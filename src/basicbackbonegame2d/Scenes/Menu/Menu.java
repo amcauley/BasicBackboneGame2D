@@ -109,6 +109,7 @@ public class Menu extends Scene{
         /* Basic initialization params */     
         sceneName = "Menu";
         isSubscene = false;
+        animationType = Scene.AnimationType.NO_ANIMATION;
         xLoc = 0;
         yLoc = 0;
         width = GameFrame.NOMINAL_WIDTH;
@@ -116,9 +117,6 @@ public class Menu extends Scene{
         
         /* Initialize this scene's image */
         imagePath = ImagePathMap.MENU.str;         
-        
-        /* Reset screen */        
-        screen.clearImgs();
                 
         /* Create any subscenes and add to array */
         numSubScenes = SubSceneMap.values().length;
@@ -163,11 +161,10 @@ public class Menu extends Scene{
         /* Music handling (if any) */
         //g.jukebox.stopAll();
         
-        System.out.println("Menu last scene ID: " + stateInfo.vals[StateMap.LAST_SCENE.idx]);
+        //System.out.println("Menu last scene ID: " + stateInfo.vals[StateMap.LAST_SCENE.idx]);
         
         /* Standard scene drawing routines for top level scenes */        
-        updateScreen(false);
-        draw();
+        refresh();
     }
    
     @Override

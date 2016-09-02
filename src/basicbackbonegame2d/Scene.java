@@ -14,6 +14,8 @@ public abstract class Scene {
         NO_ANIMATION, ANIMATED_NO_LOOP, ANIMATED_WITH_LOOP;
     }
     
+    public static final int DEFAULT_DEPTH = 10;
+    
     /* Reference to top level game object. Used by Transition class to switch topLvlScene. */
     static public BasicBackboneGame2D g;
     
@@ -29,7 +31,10 @@ public abstract class Scene {
     public int height;          //height
     public AnimationType animationType;  //flag indicating the scene is an animation    
     
+    public int depth;           //depth of (sub)scene. Higher numbers are drawn over lower numbers. 
+    
     boolean isActive;           //should this subscene be drawn?
+    
     
     /* File location of this scene's active image. */
     public String imagePath;
@@ -45,38 +50,60 @@ public abstract class Scene {
     public Scene(){
         numSubScenes = 0;
         isActive = true;
+        depth = DEFAULT_DEPTH;
+        animationType = AnimationType.NO_ANIMATION;
     }
     
 
     /* Actually update screen with the image in this scene, as well as any images
        from any subscenes. */
-    final public void updateScreen(boolean skipAnimated){
+    final public void updateScreen(boolean topLvlCall){
         
-        if ((animationType != Scene.AnimationType.NO_ANIMATION) && (!skipAnimated)){
-            screen.addAnimation(imagePath, xLoc, yLoc, width, height, animationType);
-        } else if (animationType == Scene.AnimationType.NO_ANIMATION){
-            screen.addImg(imagePath, xLoc, yLoc);
+        if (topLvlCall){
+            screen.clearNewDrawList();
+        }
+        
+        /* ID should be unique to each (sub)scene image. Append imagePath to sceneName in case scene
+           uses multiple images. imagePath isn't enough by itself in case multiple (sub)scenes use the
+           same image. */
+        String id = sceneName + "_" + imagePath;
+        
+        /* Recurse to add images/animations to newDrawList */
+        if (animationType != Scene.AnimationType.NO_ANIMATION){
+            screen.addAnimationToDrawList(imagePath, xLoc, yLoc, width, height, animationType, depth, id);
+        } else {
+            screen.addImgToDrawList(imagePath, xLoc, yLoc, depth, id);
         }
         for (int scnIdx = 0; scnIdx < numSubScenes ; scnIdx++) {
             if (subScenes[scnIdx].isActive()){
-                subScenes[scnIdx].updateScreen(skipAnimated);   
+                subScenes[scnIdx].updateScreen(false);   
             }
         }
         
-        /* Update cursor as well by issuing a dummy movement event at the current location. */
-        if (!isSubscene){
-            Point mouseLoc = getPointerInfo().getLocation();
-            Point screenLoc = screen.getLocationOnScreen();
-            actionHandler(  g, 
-                            BasicBackboneGame2D.MouseActions.MOVEMENT, 
-                            mouseLoc.x-screenLoc.x, 
-                            mouseLoc.y-screenLoc.y);
+        if (topLvlCall){
+
+            screen.submitNewDrawList();
+            
+            /* Update cursor as well by issuing a dummy movement event at the current location. */
+            if (!isSubscene){
+                Point mouseLoc = getPointerInfo().getLocation();
+                Point screenLoc = screen.getLocationOnScreen();
+                actionHandler(  g, 
+                                BasicBackboneGame2D.MouseActions.MOVEMENT, 
+                                mouseLoc.x-screenLoc.x, 
+                                mouseLoc.y-screenLoc.y);
+            }
         }
     }
     
     public void draw(){
-        System.out.println("Draw");
+        //System.out.println("Draw");
         screen.repaint();
+    }
+    
+    public void refresh(){
+        updateScreen(true);
+        draw();        
     }
     
     public void setActiveState(boolean b){

@@ -7,6 +7,8 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import javax.imageio.ImageIO;
@@ -19,7 +21,7 @@ public class GameScreen extends JPanel {
     
     public boolean fromTick = false;
     
-    public static final int FRAMES_PER_SEC = 2;
+    public static final int FRAMES_PER_SEC = 5;
     
     public enum CursorType{
         INVALID, DEFAULT, INSPECTION, TRANSITION
@@ -35,18 +37,26 @@ public class GameScreen extends JPanel {
         BufferedImage img;
         int x, y;
         int width, height;
+        int depth;  //What the depth of this image is, used for determining what is drawn on top of what else
+        String id;  //unique identifier for this image, can be used to check if this is already in images list
         
         ImageContainer(){
             
         }
         
-        ImageContainer(String pathName, int xx, int yy){
+        ImageContainer( String pathName, 
+                        int xx, int yy,
+                        int dpth,
+                        String idStr){
+            
             imgPath = pathName;
             x = xx;
             y = yy;
+            depth = dpth;
+            id = idStr;
             
             try {
-                System.out.println("Loading image:" + imgPath);
+                //System.out.println("Loading image:" + imgPath);
                 img = ImageIO.read(getClass().getClassLoader().getResource(imgPath));
                 width = img.getWidth();
                 height = img.getHeight();
@@ -87,6 +97,10 @@ public class GameScreen extends JPanel {
     /* Array of all images that contribute to the current screen. */
     private List<ImageContainer> images = new ArrayList<>();
     
+    /* For next list of images/animations to be drawn. This will get latched into images,
+       i.e. actively displayed images, after calling submitNewDrawList() */
+    private List<ImageContainer> newImages = new ArrayList<>();
+    
     /* Class to contain an animation. Animations are stored as large images - if each
        frame is w x h pixels (width by height), then the animation image is size
        (m x w) x (n x h), where m x n = <number of frames>. Upon creation, we'll read the
@@ -104,15 +118,20 @@ public class GameScreen extends JPanel {
         
         /* Current state of animation: 0 = inactive/finished, 1 = running. May want to further
            distinguish been not started / paused / finished in the future. */
-        private int active;
+        private boolean active;
         
         
         /* Constructor needs to know how the large each frame is. We'll compute the width of the
            number of frames by dividing the total image by the size of a frame and with the help 
            of getWidth() or getHeight(). */
-        Animation(String pathName, int xx, int yy, int frameSizeX, int frameSizeY, Scene.AnimationType aType){
+        Animation(  String pathName, 
+                    int xx, int yy, 
+                    int frameSizeX, int frameSizeY, 
+                    Scene.AnimationType aType,
+                    int depth,
+                    String id){
             
-            super(pathName, xx, yy);
+            super(pathName, xx, yy, depth, id);
             
             xFrameSize = frameSizeX;
             yFrameSize = frameSizeY;
@@ -127,10 +146,9 @@ public class GameScreen extends JPanel {
             curFrame = 0;
             animationType = aType;
             
-            /* Start running by default. */
-            active = 1;
+            active = true;
             
-            System.out.println("Animation created");
+            //System.out.println("Animation created");
         }
         
         /* Draw the current sceen and update info for the next frame to be drawn. */
@@ -139,10 +157,10 @@ public class GameScreen extends JPanel {
             if(!fromTick){
                 return; //only update state if due to tick
             }
-            if (active != 0){
+            if (active){
                 curFrame = (curFrame+1)%numFrames;
                 if ((curFrame == 0) && (animationType == Scene.AnimationType.ANIMATED_NO_LOOP)){
-                    active = 0;
+                    active = false;
                 }
             }
         }
@@ -155,7 +173,7 @@ public class GameScreen extends JPanel {
             int yIdx = curFrame/numXFrames;
             int xIdx = curFrame - yIdx*numXFrames;
             
-            System.out.println("Animation frame " + curFrame + "/ " + numFrames + ", x " + xIdx + ", y " + yIdx);
+            //System.out.println("Animation frame " + (curFrame+1) + "/ " + numFrames + ", x " + xIdx + ", y " + yIdx);
             
             return img.getSubimage( xIdx*xFrameSize, 
                                     yIdx*yFrameSize,
@@ -166,7 +184,7 @@ public class GameScreen extends JPanel {
         /* If animation is in progress, keep reporting active so that timer keeps firing. */
         @Override
         boolean isActive(){
-            return active != 0;
+            return active;
         }
         
         @Override
@@ -196,34 +214,89 @@ public class GameScreen extends JPanel {
         setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));        
     }
     
-    public void addImg(String imgPath, int x, int y){
-        images.add(new ImageContainer(imgPath, x, y));
+    public void addImgToDrawList(   String imgPath, 
+                                    int x, int y, 
+                                    int depth, 
+                                    String id){
+        
+        newImages.add(new ImageContainer(imgPath, x, y, depth, id));
         //System.out.println(images.size() + " images");
     }
     
-    public void addAnimation(String imgPath, int x, int y, int frameSizeX, int frameSizeY, Scene.AnimationType aType){
-        images.add(new Animation(imgPath, x, y, frameSizeX, frameSizeY, aType));
+    public void addAnimationToDrawList( String imgPath, 
+                                        int x, int y, 
+                                        int frameSizeX, int frameSizeY, 
+                                        Scene.AnimationType aType, 
+                                        int depth, 
+                                        String id){
+        
+        newImages.add(new Animation(imgPath, x, y, frameSizeX, frameSizeY, aType, depth, id));
     }
     
-    /* Clear all images, including active animations. */
-    public void clearImgs(){
-        images.clear();
+    /* Clear list of new/pending images/animations. */
+    public void clearNewDrawList(){
+        newImages.clear();
     }
     
-    /* Only clear non-animated images, so animations won't lose state. */
-    public void clearStillImgs(){
-        for (Iterator<ImageContainer> it = images.iterator(); it.hasNext();) {
-            ImageContainer ic = it.next();
-            if (!ic.isAnimated()) {
-                it.remove();
+    /* Latch any new images/animations into drawing list (images). Remove any old ones. Note that
+       if an animation is in both new and currently active list, it will keep running. */
+    public void submitNewDrawList(){
+        
+        /*
+        System.out.println("submitNewDrawList images:");
+        for(ImageContainer i : images){
+            System.out.println("   " + i.id);
+        }
+        System.out.println("submitNewDrawList newImages:");
+        for(ImageContainer i : newImages){
+            System.out.println("   " + i.id);
+        }
+        //*/
+        
+        /* Remove any stale items from images. */
+        for(Iterator<ImageContainer> oldIcIt = images.iterator(); oldIcIt.hasNext();) {
+            ImageContainer oldIc = oldIcIt.next();
+            /* Check if there's a match in the new list */
+            boolean foundMatch = false;
+            for(Iterator<ImageContainer> newIcIt = newImages.iterator(); newIcIt.hasNext();) {
+                ImageContainer newIc = newIcIt.next();
+                //System.out.println("newId: " + newIc.id + ", oldId: " + oldIc.id);
+                if (newIc.id.equals(oldIc.id)){
+                    foundMatch = true;
+                    /* We can also get rid of the entry from the new list since we found its match. */
+                    newIcIt.remove();
+                    break;
+                }
+             }
+            
+            if (!foundMatch){
+                oldIcIt.remove();
             }
-        }        
+        }
+        
+        /* Now everything remaining in newImages is new and should be added to images. */
+        images.addAll(newImages);
+        
+        /* Finally, sort the new images list in order of ascending depth value (maybe "depth" can be renamed). */
+        Collections.sort(   images,
+                            new Comparator<ImageContainer>(){
+                                public int compare(ImageContainer c1, ImageContainer c2){
+                                    if (c1.depth == c2.depth){
+                                        return 0;
+                                    }
+                                    else{
+                                        return c1.depth < c2.depth ? -1 : 1;
+                                    }
+                                }
+                            });
+        
     }
+    
     
     @Override
     public void paint(Graphics g) { 
         
-        System.out.println("painting GameScreen, fromTick " + fromTick);
+        //System.out.println("painting GameScreen, fromTick " + fromTick);
         
         /* Draw background across entire drawable area. This will form the border between the
            window frame and the scene itself. */
@@ -234,45 +307,20 @@ public class GameScreen extends JPanel {
                 
         /* Draw all images (and animations) in the current screen. */
         boolean needNextTimerTick = false;
+        /* Process images/animations in order (from background to foreground, already sorted). */
         for (int icIdx = 0; icIdx < images.size(); icIdx++) {
             ImageContainer ic = images.get(icIdx);
-            
-            if (ic.isAnimated()){
-                continue;
-            }
             
             int startX = (int)(ic.x*scale) + GameFrame.xPad;
             int startY = (int)(ic.y*scale) + GameFrame.yPad;
             int startWidth = ic.width;
             int startHeight = ic.height;
             
-            System.out.println("1." + icIdx + " " + ic.imgPath);
-            System.out.println("x " + startX + ", y " + startY + ", w " + startWidth + ", h " + startHeight);
+            //System.out.println(ic.imgPath);
+            //System.out.println("x " + startX + ", y " + startY + ", w " + startWidth + ", h " + startHeight);
             
-            g.drawImage(ic.getImg(),
-                        startX, startY,
-                        startX + (int)(startWidth*scale), startY + (int)(startHeight*scale),
-                        0, 0,
-                        startWidth, startHeight,
-                        null);
-        }
-        
-        /* Process animations after regular images as a workaround for background image during update, thus
-           covering over the animation. */
-        for (int icIdx = 0; icIdx < images.size(); icIdx++) {
-            ImageContainer ic = images.get(icIdx);
-            
-            if (!ic.isAnimated()){
-                continue;
-            }
-            
-            int startX = (int)(ic.x*scale) + GameFrame.xPad;
-            int startY = (int)(ic.y*scale) + GameFrame.yPad;
-            int startWidth = ic.width;
-            int startHeight = ic.height;
-            
-            System.out.println("2." + icIdx + " " + ic.imgPath);
-            System.out.println("x " + startX + ", y " + startY + ", w " + startWidth + ", h " + startHeight);
+            /* Update animations (no-op for static images). */
+            ic.update();            
             
             g.drawImage(ic.getImg(),
                         startX, startY,
@@ -281,8 +329,6 @@ public class GameScreen extends JPanel {
                         startWidth, startHeight,
                         null);
             
-            /* Update animations for next frame (no-op for static images). */
-            ic.update();
             if (ic.isActive()){
                 needNextTimerTick = true;
             }
@@ -291,19 +337,19 @@ public class GameScreen extends JPanel {
         /* Update timer as needed for animations */
         if (timer.isRunning()){
             if (needNextTimerTick){
-                System.out.println("Timer running");   
+                //System.out.println("Timer running");   
             }
             else {
-                System.out.println("Timer stopping");
+                //System.out.println("Timer stopping");
                 timer.stop();
             }
         } else {
             if (needNextTimerTick){
-                System.out.println("Timer restart");
+                //System.out.println("Timer restart");
                 timer.restart();
             }
             else {
-                System.out.println("Timer stopped");
+                //System.out.println("Timer stopped");
             }
         }
         

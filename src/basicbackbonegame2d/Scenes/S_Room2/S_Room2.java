@@ -91,13 +91,11 @@ public class S_Room2 extends Scene{
         /* Basic initialization params */     
         sceneName = "S_Room2";
         isSubscene = false;
+        animationType = Scene.AnimationType.NO_ANIMATION;
         xLoc = 0;
         yLoc = 0;
         width = GameFrame.NOMINAL_WIDTH;
         height = GameFrame.NOMINAL_HEIGHT;
-        
-        /* Reset screen */        
-        screen.clearImgs();
                 
         /* Create any subscenes and add to array */
         numSubScenes = SubSceneMap.values().length;
@@ -135,8 +133,7 @@ public class S_Room2 extends Scene{
         g.jukebox.play(Jukebox.Sounds.BG_MUSIC0, true);        
         
         /* Standard scene drawing routines for top level scenes */        
-        updateScreen(false);
-        draw();
+        refresh();
     }
     
     @Override
@@ -159,9 +156,7 @@ public class S_Room2 extends Scene{
             
             addTransition(new Transition(SceneList.S_WIN, 193, 164, 76, 122, Jukebox.Sounds.NONE)); 
             
-            screen.clearImgs();
-            updateScreen(false); 
-            draw();             
+            refresh();         
             
             /* Cease further processing to prevent cursor type from changing again in original
                calling routine. */
@@ -178,9 +173,7 @@ public class S_Room2 extends Scene{
             SceneManager.SceneList.TOP.state.vals[Top.StateMap.HAS_BAUBLE.idx] = 1;
             
             /* Refresh the screen. */
-            screen.clearImgs();
-            updateScreen(false);
-            draw();
+            refresh();
         }        
 
         return 0;
