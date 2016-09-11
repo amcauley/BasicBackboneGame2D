@@ -15,24 +15,17 @@ import javax.swing.event.MouseInputAdapter;
 
 
 /* TODO:
-
-    08/31/17 - needs a lot of cleanup / better implementation for Animations. In order
-               to help prevent resetting animation anytime a subscene updates, modify addImage
-               and addAnimation methods to form of images/animations we want to run after calling
-               a separate commitImageUpdate/Animation method. This method compares what's already
-               latched (images and Animations) in the screen, and only adds or removes as needed
-               compared to newly latched list. This prevents modifying/resetting any already
-               running animations.
+    - Replace some direct member accesses with getters/setters
 */
 
 public class BasicBackboneGame2D implements ActionListener {
     
-    public GameFrame gameFrame = new GameFrame();
+    public GameFrame gameFrame;
     
-    public SceneManager sm = new SceneManager();
+    public SceneManager sm;
     
     /* Register jukebox for music control */
-    public Jukebox jukebox = new Jukebox();
+    public Jukebox jukebox;
     
     /* Swing timer (not just regular util timer) for all our timing needs. Swing timer
        operates from event dispatch thread, so same context as other event handling, therefore
@@ -54,7 +47,7 @@ public class BasicBackboneGame2D implements ActionListener {
     public class gameMouseListener extends MouseInputAdapter {
         
         public gameMouseListener() {
-            System.out.println("Instantiating gameMouseListener");
+            //System.out.println("Instantiating gameMouseListener");
         }
     
         @Override
@@ -93,19 +86,23 @@ public class BasicBackboneGame2D implements ActionListener {
     }
     
     public void run() throws IOException{
+        
+        gameFrame = new GameFrame();
+        jukebox = new Jukebox();
+        sm = new SceneManager();
+        
         gameFrame.init();
         
         /* Register game object to scene. */
         Scene.g = this;
         
-        /* Add the static screen to this JFrame-based object. */
-        gameFrame.add(Scene.screen);
-        
         timer = new Timer(1000/GameScreen.FRAMES_PER_SEC, this);
         Scene.screen.registerTimer(timer);        
         
-        System.out.println("Setting frame visible...");
+        //System.out.println("Begin...");
         
+        /* Add the static screen to this JFrame-based object. */
+        gameFrame.add(Scene.screen);        
         gameFrame.setVisible(true);            
         
         /* Add this after screen is added and setVisible, since scene creation calls
@@ -113,7 +110,7 @@ public class BasicBackboneGame2D implements ActionListener {
            already be drawn on the screen or we hit a runtime error. */
         
         /* Load game state from file, and set topLvlScene to the stored scene. */
-        sm.loadState();
+        //sm.loadState();
         topLvlSceneIdx = stateInfo.vals[Top.StateMap.LAST_SCENE_ID.idx];
         
         /* Overwrite top level scene for now until AutoSave file handling for JAR

@@ -69,7 +69,7 @@ public class GameFrame extends JFrame{
         framePadX = width - getContentPane().getWidth();
         framePadY = height - getContentPane().getHeight();
         
-        System.out.println("framePadX " + framePadX + ", framePadY " + framePadY);
+        //System.out.println("framePadX " + framePadX + ", framePadY " + framePadY);
         
         /* Listener for resizing */
         addComponentListener(new ComponentListener(){

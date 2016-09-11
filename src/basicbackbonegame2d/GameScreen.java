@@ -4,6 +4,8 @@ package basicbackbonegame2d;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -335,24 +338,26 @@ public class GameScreen extends JPanel {
         }
         
         /* Update timer as needed for animations */
-        if (timer.isRunning()){
-            if (needNextTimerTick){
-                //System.out.println("Timer running");   
-            }
-            else {
-                //System.out.println("Timer stopping");
-                timer.stop();
-            }
-        } else {
-            if (needNextTimerTick){
-                //System.out.println("Timer restart");
-                timer.restart();
-            }
-            else {
-                //System.out.println("Timer stopped");
+        if (timer != null){ /* Make sure timer actually exists. */
+            if (timer.isRunning()){
+                if (needNextTimerTick){
+                    //System.out.println("Timer running");   
+                }
+                else {
+                    //System.out.println("Timer stopping");
+                    timer.stop();
+                }
+            } else {
+                if (needNextTimerTick){
+                    //System.out.println("Timer restart");
+                    timer.restart();
+                }
+                else {
+                    //System.out.println("Timer stopped");
+                }
             }
         }
-        
+            
         fromTick = false;
     }
     
@@ -365,19 +370,31 @@ public class GameScreen extends JPanel {
         if (activeCursorType != cursorType){
             switch(cursorType){
                 case DEFAULT: //Default cursor
-                    setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                    //setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                    setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
+                            new ImageIcon(getClass().getClassLoader().getResource("resources/images/Cursor_Default.png")).getImage(),
+                            new Point(7,7),
+                            "defaultCursor"));
                     break;
                 case INSPECTION: //Inspection
-                    setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    //setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
+                            new ImageIcon(getClass().getClassLoader().getResource("resources/images/Cursor_Inspect.png")).getImage(),
+                            new Point(7,7),
+                            "inspectionCursor"));
                     break;
                 case TRANSITION: //Transition
-                    setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+                    //setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+                    setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
+                            new ImageIcon(getClass().getClassLoader().getResource("resources/images/Cursor_Transition.png")).getImage(),
+                            new Point(7,7),
+                            "transitionCursor"));
                     break;
                 default:
                     System.out.println("Undefined cursorType " + cursorType);
                     break;
-            }
-
+            }   
+            
             activeCursorType = cursorType;            
         }
     }
