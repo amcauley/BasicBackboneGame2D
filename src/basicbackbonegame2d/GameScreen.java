@@ -68,6 +68,19 @@ public class GameScreen extends JPanel {
                 System.out.println(e.getMessage());
             }
         }
+
+        String str() {
+            return id + ", " + imgPath + ", @ (" + x + ", " + y + ", " + depth + ")";
+        }
+
+        boolean equals(ImageContainer other) {
+            //System.out.println("Compare: " + str() + " vs. " + other.str());
+            return (x == other.x)
+                && (y == other.y)
+                && (depth == other.depth)
+                && imgPath.equals(other.imgPath)
+                && id.equals(other.id);
+        }
         
         /* Not needed for basic image, but Animation will want this. */
         void update(){
@@ -263,8 +276,8 @@ public class GameScreen extends JPanel {
             boolean foundMatch = false;
             for(Iterator<ImageContainer> newIcIt = newImages.iterator(); newIcIt.hasNext();) {
                 ImageContainer newIc = newIcIt.next();
-                //System.out.println("newId: " + newIc.id + ", oldId: " + oldIc.id);
-                if (newIc.id.equals(oldIc.id)){
+                if (newIc.equals(oldIc)){
+                    //System.out.println("^ Removed");
                     foundMatch = true;
                     /* We can also get rid of the entry from the new list since we found its match. */
                     newIcIt.remove();

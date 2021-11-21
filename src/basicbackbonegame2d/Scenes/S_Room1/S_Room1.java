@@ -162,7 +162,7 @@ public class S_Room1 extends Scene{
                 (SceneManager.SceneList.TOP.state.vals[Top.StateMap.ROOM2_HAS_PWR.idx] == 1) ?
                     S_Switch.imagePathMap.UP.str:
                     S_Switch.imagePathMap.DOWN.str);
-            
+
             refresh();          
         }
         

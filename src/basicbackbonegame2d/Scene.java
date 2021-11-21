@@ -53,21 +53,15 @@ public abstract class Scene {
         depth = DEFAULT_DEPTH;
         animationType = AnimationType.NO_ANIMATION;
     }
-    
 
-    /* Actually update screen with the image in this scene, as well as any images
-       from any subscenes. */
-    final public void updateScreen(boolean topLvlCall){
-        
-        if (topLvlCall){
-            screen.clearNewDrawList();
-        }
-        
+    // Update the draw list with this scene's entries (and entries from sub-scenes).
+    // Individual scenes can override this if needed.
+    public void updateDrawList() {
         /* ID should be unique to each (sub)scene image. Append imagePath to sceneName in case scene
            uses multiple images. imagePath isn't enough by itself in case multiple (sub)scenes use the
            same image. */
         String id = sceneName + "_" + imagePath;
-        
+
         /* Recurse to add images/animations to newDrawList */
         if (animationType != Scene.AnimationType.NO_ANIMATION){
             screen.addAnimationToDrawList(imagePath, xLoc, yLoc, width, height, animationType, depth, id);
@@ -79,6 +73,21 @@ public abstract class Scene {
                 subScenes[scnIdx].updateScreen(false);   
             }
         }
+    }
+
+    /* Actually update screen with the image in this scene, as well as any images
+       from any subscenes. */
+    final public void updateScreen(boolean topLvlCall){
+        
+        if (topLvlCall){
+            screen.clearNewDrawList();
+
+            // The player should make sure the player gets drawn.
+            // This can later be expanded to selectively hide the player in particular scenes or situations.
+            g.player.updateDrawList();
+        }
+
+        updateDrawList();
         
         if (topLvlCall){
 
@@ -96,6 +105,16 @@ public abstract class Scene {
         }
     }
     
+    public void setLoc(int x, int y) {
+        xLoc = x;
+        yLoc = y;
+    }
+
+    public void setLoc(int x, int y, int depth_) {
+        setLoc(x, y);
+        depth = depth_;
+    }
+
     public void draw(){
         //System.out.println("Draw");
         screen.repaint();
@@ -203,7 +222,7 @@ public abstract class Scene {
         return 0;
     }
     
-    /* Base action handler, common to all scenens */
+    /* Base action handler, common to all scenes */
     public void actionHandler(  BasicBackboneGame2D g, 
                                 BasicBackboneGame2D.MouseActions evtType, 
                                 int evtX, 

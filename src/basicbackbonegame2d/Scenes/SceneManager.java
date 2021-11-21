@@ -111,7 +111,7 @@ public class SceneManager{
         //saveState(AUTOSAVE_FILENAME);
     }
     
-    public static void switchScene(BasicBackboneGame2D g, SceneList sceneId){
+    public static void switchScene(BasicBackboneGame2D g, SceneList sceneId) {
         
         switch(sceneId){
             case MENU:      //Menu "Scene"
@@ -147,5 +147,21 @@ public class SceneManager{
         
         /* Update top level state. */
         SceneList.TOP.state.vals[Top.StateMap.LAST_SCENE_ID.idx] = sceneId.idx;
+    }
+
+    public void actionHandler(  BasicBackboneGame2D g, 
+                                BasicBackboneGame2D.MouseActions evtType, 
+                                int evtX, 
+                                int evtY) {
+        System.out.println("SM evt " + evtType + " @ (" + evtX + ", " + evtY + ")");
+
+        // Move player to the location.
+        // TODO: Add pathing and transition animations.
+        // Also need to add mechanism for interacting with the destination object, and any objects along the way.
+        // Interaction could potentially be handled by the scenes themselves through g.player.
+        g.player.setLoc(evtX, evtY);
+
+        // Default scene handling.
+        g.topLvlScene.actionHandler(g, evtType, evtX, evtY);
     }
 }

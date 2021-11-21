@@ -16,63 +16,69 @@ import javax.swing.event.MouseInputAdapter;
 
 /* TODO:
     - Replace some direct member accesses with getters/setters
+    - Refactor player; player shouldn't be derived from scene.
+    - Code cleanup. Need a linter or something to clean up code / whitespace.
 */
 
 public class BasicBackboneGame2D implements ActionListener {
     
     public GameFrame gameFrame;
-    
-    public SceneManager sm;
-    
+
     /* Register jukebox for music control */
     public Jukebox jukebox;
-    
+
+    public Player player;
+
+    public SceneManager sm;
+
     /* Swing timer (not just regular util timer) for all our timing needs. Swing timer
        operates from event dispatch thread, so same context as other event handling, therefore
        no race conditions. */
     public Timer timer;
-    
+
     /* Top level scene */
     public Scene topLvlScene;
-    
+
     /* Index of top lvl scene. Update when we update topLvlScene itself. */
     public int topLvlSceneIdx;
-    
+
     public enum MouseActions{
         LEFT_BUTTON, RIGHT_BUTTON, MOVEMENT
     }    
-    
+
     /* Handle mouse events. Needs access to topLvlScene for passing on events
        to the scene. */
     public class gameMouseListener extends MouseInputAdapter {
-        
+
         public gameMouseListener() {
             //System.out.println("Instantiating gameMouseListener");
         }
-    
+
         @Override
         public void mousePressed(MouseEvent me) {
-            
+
             //System.out.println("mouse evt");
-            
+
             if (SwingUtilities.isLeftMouseButton(me)) {
-                topLvlScene.actionHandler(  BasicBackboneGame2D.this, 
+                // Let the scene manager handle movement / clicks.
+                // It'll have to coordinate information between the player and scene, ex. for pathing.
+                sm.actionHandler(  BasicBackboneGame2D.this, 
                                             MouseActions.LEFT_BUTTON, 
                                             me.getX(), me.getY());                
             }
             else if (SwingUtilities.isRightMouseButton(me)) {
-                
+
                 /* Enter menu */
                 SceneManager.switchScene(   BasicBackboneGame2D.this, 
                                             SceneManager.SceneList.MENU);
-                
+
                 //topLvlScene.actionHandler(BasicBackboneGame2D.this, 
                 //                            MouseActions.RIGHT_BUTTON, 
                 //                            me.getX(), me.getY());                
             }
-            
+
         }
-            
+
         @Override
         public void mouseMoved(MouseEvent me) {
             topLvlScene.actionHandler(  BasicBackboneGame2D.this, 
@@ -80,15 +86,16 @@ public class BasicBackboneGame2D implements ActionListener {
                                         me.getX(), me.getY());
         }
     }    
-    
+
     public BasicBackboneGame2D(){
     
     }
-    
+
     public void run() throws IOException{
-        
+
         gameFrame = new GameFrame();
         jukebox = new Jukebox();
+        player = new Player();
         sm = new SceneManager();
         
         gameFrame.init();
