@@ -25,7 +25,18 @@ public class GameFrame extends JFrame{
     /* Padding due to window border/header. TODO: Need to study this more. */
     int framePadX;    
     int framePadY;
-    
+
+    /* Convert the game frame position into an unpadded/unscaled version, i.e. in game-native coordinates. */
+    // TODO: Should convert most coordinates, ex. in the scene, to a normalized range [0, 1].
+    public static int getNativeX(int frameX) {
+        return (int)((float)(frameX-GameFrame.xPad)/GameFrame.scale);
+    }
+
+    /* Convert the game frame position into an unpadded/unscaled version, i.e. in game-native coordinates. */
+    public static int getNativeY(int frameY) {
+        return (int)((float)(frameY-GameFrame.yPad)/GameFrame.scale);
+    }
+
     public void scaleComp(){
         /* Compute scaling from native size to current target size. */     
         float scaleX = (float)width / NOMINAL_WIDTH;

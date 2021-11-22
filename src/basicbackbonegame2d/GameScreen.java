@@ -380,27 +380,37 @@ public class GameScreen extends JPanel {
     
     /* Update mouse cursor if it doen't match the currently active cursor type. */
     public void updateCursor(CursorType cursorType){
+        // TODO: get these from checking the image dimensions instead of hardcoding them.
+        int PREFERRED_CURSOR_WIDTH = 15;
+        int PREFERRED_CURSOR_HEIGHT = 15;
+
+        // Windows seems to be scaling the cursor up to its preferred dimensions
+        // and the hotspot offset seems to use these new dimensions.
+        // TODO: Don't just hardcode these.
+        int hotSpotX = 7 * 32 / PREFERRED_CURSOR_WIDTH;
+        int hotSpotY = 7 * 32 / PREFERRED_CURSOR_HEIGHT;
+
         if (activeCursorType != cursorType){
             switch(cursorType){
                 case DEFAULT: //Default cursor
                     //setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                     setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
                             new ImageIcon(getClass().getClassLoader().getResource("resources/images/Cursor_Default.png")).getImage(),
-                            new Point(7,7),
+                            new Point(hotSpotX, hotSpotY),
                             "defaultCursor"));
                     break;
                 case INSPECTION: //Inspection
                     //setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                     setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
                             new ImageIcon(getClass().getClassLoader().getResource("resources/images/Cursor_Inspect.png")).getImage(),
-                            new Point(7,7),
+                            new Point(hotSpotX, hotSpotY),
                             "inspectionCursor"));
                     break;
                 case TRANSITION: //Transition
                     //setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
                     setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
                             new ImageIcon(getClass().getClassLoader().getResource("resources/images/Cursor_Transition.png")).getImage(),
-                            new Point(7,7),
+                            new Point(hotSpotX, hotSpotY),
                             "transitionCursor"));
                     break;
                 default:

@@ -145,10 +145,10 @@ public abstract class Scene {
     /* Is the (x,y) location within this scene? */
     public boolean isHit(int x, int y){
         
-        /* Undo any scaling/padding on the locations - all checks are based on nominal scaling. */
-        x = (int)((float)(x-GameFrame.xPad)/GameFrame.scale);
-        y = (int)((float)(y-GameFrame.yPad)/GameFrame.scale);
-        
+        /* Undo any scaling/padding on the location - all checks are based on nominal scaling. */
+        x = GameFrame.getNativeX(x);
+        y = GameFrame.getNativeY(y);
+
         /* x/y locations were based on nominal scaling, so no conversion needed. */
         x -= xLoc;
         y -= yLoc;

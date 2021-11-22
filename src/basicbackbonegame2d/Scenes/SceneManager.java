@@ -2,6 +2,7 @@
 package basicbackbonegame2d.Scenes;
 
 import basicbackbonegame2d.BasicBackboneGame2D;
+import basicbackbonegame2d.GameFrame;
 import basicbackbonegame2d.Scenes.Menu.Menu;
 import basicbackbonegame2d.StateInfo;
 import basicbackbonegame2d.Scenes.S_Room1.S_Room1;
@@ -153,13 +154,13 @@ public class SceneManager{
                                 BasicBackboneGame2D.MouseActions evtType, 
                                 int evtX, 
                                 int evtY) {
-        System.out.println("SM evt " + evtType + " @ (" + evtX + ", " + evtY + ")");
+        //System.out.println("SM evt " + evtType + " @ (" + evtX + ", " + evtY + ")");
 
         // Move player to the location.
         // TODO: Add pathing and transition animations.
         // Also need to add mechanism for interacting with the destination object, and any objects along the way.
         // Interaction could potentially be handled by the scenes themselves through g.player.
-        g.player.setLoc(evtX, evtY);
+        g.player.setLoc(GameFrame.getNativeX(evtX), GameFrame.getNativeY(evtY));
 
         // Default scene handling.
         g.topLvlScene.actionHandler(g, evtType, evtX, evtY);
