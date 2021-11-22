@@ -2,20 +2,20 @@
 package basicbackbonegame2d;
 
 public class StateInfo {
-    
+
     /* Values that comprise state */
     public int vals[];
-    
-    public StateInfo(){
-        
+
+    public StateInfo() {
+
     }
-    
-    public void loadState(String str){
-        
+
+    public void loadState(String str) {
+
     }
-    
-    public String saveState(){
+
+    public String saveState() {
         return "";
     }
-    
+
 }
