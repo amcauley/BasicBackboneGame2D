@@ -7,13 +7,11 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -37,37 +35,23 @@ public class GameScreen extends JPanel {
      * Inner class for storing image info, including location and the actual
      * buffered image data.
      */
-    private class ImageContainer {
-        String imgPath;
-        BufferedImage img;
+    private class ImageContainer extends Image {
+        // String imgPath;
+        // BufferedImage img;
         int x, y;
-        int width, height;
+        // int width, height;
         int depth; // What the depth of this image is, used for determining what is drawn on top of
                    // what else
         String id; // unique identifier for this image, can be used to check if this is already in
                    // images list
 
-        ImageContainer() {
-
-        }
-
         ImageContainer(String pathName, int xx, int yy, int dpth, String idStr) {
+            super(pathName);
 
-            imgPath = pathName;
             x = xx;
             y = yy;
             depth = dpth;
             id = idStr;
-
-            try {
-                // System.out.println("Loading image:" + imgPath);
-                img = ImageIO.read(getClass().getClassLoader().getResource(imgPath));
-                width = img.getWidth();
-                height = img.getHeight();
-            } catch (IOException e) {
-                System.out.println("Error loading " + imgPath + ":");
-                System.out.println(e.getMessage());
-            }
         }
 
         String str() {
@@ -78,6 +62,10 @@ public class GameScreen extends JPanel {
             // System.out.println("Compare: " + str() + " vs. " + other.str());
             return (x == other.x) && (y == other.y) && (depth == other.depth) && imgPath.equals(other.imgPath)
                     && id.equals(other.id);
+        }
+
+        boolean equals(int xx, int yy, int dpth, String imagePath, String idStr) {
+            return (x == xx) && (y == yy) && (depth == dpth) && imgPath.equals(imagePath) && id.equals(idStr);
         }
 
         /* Not needed for basic image, but Animation will want this. */
@@ -115,10 +103,17 @@ public class GameScreen extends JPanel {
     private List<ImageContainer> images = new ArrayList<>();
 
     /*
-     * For next list of images/animations to be drawn. This will get latched into
-     * images, i.e. actively displayed images, after calling submitNewDrawList()
+     * For next list of images/animations to be drawn. New entries will get latched
+     * into images, i.e. actively displayed images, after calling
+     * submitNewDrawList()
      */
     private List<ImageContainer> newImages = new ArrayList<>();
+
+    /*
+     * Refresh images, i.e. existing images that have been re-added to the draw
+     * list.
+     */
+    private List<ImageContainer> refreshImages = new ArrayList<>();
 
     /*
      * Class to contain an animation. Animations are stored as large images - if
@@ -240,13 +235,47 @@ public class GameScreen extends JPanel {
     }
 
     public void addImgToDrawList(String imgPath, int x, int y, int depth, String id) {
+        // TODO: Unify with addAnimationToDrawList()
+        /* Check if the image is already loaded, ex. from the previous frame. */
+        for (Iterator<ImageContainer> oldIcIt = images.iterator(); oldIcIt.hasNext();) {
+            ImageContainer oldIc = oldIcIt.next();
+            if (oldIc.equals(x, y, depth, imgPath, id)) {
+                for (Iterator<ImageContainer> refreshIcIt = refreshImages.iterator(); refreshIcIt.hasNext();) {
+                    ImageContainer refreshIc = refreshIcIt.next();
+                    if (oldIc.equals(refreshIc)) {
+                        // Already tracked
+                        return;
+                    }
+                }
+                refreshImages.add(oldIc);
+                return;
+            }
+        }
 
         newImages.add(new ImageContainer(imgPath, x, y, depth, id));
+
         // System.out.println(images.size() + " images");
     }
 
     public void addAnimationToDrawList(String imgPath, int x, int y, int frameSizeX, int frameSizeY,
             Scene.AnimationType aType, int depth, String id) {
+
+        // TODO: try reusing animation object if it's the same one, only in a different
+        // location.
+        for (Iterator<ImageContainer> oldIcIt = images.iterator(); oldIcIt.hasNext();) {
+            ImageContainer oldIc = oldIcIt.next();
+            if (oldIc.equals(x, y, depth, imgPath, id)) { // TODO: Consider full check (animation type, size, etc.)
+                for (Iterator<ImageContainer> refreshIcIt = refreshImages.iterator(); refreshIcIt.hasNext();) {
+                    ImageContainer refreshIc = refreshIcIt.next();
+                    // If already tracked, no need to update anything.
+                    if (oldIc.equals(refreshIc)) {
+                        return;
+                    }
+                }
+                refreshImages.add(oldIc);
+                return;
+            }
+        }
 
         newImages.add(new Animation(imgPath, x, y, frameSizeX, frameSizeY, aType, depth, id));
     }
@@ -254,6 +283,7 @@ public class GameScreen extends JPanel {
     /* Clear list of new/pending images/animations. */
     public void clearNewDrawList() {
         newImages.clear();
+        refreshImages.clear();
     }
 
     /*
@@ -272,18 +302,17 @@ public class GameScreen extends JPanel {
 
         /* Remove any stale items from images. */
         for (Iterator<ImageContainer> oldIcIt = images.iterator(); oldIcIt.hasNext();) {
+
             ImageContainer oldIc = oldIcIt.next();
-            /* Check if there's a match in the new list */
+
             boolean foundMatch = false;
-            for (Iterator<ImageContainer> newIcIt = newImages.iterator(); newIcIt.hasNext();) {
-                ImageContainer newIc = newIcIt.next();
-                if (newIc.equals(oldIc)) {
-                    // System.out.println("^ Removed");
+            // If the entry isn't getting refreshed, it's stale.
+            for (Iterator<ImageContainer> refreshIcIt = refreshImages.iterator(); refreshIcIt.hasNext();) {
+                ImageContainer refreshIc = refreshIcIt.next();
+
+                if (refreshIc.equals(oldIc)) {
+
                     foundMatch = true;
-                    /*
-                     * We can also get rid of the entry from the new list since we found its match.
-                     */
-                    newIcIt.remove();
                     break;
                 }
             }
@@ -293,9 +322,7 @@ public class GameScreen extends JPanel {
             }
         }
 
-        /*
-         * Now everything remaining in newImages is new and should be added to images.
-         */
+        // Everything in newImages is new and should be added to images.
         images.addAll(newImages);
 
         /*
