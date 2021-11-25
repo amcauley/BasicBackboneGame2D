@@ -1,7 +1,6 @@
 
 package basicbackbonegame2d;
 
-import basicbackbonegame2d.Scenes.SceneManager;
 import static basicbackbonegame2d.Top.stateInfo;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,8 +14,14 @@ import javax.swing.event.MouseInputAdapter;
 
 /* TODO:
     - Replace some direct member accesses with getters/setters
+    - Obstacle class. Load obstacle image, combine (overwrite, additive, etc.) with others, ex. subscenes.
+    --- Pathfinding routines can run with obstacle map as input.
     - Refactor player; player shouldn't be derived from scene.
     - Code cleanup. Need a linter or something to clean up code / whitespace.
+    - Move simple scenes to a default template/loader.
+    --- Ex) Clock's basic params could be in JSON and a parser could initialize a Scene dynamically.
+    --- Default behavior is to interpret file structure as scene / subscene
+    - Move top level config to template/loader. Ex) starting scene and window size.
 */
 
 public class BasicBackboneGame2D implements ActionListener {

@@ -1,14 +1,11 @@
 
-package basicbackbonegame2d.Scenes;
+package basicbackbonegame2d;
 
-import basicbackbonegame2d.BasicBackboneGame2D;
-import basicbackbonegame2d.GameFrame;
 import basicbackbonegame2d.Scenes.Menu.Menu;
-import basicbackbonegame2d.StateInfo;
 import basicbackbonegame2d.Scenes.S_Room1.S_Room1;
 import basicbackbonegame2d.Scenes.S_Room2.S_Room2;
 import basicbackbonegame2d.Scenes.S_Win.S_Win;
-import basicbackbonegame2d.Top;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;

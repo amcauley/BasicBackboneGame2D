@@ -1,11 +1,12 @@
 
 package basicbackbonegame2d;
 
-import basicbackbonegame2d.Scenes.SceneManager;
-import basicbackbonegame2d.Scenes.SceneManager.SceneList;
 import static java.awt.MouseInfo.getPointerInfo;
 import java.awt.Point;
 import java.util.List;
+
+import basicbackbonegame2d.SceneManager.SceneList;
+
 import java.util.ArrayList;
 
 public abstract class Scene {

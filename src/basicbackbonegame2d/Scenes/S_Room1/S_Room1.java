@@ -5,13 +5,13 @@ import basicbackbonegame2d.BasicBackboneGame2D;
 import basicbackbonegame2d.GameFrame;
 import basicbackbonegame2d.Jukebox;
 import basicbackbonegame2d.Scene;
+import basicbackbonegame2d.SceneManager;
 import basicbackbonegame2d.Scenes.S_Room1.S_Clock.S_Clock;
-import basicbackbonegame2d.Scenes.SceneManager.SceneList;
 import basicbackbonegame2d.StateInfo;
 import basicbackbonegame2d.Scenes.S_Room1.S_Key.S_Key;
 import basicbackbonegame2d.Scenes.S_Room1.S_Switch.S_Switch;
-import basicbackbonegame2d.Scenes.SceneManager;
 import basicbackbonegame2d.Top;
+import basicbackbonegame2d.SceneManager.SceneList;
 
 public class S_Room1 extends Scene {
 
