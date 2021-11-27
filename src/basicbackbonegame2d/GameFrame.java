@@ -11,7 +11,8 @@ public class GameFrame extends JFrame {
     public static final int NOMINAL_WIDTH = 400;
     public static final int NOMINAL_HEIGHT = 400;
 
-    /* Store the actual, current width and height. */
+    // Store the actual, current width and height (including padding).
+    // TODO: better naming / definitions. Maybe don't include padding.
     // TODO: maybe use getters and setters for these
     public static int width;
     public static int height;
@@ -44,6 +45,14 @@ public class GameFrame extends JFrame {
      */
     public static int getNativeY(int frameY) {
         return (int) ((float) (frameY - GameFrame.yPad) / GameFrame.scale);
+    }
+
+    public static double getNormalizedX(int frameX) {
+        return (frameX - xPad) / (width - 2.0 * xPad);
+    }
+
+    public static double getNormalizedY(int frameY) {
+        return (frameY - yPad) / (height - 2.0 * yPad);
     }
 
     public void scaleComp() {

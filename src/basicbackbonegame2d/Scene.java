@@ -49,6 +49,10 @@ public abstract class Scene {
     /* Dynamic array of Transitions */
     public List<Transition> transitions = new ArrayList<>();
 
+    // Map of obstacles in this scenes.
+    // This can be uninitialized if the scene doesn't have any.
+    public Obstacle obstacle;
+
     /* Default scene constructor */
     public Scene() {
         numSubScenes = 0;
@@ -228,7 +232,7 @@ public abstract class Scene {
 
     /*
      * This will be overridden by each individual scene to provide custom action
-     * handling. return value indicates of further action processing should be
+     * handling. return value indicates if further action processing should be
      * stopped.
      */
     public int uniqueActionHandler(BasicBackboneGame2D g, BasicBackboneGame2D.MouseActions evtType, int evtX,
@@ -302,5 +306,9 @@ public abstract class Scene {
             g.sm.saveState();
         }
 
+    }
+
+    public Obstacle getObstacle() {
+        return obstacle;
     }
 }

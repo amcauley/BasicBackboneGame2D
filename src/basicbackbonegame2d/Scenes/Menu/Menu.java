@@ -232,9 +232,7 @@ public class Menu extends Scene {
             return 1;
         }
 
-        /* No further processing. */
         return 0;
-
     }
 
 }

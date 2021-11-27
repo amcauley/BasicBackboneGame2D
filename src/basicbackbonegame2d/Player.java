@@ -4,9 +4,12 @@ package basicbackbonegame2d;
 // TODO: They should probably both derive from some common drawable/animatable base class.
 public class Player extends Scene {
 
+    // Player's view of any obstacles on the map.
+    Obstacle obstacle;
+
     /* Enum of avilable images for this scene */
     public enum imagePathMap {
-        PLAYER("resources/images/Clock.png");
+        PLAYER("resources/images/Player.bmp");
 
         public String str;
 
@@ -22,8 +25,8 @@ public class Player extends Scene {
         animationType = Scene.AnimationType.ANIMATED_WITH_LOOP;
         xLoc = 130; // TODO: Locations should be normalized to the range [0, 1].
         yLoc = 150;
-        width = 25; /* For animations, this is the size of a single frame. */
-        height = 25;
+        width = 32; /* For animations, this is the size of a single frame. */
+        height = 32;
         depth = 100;
 
         /* Initialize this scene's image */
@@ -41,4 +44,18 @@ public class Player extends Scene {
         screen.addAnimationToDrawList(imagePath, xLoc, yLoc, width, height, animationType, depth, id);
     }
 
+    @Override
+    public void actionHandler(BasicBackboneGame2D g, BasicBackboneGame2D.MouseActions evtType, int evtX, int evtY) {
+        if (evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON) {
+            if (obstacle == null) {
+                return;
+            } else if (obstacle.isClear(GameFrame.getNormalizedX(evtX), GameFrame.getNormalizedY(evtY))) {
+                setLoc(GameFrame.getNativeX(evtX), GameFrame.getNativeY(evtY));
+            }
+        }
+    }
+
+    public void setObstacle(Obstacle o) {
+        obstacle = o;
+    }
 }

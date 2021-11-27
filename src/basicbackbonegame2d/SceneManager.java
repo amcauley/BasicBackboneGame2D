@@ -108,34 +108,34 @@ public class SceneManager {
     public static void switchScene(BasicBackboneGame2D g, SceneList sceneId) {
 
         switch (sceneId) {
-        case MENU: // Menu "Scene"
-            /* Store the scene we're leaving. */
-            // System.out.println("Lathing LAST_SCENE, old " +
-            // SceneList.MENU.state.vals[Menu.StateMap.LAST_SCENE.idx] +
-            // ", new " + g.topLvlSceneIdx);
+            case MENU: // Menu "Scene"
+                /* Store the scene we're leaving. */
+                // System.out.println("Lathing LAST_SCENE, old " +
+                // SceneList.MENU.state.vals[Menu.StateMap.LAST_SCENE.idx] +
+                // ", new " + g.topLvlSceneIdx);
 
-            /*
-             * If the current scene is already the menu, for example if the program
-             * previously exited from the menu screen, don't latch menu into LAST_SCENE, or
-             * else we'll not be able to resume from the menu screen.
-             */
-            if (g.topLvlSceneIdx != SceneList.MENU.idx) {
-                SceneList.MENU.state.vals[Menu.StateMap.LAST_SCENE.idx] = g.topLvlSceneIdx;
-            }
-            g.topLvlScene = new Menu();
-            break;
-        case S_ROOM1: // Room1
-            g.topLvlScene = new S_Room1();
-            break;
-        case S_ROOM2: // Room2
-            g.topLvlScene = new S_Room2();
-            break;
-        case S_WIN: // End of game
-            g.topLvlScene = new S_Win();
-            break;
-        default:
-            System.out.println("Invalid sceneId " + sceneId);
-            break;
+                /*
+                 * If the current scene is already the menu, for example if the program
+                 * previously exited from the menu screen, don't latch menu into LAST_SCENE, or
+                 * else we'll not be able to resume from the menu screen.
+                 */
+                if (g.topLvlSceneIdx != SceneList.MENU.idx) {
+                    SceneList.MENU.state.vals[Menu.StateMap.LAST_SCENE.idx] = g.topLvlSceneIdx;
+                }
+                g.topLvlScene = new Menu();
+                break;
+            case S_ROOM1: // Room1
+                g.topLvlScene = new S_Room1();
+                break;
+            case S_ROOM2: // Room2
+                g.topLvlScene = new S_Room2();
+                break;
+            case S_WIN: // End of game
+                g.topLvlScene = new S_Win();
+                break;
+            default:
+                System.out.println("Invalid sceneId " + sceneId);
+                break;
         }
 
         /* Latch new topLvlSceneIdx */
@@ -143,6 +143,8 @@ public class SceneManager {
 
         /* Update top level state. */
         SceneList.TOP.state.vals[Top.StateMap.LAST_SCENE_ID.idx] = sceneId.idx;
+
+        g.player.setObstacle(g.topLvlScene.getObstacle());
     }
 
     public void actionHandler(BasicBackboneGame2D g, BasicBackboneGame2D.MouseActions evtType, int evtX, int evtY) {
@@ -154,7 +156,7 @@ public class SceneManager {
         // any objects along the way.
         // Interaction could potentially be handled by the scenes themselves through
         // g.player.
-        g.player.setLoc(GameFrame.getNativeX(evtX), GameFrame.getNativeY(evtY));
+        g.player.actionHandler(g, evtType, evtX, evtY);
 
         // Default scene handling.
         g.topLvlScene.actionHandler(g, evtType, evtX, evtY);

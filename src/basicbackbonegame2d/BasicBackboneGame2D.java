@@ -129,7 +129,7 @@ public class BasicBackboneGame2D implements ActionListener {
          * Overwrite top level scene for now until AutoSave file handling for JAR
          * distribution is figured out. Just load to room 0.
          */
-        sm.switchScene(this, SceneManager.SceneList.S_ROOM1);
+        SceneManager.switchScene(this, SceneManager.SceneList.S_ROOM1);
 
         SceneManager.switchScene(this, SceneManager.SceneList.values()[topLvlSceneIdx]);
 
@@ -138,8 +138,7 @@ public class BasicBackboneGame2D implements ActionListener {
          * is initialized.
          */
         gameMouseListener mouseListener = new gameMouseListener();
-        topLvlScene.screen.registerMouseListener(mouseListener);
-
+        Scene.screen.registerMouseListener(mouseListener);
     }
 
     /*
@@ -149,7 +148,8 @@ public class BasicBackboneGame2D implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         // System.out.println("Timer triggered");
 
-        topLvlScene.screen.fromTick = true;
+        Scene.screen.fromTick = true;
+        // TODO: Put other tick-based processing here, ex. player movement.
         topLvlScene.updateScreen(true);
         topLvlScene.draw();
     }
