@@ -147,7 +147,7 @@ public class BasicBackboneGame2D implements ActionListener {
         // System.out.println("Timer triggered");
 
         Scene.screen.fromTick = true;
-        // TODO: Put other tick-based processing here, ex. player movement.
+        player.onTick();
         topLvlScene.updateScreen(true);
         topLvlScene.draw();
     }

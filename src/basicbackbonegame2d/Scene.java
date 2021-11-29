@@ -3,11 +3,10 @@ package basicbackbonegame2d;
 
 import static java.awt.MouseInfo.getPointerInfo;
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.List;
 
 import basicbackbonegame2d.SceneManager.SceneList;
-
-import java.util.ArrayList;
 
 public abstract class Scene {
 
@@ -166,8 +165,8 @@ public abstract class Scene {
          * Undo any scaling/padding on the location - all checks are based on nominal
          * scaling.
          */
-        x = GameFrame.getNativeX(x);
-        y = GameFrame.getNativeY(y);
+        x = GameFrame.frameToNativeX(x);
+        y = GameFrame.frameToNativeY(y);
 
         /* x/y locations were based on nominal scaling, so no conversion needed. */
         x -= xLoc;

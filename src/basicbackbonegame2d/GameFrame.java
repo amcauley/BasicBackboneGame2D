@@ -35,24 +35,52 @@ public class GameFrame extends JFrame {
      */
     // TODO: Should convert most coordinates, ex. in the scene, to a normalized
     // range [0, 1].
-    public static int getNativeX(int frameX) {
+    public static int frameToNativeX(int frameX) {
         return (int) ((float) (frameX - GameFrame.xPad) / GameFrame.scale);
     }
 
-    /*
-     * Convert the game frame position into an unpadded/unscaled version, i.e. in
-     * game-native coordinates.
-     */
-    public static int getNativeY(int frameY) {
+    public static int frameToNativeY(int frameY) {
         return (int) ((float) (frameY - GameFrame.yPad) / GameFrame.scale);
     }
 
-    public static double getNormalizedX(int frameX) {
+    public static double frameToNormalizedX(int frameX) {
         return (frameX - xPad) / (width - 2.0 * xPad);
     }
 
-    public static double getNormalizedY(int frameY) {
+    public static double frameToNormalizedY(int frameY) {
         return (frameY - yPad) / (height - 2.0 * yPad);
+    }
+
+    public static int nativeToFrameX(int nativeX) {
+        return (int) (nativeX * GameFrame.scale + GameFrame.xPad);
+    }
+
+    public static int nativeToFrameY(int nativeY) {
+        return (int) (nativeY * GameFrame.scale + GameFrame.yPad);
+    }
+
+    public static int normalizedToFrameX(double x) {
+        return (int) (x * (width - 2.0 * xPad) + xPad);
+    }
+
+    public static int normalizedToFrameY(double y) {
+        return (int) (y * (height - 2.0 * yPad) + yPad);
+    }
+
+    public static double nativeToNormalizedX(int nativeX) {
+        return frameToNormalizedX(nativeToFrameX(nativeX));
+    }
+
+    public static double nativeToNormalizedY(int nativeY) {
+        return frameToNormalizedY(nativeToFrameY(nativeY));
+    }
+
+    public static int normalizedToNativeX(double x) {
+        return frameToNativeX(normalizedToFrameX(x));
+    }
+
+    public static int normalizedToNativeY(double y) {
+        return frameToNativeY(normalizedToFrameY(y));
     }
 
     public void scaleComp() {
