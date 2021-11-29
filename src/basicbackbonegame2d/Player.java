@@ -79,6 +79,10 @@ public class Player extends Scene {
         scaleMap = s;
     }
 
+    public void setDepth(int d) {
+        depth = d;
+    }
+
     public void onTick() {
         // System.out.println("Player tick");
         double xLocNormalized = GameFrame.nativeToNormalizedX(xLoc);
@@ -94,6 +98,12 @@ public class Player extends Scene {
 
             if (scaleMap != null) {
                 scale = scaleMap.getScalingFactor(nextLocation.x, nextLocation.y);
+                // TODO: Refactor scaleMap into depthMap.
+                // Will probably need auxilliary JSON to describe how the values map to scale
+                // and depth. Ex. what are min and max values, is there any offset on top of
+                // linear scaling, do we even want linear scaling, which image corresponds to
+                // the actual map, etc.
+                setDepth(10 + (int) (scale * 20));
             }
         }
     }

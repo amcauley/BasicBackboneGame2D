@@ -45,6 +45,8 @@ public abstract class Scene {
     public Scene subScenes[];
     public int numSubScenes;
 
+    public boolean showPlayer;
+
     /* Dynamic array of Transitions */
     public List<Transition> transitions = new ArrayList<>();
 
@@ -62,6 +64,7 @@ public abstract class Scene {
         isActive = true;
         depth = DEFAULT_DEPTH;
         animationType = AnimationType.NO_ANIMATION;
+        showPlayer = false;
     }
 
     // Update the draw list with this scene's entries (and entries from sub-scenes).
@@ -96,10 +99,10 @@ public abstract class Scene {
         if (topLvlCall) {
             screen.clearNewDrawList();
 
-            // The player should make sure the player gets drawn.
-            // This can later be expanded to selectively hide the player in particular
-            // scenes or situations.
-            g.player.updateDrawList();
+            // The scene should make sure the player gets drawn.
+            if (showPlayer) {
+                g.player.updateDrawList();
+            }
         }
 
         updateDrawList();

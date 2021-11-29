@@ -91,6 +91,7 @@ public class S_Room1 extends Scene {
         /* Basic initialization params */
         sceneName = "S_Room1";
         isSubscene = false;
+        showPlayer = true;
         animationType = Scene.AnimationType.NO_ANIMATION;
         xLoc = 0;
         yLoc = 0;

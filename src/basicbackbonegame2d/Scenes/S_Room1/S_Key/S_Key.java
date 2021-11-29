@@ -21,10 +21,11 @@ public class S_Key extends Scene {
         sceneName = "S_Key";
         isSubscene = true;
         animationType = Scene.AnimationType.NO_ANIMATION;
-        xLoc = 73;
-        yLoc = 235;
+        xLoc = 100;
+        yLoc = 280;
         width = 51;
         height = 30;
+        depth = 20;
 
         /* Initialize this scene's image */
         imagePath = imagePathMap.KEY.str;
