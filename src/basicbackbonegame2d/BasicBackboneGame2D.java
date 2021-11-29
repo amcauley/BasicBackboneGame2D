@@ -14,10 +14,8 @@ import javax.swing.event.MouseInputAdapter;
 
 /* TODO:
     - Replace some direct member accesses with getters/setters
-    - Obstacle class. Load obstacle image, combine (overwrite, additive, etc.) with others, ex. subscenes.
-    --- Pathfinding routines can run with obstacle map as input.
     - Refactor player; player shouldn't be derived from scene.
-    - Code cleanup. Need a linter or something to clean up code / whitespace.
+    - Give scenes the option to disable player.
     - Move simple scenes to a default template/loader.
     --- Ex) Clock's basic params could be in JSON and a parser could initialize a Scene dynamically.
     --- Default behavior is to interpret file structure as scene / subscene

@@ -5,6 +5,7 @@ import basicbackbonegame2d.BasicBackboneGame2D;
 import basicbackbonegame2d.GameFrame;
 import basicbackbonegame2d.Jukebox;
 import basicbackbonegame2d.Obstacle;
+import basicbackbonegame2d.ScaleMap;
 import basicbackbonegame2d.Scene;
 import basicbackbonegame2d.SceneManager;
 import basicbackbonegame2d.Scenes.S_Room1.S_Clock.S_Clock;
@@ -100,6 +101,7 @@ public class S_Room1 extends Scene {
         imagePath = imagePathMap.ROOM1.str;
 
         obstacle = new Obstacle("resources/images/Room1_Obstacle.bmp");
+        scaleMap = new ScaleMap("resources/images/Room1_ScaleMap.bmp");
 
         /* Create any subscenes and add to array */
         numSubScenes = SubSceneMap.values().length;

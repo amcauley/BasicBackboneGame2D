@@ -7,6 +7,8 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.awt.image.AffineTransformOp;
+import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -31,6 +33,19 @@ public class GameScreen extends JPanel {
     /* currently used cursor type */
     private CursorType activeCursorType;
 
+    public static BufferedImage scaleBufferedImage(BufferedImage input, double scale) {
+        int widthOut = (int) (input.getWidth() * scale);
+        int heightOut = (int) (input.getHeight() * scale);
+
+        BufferedImage output = new BufferedImage(widthOut, heightOut, input.getType());
+
+        AffineTransform scaleTransform = AffineTransform.getScaleInstance(scale, scale);
+        AffineTransformOp scaleOp = new AffineTransformOp(scaleTransform, AffineTransformOp.TYPE_BILINEAR);
+
+        scaleOp.filter(input, output);
+        return output;
+    }
+
     /*
      * Inner class for storing image info, including location and the actual
      * buffered image data.
@@ -40,6 +55,7 @@ public class GameScreen extends JPanel {
         // BufferedImage img;
         int x, y;
         // int width, height;
+        double scale;
         int depth; // What the depth of this image is, used for determining what is drawn on top of
                    // what else
         String id; // unique identifier for this image, can be used to check if this is already in
@@ -52,6 +68,7 @@ public class GameScreen extends JPanel {
             y = yy;
             depth = dpth;
             id = idStr;
+            scale = 1.0;
         }
 
         String str() {
@@ -84,6 +101,14 @@ public class GameScreen extends JPanel {
          */
         boolean isActive() {
             return false;
+        }
+
+        void setScale(double s) {
+            scale = s;
+        }
+
+        double getScale() {
+            return scale;
         }
 
         boolean isAnimated() {
@@ -145,7 +170,7 @@ public class GameScreen extends JPanel {
          * frame and with the help of getWidth() or getHeight().
          */
         Animation(String pathName, int xx, int yy, int frameSizeX, int frameSizeY, Scene.AnimationType aType, int depth,
-                String id) {
+                double s, String id) {
 
             super(pathName, xx, yy, depth, id);
 
@@ -161,6 +186,8 @@ public class GameScreen extends JPanel {
 
             curFrame = 0;
             animationType = aType;
+
+            scale = s;
 
             active = true;
 
@@ -195,7 +222,8 @@ public class GameScreen extends JPanel {
             // System.out.println("Animation frame " + (curFrame+1) + "/ " + numFrames + ",
             // x " + xIdx + ", y " + yIdx);
 
-            return img.getSubimage(xIdx * xFrameSize, yIdx * yFrameSize, xFrameSize, yFrameSize);
+            return scaleBufferedImage(img.getSubimage(xIdx * xFrameSize, yIdx * yFrameSize, xFrameSize, yFrameSize),
+                    scale);
         }
 
         /*
@@ -258,7 +286,7 @@ public class GameScreen extends JPanel {
     }
 
     public void addAnimationToDrawList(String imgPath, int x, int y, int frameSizeX, int frameSizeY,
-            Scene.AnimationType aType, int depth, String id) {
+            Scene.AnimationType aType, int depth, double scale, String id) {
 
         // TODO: try reusing animation object if it's the same one, only in a different
         // location.
@@ -277,7 +305,7 @@ public class GameScreen extends JPanel {
             }
         }
 
-        newImages.add(new Animation(imgPath, x, y, frameSizeX, frameSizeY, aType, depth, id));
+        newImages.add(new Animation(imgPath, x, y, frameSizeX, frameSizeY, aType, depth, scale, id));
     }
 
     /* Clear list of new/pending images/animations. */
@@ -366,8 +394,8 @@ public class GameScreen extends JPanel {
 
             int startX = (int) (ic.x * scale) + GameFrame.xPad;
             int startY = (int) (ic.y * scale) + GameFrame.yPad;
-            int startWidth = ic.width;
-            int startHeight = ic.height;
+            int startWidth = (int) (ic.width * ic.getScale());
+            int startHeight = (int) (ic.height * ic.getScale());
 
             // System.out.println(ic.imgPath);
             // System.out.println("x " + startX + ", y " + startY + ", w " + startWidth + ",
@@ -425,30 +453,33 @@ public class GameScreen extends JPanel {
 
         if (activeCursorType != cursorType) {
             switch (cursorType) {
-            case DEFAULT: // Default cursor
-                // setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-                setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
-                        new ImageIcon(getClass().getClassLoader().getResource("resources/images/Cursor_Default.png"))
-                                .getImage(),
-                        new Point(hotSpotX, hotSpotY), "defaultCursor"));
-                break;
-            case INSPECTION: // Inspection
-                // setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-                setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
-                        new ImageIcon(getClass().getClassLoader().getResource("resources/images/Cursor_Inspect.png"))
-                                .getImage(),
-                        new Point(hotSpotX, hotSpotY), "inspectionCursor"));
-                break;
-            case TRANSITION: // Transition
-                // setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
-                setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
-                        new ImageIcon(getClass().getClassLoader().getResource("resources/images/Cursor_Transition.png"))
-                                .getImage(),
-                        new Point(hotSpotX, hotSpotY), "transitionCursor"));
-                break;
-            default:
-                System.out.println("Undefined cursorType " + cursorType);
-                break;
+                case DEFAULT: // Default cursor
+                    // setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                    setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
+                            new ImageIcon(
+                                    getClass().getClassLoader().getResource("resources/images/Cursor_Default.png"))
+                                            .getImage(),
+                            new Point(hotSpotX, hotSpotY), "defaultCursor"));
+                    break;
+                case INSPECTION: // Inspection
+                    // setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
+                            new ImageIcon(
+                                    getClass().getClassLoader().getResource("resources/images/Cursor_Inspect.png"))
+                                            .getImage(),
+                            new Point(hotSpotX, hotSpotY), "inspectionCursor"));
+                    break;
+                case TRANSITION: // Transition
+                    // setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+                    setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
+                            new ImageIcon(
+                                    getClass().getClassLoader().getResource("resources/images/Cursor_Transition.png"))
+                                            .getImage(),
+                            new Point(hotSpotX, hotSpotY), "transitionCursor"));
+                    break;
+                default:
+                    System.out.println("Undefined cursorType " + cursorType);
+                    break;
             }
 
             activeCursorType = cursorType;

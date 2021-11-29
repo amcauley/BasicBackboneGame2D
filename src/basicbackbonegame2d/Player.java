@@ -7,6 +7,11 @@ public class Player extends Scene {
     // Player's view of any obstacles on the map.
     Obstacle obstacle;
 
+    // Scaling map for the player.
+    ScaleMap scaleMap;
+
+    double scale;
+
     /* Enum of avilable images for this scene */
     public enum imagePathMap {
         PLAYER("resources/images/Player.bmp");
@@ -28,6 +33,7 @@ public class Player extends Scene {
         width = 32; /* For animations, this is the size of a single frame. */
         height = 32;
         depth = 100;
+        scale = 1.0;
 
         /* Initialize this scene's image */
         imagePath = imagePathMap.PLAYER.str;
@@ -41,12 +47,16 @@ public class Player extends Scene {
          * multiple (sub)scenes use the same image.
          */
         String id = sceneName + "_" + imagePath;
-        screen.addAnimationToDrawList(imagePath, xLoc, yLoc, width, height, animationType, depth, id);
+        screen.addAnimationToDrawList(imagePath, xLoc, yLoc, width, height, animationType, depth, scale, id);
     }
 
     @Override
     public void actionHandler(BasicBackboneGame2D g, BasicBackboneGame2D.MouseActions evtType, int evtX, int evtY) {
         if (evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON) {
+            if (scaleMap != null) {
+                scale = scaleMap.getScalingFactor(GameFrame.getNormalizedX(evtX), GameFrame.getNormalizedY(evtY));
+            }
+
             if (obstacle == null) {
                 return;
             } else if (obstacle.isClear(GameFrame.getNormalizedX(evtX), GameFrame.getNormalizedY(evtY))) {
@@ -57,5 +67,9 @@ public class Player extends Scene {
 
     public void setObstacle(Obstacle o) {
         obstacle = o;
+    }
+
+    public void setScaleMap(ScaleMap s) {
+        scaleMap = s;
     }
 }

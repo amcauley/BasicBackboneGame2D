@@ -53,6 +53,10 @@ public abstract class Scene {
     // This can be uninitialized if the scene doesn't have any.
     public Obstacle obstacle;
 
+    // Scaling applied to the Player. This represents depth in the scene.
+    // Can be uninitialized if not applicable to a scene.
+    public ScaleMap scaleMap;
+
     /* Default scene constructor */
     public Scene() {
         numSubScenes = 0;
@@ -73,7 +77,7 @@ public abstract class Scene {
 
         /* Recurse to add images/animations to newDrawList */
         if (animationType != Scene.AnimationType.NO_ANIMATION) {
-            screen.addAnimationToDrawList(imagePath, xLoc, yLoc, width, height, animationType, depth, id);
+            screen.addAnimationToDrawList(imagePath, xLoc, yLoc, width, height, animationType, depth, 1.0, id);
         } else {
             screen.addImgToDrawList(imagePath, xLoc, yLoc, depth, id);
         }
@@ -310,5 +314,9 @@ public abstract class Scene {
 
     public Obstacle getObstacle() {
         return obstacle;
+    }
+
+    public ScaleMap getScaleMap() {
+        return scaleMap;
     }
 }

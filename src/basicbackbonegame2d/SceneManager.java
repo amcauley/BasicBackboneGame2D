@@ -145,6 +145,7 @@ public class SceneManager {
         SceneList.TOP.state.vals[Top.StateMap.LAST_SCENE_ID.idx] = sceneId.idx;
 
         g.player.setObstacle(g.topLvlScene.getObstacle());
+        g.player.setScaleMap(g.topLvlScene.getScaleMap());
     }
 
     public void actionHandler(BasicBackboneGame2D g, BasicBackboneGame2D.MouseActions evtType, int evtX, int evtY) {
