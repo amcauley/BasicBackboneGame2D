@@ -2,64 +2,63 @@
 package basicbackbonegame2d;
 
 /* Pseudo-scene for top level management. */
-public class Top extends Scene{
-    
+public class Top extends Scene {
+
     static StateInfo stateInfo = new StateInfo_Top();
-    
-    public static StateInfo getStateInfo(){
+
+    public static StateInfo getStateInfo() {
         return stateInfo;
     }
-    
+
     /* Enum for tracking/defining state info for this scene. */
-    public enum StateMap{
-        LAST_SCENE_ID(0),   //Stores the last active scene
-        HAS_KEY(1),         //Player has the key
-        ROOM2_HAS_PWR(2),   //Room2 scene is powered
-        HAS_BAUBLE(3);      //Useless item just for testing
-        
+    public enum StateMap {
+        LAST_SCENE_ID(0), // Stores the last active scene
+        HAS_KEY(1), // Player has the key
+        ROOM2_HAS_PWR(2), // Room2 scene is powered
+        HAS_BAUBLE(3); // Useless item just for testing
+
         public int idx;
-        
-        StateMap(int i){
+
+        StateMap(int i) {
             idx = i;
         }
-    }    
-    
-    public static class StateInfo_Top extends StateInfo{
-    
-        public StateInfo_Top(){
+    }
+
+    public static class StateInfo_Top extends StateInfo {
+
+        public StateInfo_Top() {
             /* Allocate memory for state */
             vals = new int[StateMap.values().length];
-            
+
             /* Initialize state values. */
-            vals[StateMap.LAST_SCENE_ID.idx]    = 1;    //Default scene is Room1
-            vals[StateMap.HAS_KEY.idx]          = 0;    //No key yet
-            vals[StateMap.ROOM2_HAS_PWR.idx]    = 0;    //Not yet powered
-            vals[StateMap.HAS_BAUBLE.idx]       = 0;    //Not collected
+            vals[StateMap.LAST_SCENE_ID.idx] = 1; // Default scene is Room1
+            vals[StateMap.HAS_KEY.idx] = 0; // No key yet
+            vals[StateMap.ROOM2_HAS_PWR.idx] = 0; // Not yet powered
+            vals[StateMap.HAS_BAUBLE.idx] = 0; // Not collected
         }
-        
+
         @Override
-        public String saveState(){
+        public String saveState() {
             String strOut = "";
-            for (StateMap st : StateMap.values()){
+            for (StateMap st : StateMap.values()) {
                 strOut += String.valueOf(stateInfo.vals[st.idx]) + " ";
             }
             return strOut;
-        }           
-        
-        
+        }
+
         /* Use stateMap enum to map in values from input string */
         @Override
-        public void loadState(String str){
+        public void loadState(String str) {
             String[] strVals = str.split(" ");
             int idx = 0;
-            for (StateMap st : StateMap.values()){
+            for (StateMap st : StateMap.values()) {
                 stateInfo.vals[st.idx] = Integer.valueOf(strVals[idx++]);
             }
-        }             
+        }
 
-    }    
+    }
 
-    public Top(){
+    public Top() {
         /* Basic initialization params */
         sceneName = "Top";
         isSubscene = false;
@@ -67,21 +66,21 @@ public class Top extends Scene{
         yLoc = 0;
         width = 0;
         height = 0;
-        
+
         /* Initialize this scene's image */
-        //NA
-        
+        // NA
+
         /* Reset screen */
-        //NA
-        
+        // NA
+
         /* Create any subscenes and add to array */
-        //NA
-        
+        // NA
+
         /* Add any starting transitions */
-        //NA
-        
+        // NA
+
         /* Standard scene drawing routines for top level scenes */
-        //NA
+        // NA
     }
-    
+
 }

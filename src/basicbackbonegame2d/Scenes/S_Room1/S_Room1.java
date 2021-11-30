@@ -4,169 +4,170 @@ package basicbackbonegame2d.Scenes.S_Room1;
 import basicbackbonegame2d.BasicBackboneGame2D;
 import basicbackbonegame2d.GameFrame;
 import basicbackbonegame2d.Jukebox;
+import basicbackbonegame2d.Obstacle;
+import basicbackbonegame2d.ScaleMap;
 import basicbackbonegame2d.Scene;
+import basicbackbonegame2d.SceneManager;
 import basicbackbonegame2d.Scenes.S_Room1.S_Clock.S_Clock;
-import basicbackbonegame2d.Scenes.SceneManager.SceneList;
 import basicbackbonegame2d.StateInfo;
 import basicbackbonegame2d.Scenes.S_Room1.S_Key.S_Key;
 import basicbackbonegame2d.Scenes.S_Room1.S_Switch.S_Switch;
-import basicbackbonegame2d.Scenes.SceneManager;
 import basicbackbonegame2d.Top;
+import basicbackbonegame2d.SceneManager.SceneList;
 
-public class S_Room1 extends Scene{
-    
+public class S_Room1 extends Scene {
+
     static StateInfo stateInfo = new StateInfo_Room1();
-    
-    public static StateInfo getStateInfo(){
+
+    public static StateInfo getStateInfo() {
         return stateInfo;
     }
-    
+
     /* Enum for tracking/defining state info for this scene. */
-    enum StateMap{
-        RESERVED(0);    //Reserved for future use
-        
+    enum StateMap {
+        RESERVED(0); // Reserved for future use
+
         int idx;
-        
-        StateMap(int i){
+
+        StateMap(int i) {
             idx = i;
         }
-    }    
-    
-    public static class StateInfo_Room1 extends StateInfo{
-    
-        public StateInfo_Room1(){
+    }
+
+    public static class StateInfo_Room1 extends StateInfo {
+
+        public StateInfo_Room1() {
             /* Allocate memory for state */
             vals = new int[StateMap.values().length];
-            
+
             /* Initialize state values. */
-            vals[StateMap.RESERVED.idx] = 0;    //Reserved for future use
+            vals[StateMap.RESERVED.idx] = 0; // Reserved for future use
         }
-        
+
         @Override
-        public String saveState(){
+        public String saveState() {
             String strOut = "";
-            for (StateMap st : StateMap.values()){
+            for (StateMap st : StateMap.values()) {
                 strOut += String.valueOf(stateInfo.vals[st.idx]) + " ";
             }
             return strOut;
-        }           
-        
-        
+        }
+
         /* Use stateMap enum to map in values from input string */
         @Override
-        public void loadState(String str){
+        public void loadState(String str) {
             String[] strVals = str.split(" ");
             int idx = 0;
-            for (StateMap st : StateMap.values()){
+            for (StateMap st : StateMap.values()) {
                 stateInfo.vals[st.idx] = Integer.valueOf(strVals[idx++]);
             }
-        }             
+        }
 
-    }    
-    
-    /* Use an enum to better track subscenes of this scene */ 
-    enum SubSceneMap{
-        KEY(0),
-        SWITCH(1),
-        CLOCK(2);
-        
+    }
+
+    /* Use an enum to better track subscenes of this scene */
+    enum SubSceneMap {
+        KEY(0), SWITCH(1), CLOCK(2);
+
         int idx;
-        
-        SubSceneMap(int i){
+
+        SubSceneMap(int i) {
             idx = i;
         }
-    }    
-    
+    }
+
     /* Enum of avilable images for this scene */
-    public enum imagePathMap{
+    public enum imagePathMap {
         ROOM1("resources/images/Room1.jpg");
-        
+
         public String str;
-        
-        imagePathMap(String s){
+
+        imagePathMap(String s) {
             str = s;
         }
     }
-    
-    public S_Room1(){
+
+    public S_Room1() {
         /* Basic initialization params */
         sceneName = "S_Room1";
         isSubscene = false;
+        showPlayer = true;
         animationType = Scene.AnimationType.NO_ANIMATION;
         xLoc = 0;
         yLoc = 0;
         width = GameFrame.NOMINAL_WIDTH;
         height = GameFrame.NOMINAL_HEIGHT;
-        
+
         /* Initialize this scene's image */
-        imagePath = imagePathMap.ROOM1.str;        
-        
+        imagePath = imagePathMap.ROOM1.str;
+
+        obstacle = new Obstacle("resources/images/Room1_Obstacle.bmp");
+        scaleMap = new ScaleMap("resources/images/Room1_ScaleMap.bmp");
+
         /* Create any subscenes and add to array */
         numSubScenes = SubSceneMap.values().length;
         subScenes = new Scene[numSubScenes];
-        
+
         subScenes[SubSceneMap.KEY.idx] = new S_Key();
-        
+
         /* Set key invisible if it's been obtained already. */
-        if(SceneManager.SceneList.TOP.state.vals[Top.StateMap.HAS_KEY.idx] == 1){
+        if (SceneManager.SceneList.TOP.state.vals[Top.StateMap.HAS_KEY.idx] == 1) {
             subScenes[SubSceneMap.KEY.idx].setActiveState(false);
         }
-        
+
         subScenes[SubSceneMap.SWITCH.idx] = new S_Switch();
 
         /* Set switch up (down by default) if it's been toggled. */
-        if (SceneManager.SceneList.TOP.state.vals[Top.StateMap.ROOM2_HAS_PWR.idx] == 1){
+        if (SceneManager.SceneList.TOP.state.vals[Top.StateMap.ROOM2_HAS_PWR.idx] == 1) {
             subScenes[SubSceneMap.SWITCH.idx].swapImage(S_Switch.imagePathMap.UP.str);
         }
-        
+
         /* Clock animation. */
         subScenes[SubSceneMap.CLOCK.idx] = new S_Clock();
-        
+
         /* Add any starting transitions */
         addTransition(new Transition(SceneList.S_ROOM2, 325, 165, 53, 180, Jukebox.Sounds.DOOR0));
-        
+
         /* Start BG music. */
-        g.jukebox.play(Jukebox.Sounds.BG_MUSIC0, true);
-        
+        // g.jukebox.play(Jukebox.Sounds.BG_MUSIC0, true);
+
         /* Standard scene drawing routines for top level scenes */
         refresh();
     }
-    
+
     @Override
-    public int uniqueActionHandler(  BasicBackboneGame2D g, 
-                                     BasicBackboneGame2D.MouseActions evtType, 
-                                     int evtX, 
-                                     int evtY) {
-        
-        if ( (evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON) && 
-              subScenes[SubSceneMap.KEY.idx].isHit(evtX, evtY) ){
-         
+    public int uniqueActionHandler(BasicBackboneGame2D g, BasicBackboneGame2D.MouseActions evtType, int evtX,
+            int evtY) {
+
+        if ((evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON)
+                && subScenes[SubSceneMap.KEY.idx].isHit(evtX, evtY)) {
+
             /* Set key in scene to non-active so it won't be drawn. */
             subScenes[SubSceneMap.KEY.idx].setActiveState(false);
-            
+
             /* Update state to reflect the fact that key is taken. */
             SceneManager.SceneList.TOP.state.vals[Top.StateMap.HAS_KEY.idx] = 1;
-            
+
             /* Refresh the screen. */
             refresh();
         }
-        
+
         /* Handle light switch */
-        if ( (evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON) && 
-              subScenes[SubSceneMap.SWITCH.idx].isHit(evtX, evtY) ){
-            
+        if ((evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON)
+                && subScenes[SubSceneMap.SWITCH.idx].isHit(evtX, evtY)) {
+
             /* Flip switch */
             SceneManager.SceneList.TOP.state.vals[Top.StateMap.ROOM2_HAS_PWR.idx] ^= 0x1;
-            
-            subScenes[SubSceneMap.SWITCH.idx].swapImage(
-                (SceneManager.SceneList.TOP.state.vals[Top.StateMap.ROOM2_HAS_PWR.idx] == 1) ?
-                    S_Switch.imagePathMap.UP.str:
-                    S_Switch.imagePathMap.DOWN.str);
-            
-            refresh();          
+
+            subScenes[SubSceneMap.SWITCH.idx]
+                    .swapImage((SceneManager.SceneList.TOP.state.vals[Top.StateMap.ROOM2_HAS_PWR.idx] == 1)
+                            ? S_Switch.imagePathMap.UP.str
+                            : S_Switch.imagePathMap.DOWN.str);
+
+            refresh();
         }
-        
+
         return 0;
-      
+
     }
 }
