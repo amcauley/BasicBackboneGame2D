@@ -1,16 +1,16 @@
 
-package basicbackbonegame2d.Scenes.S_Room2;
+package example.Scenes.S_Room2;
 
 import basicbackbonegame2d.BasicBackboneGame2D;
 import basicbackbonegame2d.GameFrame;
 import basicbackbonegame2d.Jukebox;
 import basicbackbonegame2d.Scene;
 import basicbackbonegame2d.SceneManager;
-import basicbackbonegame2d.Scenes.S_Room2.S_Bauble.S_Bauble;
-import basicbackbonegame2d.Scenes.S_Room2.S_Key_In_Door.S_Key_In_Door;
 import basicbackbonegame2d.StateInfo;
 import basicbackbonegame2d.Top;
 import basicbackbonegame2d.SceneManager.SceneList;
+import example.Scenes.S_Room2.S_Bauble.S_Bauble;
+import example.Scenes.S_Room2.S_Key_In_Door.S_Key_In_Door;
 
 public class S_Room2 extends Scene {
 

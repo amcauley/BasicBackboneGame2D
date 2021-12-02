@@ -1,18 +1,19 @@
 
-package basicbackbonegame2d.Scenes.Menu;
+package example.Scenes.Menu;
 
 import basicbackbonegame2d.BasicBackboneGame2D;
 import basicbackbonegame2d.GameFrame;
 import basicbackbonegame2d.Scene;
 import basicbackbonegame2d.SceneManager;
-import basicbackbonegame2d.Scenes.Menu.ItemSlot0.ItemSlot0;
-import basicbackbonegame2d.Scenes.Menu.ItemSlot1.ItemSlot1;
-import basicbackbonegame2d.Scenes.Menu.Load.Load;
-import basicbackbonegame2d.Scenes.Menu.New_Game.New_Game;
-import basicbackbonegame2d.Scenes.Menu.Resume.Resume;
-import basicbackbonegame2d.Scenes.Menu.Save.Save;
 import basicbackbonegame2d.StateInfo;
 import basicbackbonegame2d.Top;
+import example.Scenes.Menu.ItemSlot0.ItemSlot0;
+import example.Scenes.Menu.ItemSlot1.ItemSlot1;
+import example.Scenes.Menu.Load.Load;
+import example.Scenes.Menu.New_Game.New_Game;
+import example.Scenes.Menu.Resume.Resume;
+import example.Scenes.Menu.Save.Save;
+
 import java.io.IOException;
 import javax.swing.JFileChooser;
 

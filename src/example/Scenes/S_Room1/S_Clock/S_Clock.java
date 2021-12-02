@@ -1,13 +1,12 @@
-
-package basicbackbonegame2d.Scenes.S_Room1.S_Switch;
+package example.Scenes.S_Room1.S_Clock;
 
 import basicbackbonegame2d.Scene;
 
-public class S_Switch extends Scene {
+public class S_Clock extends Scene {
 
     /* Enum of avilable images for this scene */
     public enum imagePathMap {
-        DOWN("resources/images/Switch_down.png"), UP("resources/images/Switch_up.png");
+        CLOCK("resources/images/Clock.png");
 
         public String str;
 
@@ -16,18 +15,18 @@ public class S_Switch extends Scene {
         }
     }
 
-    public S_Switch() {
+    public S_Clock() {
         /* Basic initialization params */
-        sceneName = "S_Switch";
+        sceneName = "S_Clock";
         isSubscene = true;
-        animationType = Scene.AnimationType.NO_ANIMATION;
-        xLoc = 223;
-        yLoc = 186;
-        width = 37;
-        height = 41;
+        animationType = Scene.AnimationType.ANIMATED_WITH_LOOP;
+        xLoc = 135;
+        yLoc = 135;
+        width = 25; /* For animations, this is the size of a single frame. */
+        height = 25;
 
-        /* Initialize this scene's image - switch is down */
-        imagePath = imagePathMap.DOWN.str;
+        /* Initialize this scene's image */
+        imagePath = imagePathMap.CLOCK.str;
 
         /* Reset screen - if top level scene */
 

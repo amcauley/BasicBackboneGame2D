@@ -1,13 +1,13 @@
 
-package basicbackbonegame2d.Scenes.S_Room1.S_Key;
+package example.Scenes.Menu.Save;
 
 import basicbackbonegame2d.Scene;
 
-public class S_Key extends Scene {
+public class Save extends Scene {
 
     /* Enum of avilable images for this scene */
     public enum imagePathMap {
-        KEY("resources/images/Key.png");
+        SAVE("resources/images/Save.jpg");
 
         public String str;
 
@@ -16,19 +16,17 @@ public class S_Key extends Scene {
         }
     }
 
-    public S_Key() {
+    public Save() {
         /* Basic initialization params */
-        sceneName = "S_Key";
+        sceneName = "Save";
         isSubscene = true;
-        animationType = Scene.AnimationType.NO_ANIMATION;
-        xLoc = 100;
-        yLoc = 280;
-        width = 51;
-        height = 30;
-        depth = 20;
+        xLoc = 51;
+        yLoc = 126;
+        width = 98;
+        height = 48;
 
         /* Initialize this scene's image */
-        imagePath = imagePathMap.KEY.str;
+        imagePath = imagePathMap.SAVE.str;
 
         /* Reset screen - if top level scene */
 

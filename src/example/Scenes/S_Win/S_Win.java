@@ -1,5 +1,5 @@
 
-package basicbackbonegame2d.Scenes.S_Win;
+package example.Scenes.S_Win;
 
 import basicbackbonegame2d.GameFrame;
 import basicbackbonegame2d.Jukebox;

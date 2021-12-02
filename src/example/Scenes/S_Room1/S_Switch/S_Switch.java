@@ -1,13 +1,13 @@
 
-package basicbackbonegame2d.Scenes.S_Room2.S_Bauble;
+package example.Scenes.S_Room1.S_Switch;
 
 import basicbackbonegame2d.Scene;
 
-public class S_Bauble extends Scene {
+public class S_Switch extends Scene {
 
     /* Enum of avilable images for this scene */
     public enum imagePathMap {
-        BAUBLE("resources/images/Bauble.png");
+        DOWN("resources/images/Switch_down.png"), UP("resources/images/Switch_up.png");
 
         public String str;
 
@@ -16,18 +16,18 @@ public class S_Bauble extends Scene {
         }
     }
 
-    public S_Bauble() {
+    public S_Switch() {
         /* Basic initialization params */
-        sceneName = "S_Bauble";
+        sceneName = "S_Switch";
         isSubscene = true;
         animationType = Scene.AnimationType.NO_ANIMATION;
-        xLoc = 117;
-        yLoc = 293;
-        width = 25;
-        height = 25;
+        xLoc = 223;
+        yLoc = 186;
+        width = 37;
+        height = 41;
 
-        /* Initialize this scene's image */
-        imagePath = imagePathMap.BAUBLE.str;
+        /* Initialize this scene's image - switch is down */
+        imagePath = imagePathMap.DOWN.str;
 
         /* Reset screen - if top level scene */
 

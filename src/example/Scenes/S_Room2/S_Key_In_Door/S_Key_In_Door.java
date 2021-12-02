@@ -1,13 +1,13 @@
 
-package basicbackbonegame2d.Scenes.Menu.Save;
+package example.Scenes.S_Room2.S_Key_In_Door;
 
 import basicbackbonegame2d.Scene;
 
-public class Save extends Scene {
+public class S_Key_In_Door extends Scene {
 
     /* Enum of avilable images for this scene */
     public enum imagePathMap {
-        SAVE("resources/images/Save.jpg");
+        NO_KEY("resources/images/No_Key.jpg");
 
         public String str;
 
@@ -16,17 +16,18 @@ public class Save extends Scene {
         }
     }
 
-    public Save() {
+    public S_Key_In_Door() {
         /* Basic initialization params */
-        sceneName = "Save";
+        sceneName = "S_Key_In_Door";
         isSubscene = true;
-        xLoc = 51;
-        yLoc = 126;
-        width = 98;
-        height = 48;
+        animationType = Scene.AnimationType.NO_ANIMATION;
+        xLoc = 198;
+        yLoc = 227;
+        width = 20;
+        height = 18;
 
         /* Initialize this scene's image */
-        imagePath = imagePathMap.SAVE.str;
+        imagePath = imagePathMap.NO_KEY.str;
 
         /* Reset screen - if top level scene */
 

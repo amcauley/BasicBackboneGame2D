@@ -20,6 +20,7 @@ import javax.swing.event.MouseInputAdapter;
     --- Viewport location, i.e. position within the viewport (non-padding subsection of the window, i.e. actual game content)
     --- Scene location. Viewport might only show a small part of entire scene (ex. if camera follows player).
         Track location within the overall scene.
+    - Text boxes. Maybe handle in GameFrame/Scene since this'll be a type of overlay, always some position in viewport.
     - Move simple scenes to a default template/loader.
     --- Ex) Clock's basic params could be in JSON and a parser could initialize a Scene dynamically.
     --- Default behavior is to interpret file structure as scene / subscene

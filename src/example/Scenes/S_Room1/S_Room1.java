@@ -1,5 +1,5 @@
 
-package basicbackbonegame2d.Scenes.S_Room1;
+package example.Scenes.S_Room1;
 
 import basicbackbonegame2d.BasicBackboneGame2D;
 import basicbackbonegame2d.GameFrame;
@@ -8,12 +8,12 @@ import basicbackbonegame2d.Obstacle;
 import basicbackbonegame2d.ScaleMap;
 import basicbackbonegame2d.Scene;
 import basicbackbonegame2d.SceneManager;
-import basicbackbonegame2d.Scenes.S_Room1.S_Clock.S_Clock;
 import basicbackbonegame2d.StateInfo;
-import basicbackbonegame2d.Scenes.S_Room1.S_Key.S_Key;
-import basicbackbonegame2d.Scenes.S_Room1.S_Switch.S_Switch;
 import basicbackbonegame2d.Top;
 import basicbackbonegame2d.SceneManager.SceneList;
+import example.Scenes.S_Room1.S_Clock.S_Clock;
+import example.Scenes.S_Room1.S_Key.S_Key;
+import example.Scenes.S_Room1.S_Switch.S_Switch;
 
 public class S_Room1 extends Scene {
 

@@ -1,13 +1,13 @@
 
-package basicbackbonegame2d.Scenes.Menu.New_Game;
+package example.Scenes.S_Room2.S_Bauble;
 
 import basicbackbonegame2d.Scene;
 
-public class New_Game extends Scene {
+public class S_Bauble extends Scene {
 
     /* Enum of avilable images for this scene */
     public enum imagePathMap {
-        NEW_GAME("resources/images/New_Game.jpg");
+        BAUBLE("resources/images/Bauble.png");
 
         public String str;
 
@@ -16,17 +16,18 @@ public class New_Game extends Scene {
         }
     }
 
-    public New_Game() {
+    public S_Bauble() {
         /* Basic initialization params */
-        sceneName = "New_Game";
+        sceneName = "S_Bauble";
         isSubscene = true;
-        xLoc = 51;
-        yLoc = 326;
-        width = 98;
-        height = 48;
+        animationType = Scene.AnimationType.NO_ANIMATION;
+        xLoc = 117;
+        yLoc = 293;
+        width = 25;
+        height = 25;
 
         /* Initialize this scene's image */
-        imagePath = imagePathMap.NEW_GAME.str;
+        imagePath = imagePathMap.BAUBLE.str;
 
         /* Reset screen - if top level scene */
 

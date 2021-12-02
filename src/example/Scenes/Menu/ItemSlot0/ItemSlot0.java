@@ -1,12 +1,17 @@
-package basicbackbonegame2d.Scenes.S_Room1.S_Clock;
+
+package example.Scenes.Menu.ItemSlot0;
 
 import basicbackbonegame2d.Scene;
 
-public class S_Clock extends Scene {
+public class ItemSlot0 extends Scene {
 
     /* Enum of avilable images for this scene */
     public enum imagePathMap {
-        CLOCK("resources/images/Clock.png");
+        /*
+         * Menu will use the scene's swapImage and setActiveState to control which
+         * image, if any, is drwan for this item.
+         */
+        DEFAULT("resources/images/KeyIcon.png");
 
         public String str;
 
@@ -15,18 +20,17 @@ public class S_Clock extends Scene {
         }
     }
 
-    public S_Clock() {
+    public ItemSlot0() {
         /* Basic initialization params */
-        sceneName = "S_Clock";
+        sceneName = "ItemSlot0";
         isSubscene = true;
-        animationType = Scene.AnimationType.ANIMATED_WITH_LOOP;
-        xLoc = 135;
-        yLoc = 135;
-        width = 25; /* For animations, this is the size of a single frame. */
-        height = 25;
+        xLoc = 225;
+        yLoc = 200;
+        width = 50;
+        height = 50;
 
         /* Initialize this scene's image */
-        imagePath = imagePathMap.CLOCK.str;
+        imagePath = imagePathMap.DEFAULT.str;
 
         /* Reset screen - if top level scene */
 

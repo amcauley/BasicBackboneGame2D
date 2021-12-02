@@ -1,17 +1,13 @@
 
-package basicbackbonegame2d.Scenes.Menu.ItemSlot1;
+package example.Scenes.S_Room1.S_Key;
 
 import basicbackbonegame2d.Scene;
 
-public class ItemSlot1 extends Scene {
+public class S_Key extends Scene {
 
     /* Enum of avilable images for this scene */
     public enum imagePathMap {
-        /*
-         * Menu will use the scene's swapImage and setActiveState to control which
-         * image, if any, is drwan for this item.
-         */
-        DEFAULT("resources/images/KeyIcon.png");
+        KEY("resources/images/Key.png");
 
         public String str;
 
@@ -20,17 +16,19 @@ public class ItemSlot1 extends Scene {
         }
     }
 
-    public ItemSlot1() {
+    public S_Key() {
         /* Basic initialization params */
-        sceneName = "ItemSlot1";
+        sceneName = "S_Key";
         isSubscene = true;
-        xLoc = 300;
-        yLoc = 200;
-        width = 50;
-        height = 50;
+        animationType = Scene.AnimationType.NO_ANIMATION;
+        xLoc = 100;
+        yLoc = 280;
+        width = 51;
+        height = 30;
+        depth = 20;
 
         /* Initialize this scene's image */
-        imagePath = imagePathMap.DEFAULT.str;
+        imagePath = imagePathMap.KEY.str;
 
         /* Reset screen - if top level scene */
 

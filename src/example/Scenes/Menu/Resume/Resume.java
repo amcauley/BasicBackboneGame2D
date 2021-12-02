@@ -1,5 +1,5 @@
 
-package basicbackbonegame2d.Scenes.Menu.Resume;
+package example.Scenes.Menu.Resume;
 
 import basicbackbonegame2d.Scene;
 

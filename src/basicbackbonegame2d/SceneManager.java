@@ -1,16 +1,16 @@
 
 package basicbackbonegame2d;
 
-import basicbackbonegame2d.Scenes.Menu.Menu;
-import basicbackbonegame2d.Scenes.S_Room1.S_Room1;
-import basicbackbonegame2d.Scenes.S_Room2.S_Room2;
-import basicbackbonegame2d.Scenes.S_Win.S_Win;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+
+import example.Scenes.Menu.Menu;
+import example.Scenes.S_Room1.S_Room1;
+import example.Scenes.S_Room2.S_Room2;
+import example.Scenes.S_Win.S_Win;
 
 public class SceneManager {
 
