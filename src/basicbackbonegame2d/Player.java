@@ -94,7 +94,7 @@ public class Player extends Scene {
             Double nextLocation = path.getNext(xLocNormalized, yLocNormalized, 0.05);
             // System.out.println("Player @ (" + xLocNormalized + ", " + yLocNormalized +
             // "), moving to " + nextLocation);
-            setLoc(GameFrame.normalizedToNativeX(nextLocation.x), GameFrame.normalizedToNativeY(nextLocation.y));
+            setLocR(GameFrame.normalizedToNativeX(nextLocation.x), GameFrame.normalizedToNativeY(nextLocation.y));
 
             if (scaleMap != null) {
                 scale = scaleMap.getScalingFactor(nextLocation.x, nextLocation.y);

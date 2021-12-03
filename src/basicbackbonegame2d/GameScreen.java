@@ -381,7 +381,7 @@ public class GameScreen extends JPanel {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, GameFrame.width, GameFrame.height);
 
-        float scale = GameFrame.scale;
+        float frameScale = GameFrame.scale;
 
         /* Draw all images (and animations) in the current screen. */
         boolean needNextTimerTick = false;
@@ -392,20 +392,28 @@ public class GameScreen extends JPanel {
         for (int icIdx = 0; icIdx < images.size(); icIdx++) {
             ImageContainer ic = images.get(icIdx);
 
-            int startX = (int) (ic.x * scale) + GameFrame.xPad;
-            int startY = (int) (ic.y * scale) + GameFrame.yPad;
+            int startX = (int) (ic.x * frameScale) + GameFrame.xPad;
+            int startY = (int) (ic.y * frameScale) + GameFrame.yPad;
             int startWidth = (int) (ic.width * ic.getScale());
             int startHeight = (int) (ic.height * ic.getScale());
 
             // System.out.println(ic.imgPath);
-            // System.out.println("x " + startX + ", y " + startY + ", w " + startWidth + ",
-            // h " + startHeight);
+            // System.out.println(
+            // "x " + startX + ", y " + startY + ", w " + startWidth + ", h " + startHeight
+            // + ", frameScale " + frameScale + ", icScale " + ic.getScale());
 
             /* Update animations (no-op for static images). */
             ic.update();
 
-            g.drawImage(ic.getImg(), startX, startY, startX + (int) (startWidth * scale),
-                    startY + (int) (startHeight * scale), 0, 0, startWidth, startHeight, null);
+            // If the image is scaled to nothing, there's nothing to draw.
+            // Attempting to do so can lead to an exception:
+            // "AWT-EventQueue-0" java.lang.IllegalArgumentException: w and h must be > 0
+            if ((startWidth == 0) || (startHeight == 0)) {
+                continue;
+            }
+
+            g.drawImage(ic.getImg(), startX, startY, startX + (int) (startWidth * frameScale),
+                    startY + (int) (startHeight * frameScale), 0, 0, startWidth, startHeight, null);
 
             if (ic.isActive()) {
                 needNextTimerTick = true;

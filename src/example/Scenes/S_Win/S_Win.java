@@ -56,17 +56,6 @@ public class S_Win extends Scene {
 
     }
 
-    /* Use an enum to better track subscenes of this scene */
-    // enum SubSceneMap{
-    // RESERVED(0); //Currently no subscenes
-    //
-    // int idx;
-    //
-    // SubSceneMap(int i){
-    // idx = i;
-    // }
-    // }
-
     /* Enum of avilable images for this scene */
     public enum imagePathMap {
         WIN("resources/images/Win.jpg");
@@ -83,8 +72,6 @@ public class S_Win extends Scene {
         sceneName = "S_Win";
         isSubscene = false;
         animationType = Scene.AnimationType.NO_ANIMATION;
-        xLoc = 0;
-        yLoc = 0;
         width = GameFrame.NOMINAL_WIDTH;
         height = GameFrame.NOMINAL_HEIGHT;
 

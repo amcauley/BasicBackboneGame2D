@@ -24,8 +24,6 @@ public class ItemSlot0 extends Scene {
         /* Basic initialization params */
         sceneName = "ItemSlot0";
         isSubscene = true;
-        xLoc = 225;
-        yLoc = 200;
         width = 50;
         height = 50;
 

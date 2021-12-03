@@ -20,8 +20,6 @@ public class Resume extends Scene {
         /* Basic initialization params */
         sceneName = "Resume";
         isSubscene = true;
-        xLoc = 51;
-        yLoc = 26;
         width = 98;
         height = 48;
 

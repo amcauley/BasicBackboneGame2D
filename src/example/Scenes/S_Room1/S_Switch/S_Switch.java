@@ -21,8 +21,6 @@ public class S_Switch extends Scene {
         sceneName = "S_Switch";
         isSubscene = true;
         animationType = Scene.AnimationType.NO_ANIMATION;
-        xLoc = 223;
-        yLoc = 186;
         width = 37;
         height = 41;
 

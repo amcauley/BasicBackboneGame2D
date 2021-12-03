@@ -117,20 +117,20 @@ public class Menu extends Scene {
         numSubScenes = SubSceneMap.values().length;
         subScenes = new Scene[numSubScenes];
 
-        subScenes[SubSceneMap.RESUME.idx] = new Resume();
-        subScenes[SubSceneMap.SAVE.idx] = new Save();
-        subScenes[SubSceneMap.LOAD.idx] = new Load();
-        subScenes[SubSceneMap.NEW_GAME.idx] = new New_Game();
+        subScenes[SubSceneMap.RESUME.idx] = subSceneRel(new Resume(), 51, 26);
+        subScenes[SubSceneMap.SAVE.idx] = subSceneRel(new Save(), 51, 126);
+        subScenes[SubSceneMap.LOAD.idx] = subSceneRel(new Load(), 51, 226);
+        subScenes[SubSceneMap.NEW_GAME.idx] = subSceneRel(new New_Game(), 51, 326);
 
         /* Populate item slots */
         assert (SubSceneMap.values().length - SubSceneMap.ITEM_SLOT0.idx == NUM_ITEM_SLOTS);
 
         int cntCheck = 0; // Just to help check that all item slots are accounted for in our copy/pasting.
 
-        subScenes[SubSceneMap.ITEM_SLOT0.idx] = new ItemSlot0();
+        subScenes[SubSceneMap.ITEM_SLOT0.idx] = subSceneRel(new ItemSlot0(), 225, 200);
         subScenes[SubSceneMap.ITEM_SLOT0.idx].setActiveState(false);
         cntCheck++;
-        subScenes[SubSceneMap.ITEM_SLOT1.idx] = new ItemSlot1();
+        subScenes[SubSceneMap.ITEM_SLOT1.idx] = subSceneRel(new ItemSlot1(), 300, 200);
         subScenes[SubSceneMap.ITEM_SLOT1.idx].setActiveState(false);
         cntCheck++;
 

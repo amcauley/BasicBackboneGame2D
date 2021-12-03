@@ -90,8 +90,6 @@ public class S_Room2 extends Scene {
         sceneName = "S_Room2";
         isSubscene = false;
         animationType = Scene.AnimationType.NO_ANIMATION;
-        xLoc = 0;
-        yLoc = 0;
         width = GameFrame.NOMINAL_WIDTH;
         height = GameFrame.NOMINAL_HEIGHT;
 
@@ -99,8 +97,8 @@ public class S_Room2 extends Scene {
         numSubScenes = SubSceneMap.values().length;
         subScenes = new Scene[numSubScenes];
 
-        subScenes[SubSceneMap.KEY_IN_DOOR.idx] = new S_Key_In_Door();
-        subScenes[SubSceneMap.BAUBLE.idx] = new S_Bauble();
+        subScenes[SubSceneMap.KEY_IN_DOOR.idx] = subSceneRel(new S_Key_In_Door(), 198, 227);
+        subScenes[SubSceneMap.BAUBLE.idx] = subSceneRel(new S_Bauble(), 117, 293);
 
         /* Initialize this scene's image */
         if (SceneManager.SceneList.TOP.state.vals[Top.StateMap.ROOM2_HAS_PWR.idx] == 0) {
@@ -116,7 +114,7 @@ public class S_Room2 extends Scene {
             if (stateInfo.vals[StateMap.KEY_IN_DOOR.idx] == 1) {
                 // subScenes[SubSceneMap.KEY_IN_DOOR.idx].swapImage(S_Key_In_Door.imagePathMap.KEY_IN_DOOR.str);
                 subScenes[SubSceneMap.KEY_IN_DOOR.idx].setActiveState(false);
-                addTransition(new Transition(SceneList.S_WIN, 193, 164, 76, 122, Jukebox.Sounds.NONE));
+                addTransitionRel(SceneList.S_WIN, 193, 164, 76, 122, Jukebox.Sounds.NONE);
             }
 
             /* Set bauble invisible if it's been obtained already. */
@@ -127,7 +125,7 @@ public class S_Room2 extends Scene {
         }
 
         /* Add any starting transitions */
-        addTransition(new Transition(SceneList.S_ROOM1, 20, 168, 53, 180, Jukebox.Sounds.DOOR0));
+        addTransitionRel(SceneList.S_ROOM1, 20, 168, 53, 180, Jukebox.Sounds.DOOR0);
 
         /* Start BG music. */
         g.jukebox.play(Jukebox.Sounds.BG_MUSIC0, true);
@@ -154,7 +152,7 @@ public class S_Room2 extends Scene {
              */
             subScenes[SubSceneMap.KEY_IN_DOOR.idx].setActiveState(false);
 
-            addTransition(new Transition(SceneList.S_WIN, 193, 164, 76, 122, Jukebox.Sounds.NONE));
+            addTransitionRel(SceneList.S_WIN, 193, 164, 76, 122, Jukebox.Sounds.NONE);
 
             refresh();
 

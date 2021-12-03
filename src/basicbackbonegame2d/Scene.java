@@ -124,14 +124,51 @@ public abstract class Scene {
         }
     }
 
-    public void setLoc(int x, int y) {
+    public void setLoc(int x, int y, int depth_) {
         xLoc = x;
         yLoc = y;
+        depth = depth_;
     }
 
-    public void setLoc(int x, int y, int depth_) {
-        setLoc(x, y);
-        depth = depth_;
+    public void setLoc(int x, int y) {
+        setLoc(x, y, depth);
+    }
+
+    // Shift the scene location to the specified position and depth.
+    // Additionally, check what the offset is between the old and new locations,
+    // and apply this offset (R)ecursively to all subscenes.
+    public void setLocR(int x, int y, int depth_) {
+        int deltaX = x - xLoc;
+        int deltaY = y - yLoc;
+        int deltaD = depth_ - depth;
+
+        setLoc(x, y, depth_);
+
+        for (int scnIdx = 0; scnIdx < numSubScenes; scnIdx++) {
+            Scene ss = subScenes[scnIdx];
+            ss.setLocR(ss.xLoc + deltaX, ss.yLoc + deltaY, ss.depth + deltaD);
+        }
+    }
+
+    public void setLocR(int x, int y) {
+        setLocR(x, y, depth);
+    }
+
+    // Helper function for placing a subscene at the specified location relative its
+    // parent. The function will shift the subscene and any of its subscenes (and
+    // any of their subscenes, etc.) accordingly. This is mainly helpful for
+    // wrapping new scenes: Scene subscene = subSceneRel(new SubScene, x, y, depth);
+    public Scene subSceneRel(Scene s, int x, int y, int depth_) {
+        s.setLocR(s.xLoc + x, s.yLoc + y, s.depth + depth_);
+        return s;
+    }
+
+    public Scene subSceneRel(Scene s, int x, int y) {
+        return subSceneRel(s, x, y, depth);
+    }
+
+    public void addTransitionRel(SceneList sId, int x, int y, int w, int h, Jukebox.Sounds s) {
+        transitions.add(new Transition(sId, xLoc + x, yLoc + y, w, h, s));
     }
 
     public void draw() {

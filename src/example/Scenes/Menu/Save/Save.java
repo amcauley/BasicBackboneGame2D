@@ -20,8 +20,6 @@ public class Save extends Scene {
         /* Basic initialization params */
         sceneName = "Save";
         isSubscene = true;
-        xLoc = 51;
-        yLoc = 126;
         width = 98;
         height = 48;
 

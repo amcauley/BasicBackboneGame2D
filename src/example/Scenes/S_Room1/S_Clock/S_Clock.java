@@ -20,8 +20,6 @@ public class S_Clock extends Scene {
         sceneName = "S_Clock";
         isSubscene = true;
         animationType = Scene.AnimationType.ANIMATED_WITH_LOOP;
-        xLoc = 135;
-        yLoc = 135;
         width = 25; /* For animations, this is the size of a single frame. */
         height = 25;
 

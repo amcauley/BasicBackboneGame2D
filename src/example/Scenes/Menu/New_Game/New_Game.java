@@ -20,8 +20,6 @@ public class New_Game extends Scene {
         /* Basic initialization params */
         sceneName = "New_Game";
         isSubscene = true;
-        xLoc = 51;
-        yLoc = 326;
         width = 98;
         height = 48;
 

@@ -21,8 +21,6 @@ public class S_Bauble extends Scene {
         sceneName = "S_Bauble";
         isSubscene = true;
         animationType = Scene.AnimationType.NO_ANIMATION;
-        xLoc = 117;
-        yLoc = 293;
         width = 25;
         height = 25;
 

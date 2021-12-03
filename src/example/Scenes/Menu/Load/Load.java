@@ -20,8 +20,6 @@ public class Load extends Scene {
         /* Basic initialization params */
         sceneName = "Load";
         isSubscene = true;
-        xLoc = 51;
-        yLoc = 226;
         width = 98;
         height = 48;
 

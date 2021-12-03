@@ -21,8 +21,6 @@ public class S_Key_In_Door extends Scene {
         sceneName = "S_Key_In_Door";
         isSubscene = true;
         animationType = Scene.AnimationType.NO_ANIMATION;
-        xLoc = 198;
-        yLoc = 227;
         width = 20;
         height = 18;
 

@@ -93,8 +93,6 @@ public class S_Room1 extends Scene {
         isSubscene = false;
         showPlayer = true;
         animationType = Scene.AnimationType.NO_ANIMATION;
-        xLoc = 0;
-        yLoc = 0;
         width = GameFrame.NOMINAL_WIDTH;
         height = GameFrame.NOMINAL_HEIGHT;
 
@@ -108,14 +106,14 @@ public class S_Room1 extends Scene {
         numSubScenes = SubSceneMap.values().length;
         subScenes = new Scene[numSubScenes];
 
-        subScenes[SubSceneMap.KEY.idx] = new S_Key();
+        subScenes[SubSceneMap.KEY.idx] = subSceneRel(new S_Key(), 100, 280, 10);
 
         /* Set key invisible if it's been obtained already. */
         if (SceneManager.SceneList.TOP.state.vals[Top.StateMap.HAS_KEY.idx] == 1) {
             subScenes[SubSceneMap.KEY.idx].setActiveState(false);
         }
 
-        subScenes[SubSceneMap.SWITCH.idx] = new S_Switch();
+        subScenes[SubSceneMap.SWITCH.idx] = subSceneRel(new S_Switch(), 223, 186);
 
         /* Set switch up (down by default) if it's been toggled. */
         if (SceneManager.SceneList.TOP.state.vals[Top.StateMap.ROOM2_HAS_PWR.idx] == 1) {
@@ -123,10 +121,10 @@ public class S_Room1 extends Scene {
         }
 
         /* Clock animation. */
-        subScenes[SubSceneMap.CLOCK.idx] = new S_Clock();
+        subScenes[SubSceneMap.CLOCK.idx] = subSceneRel(new S_Clock(), 135, 135, 100);
 
         /* Add any starting transitions */
-        addTransition(new Transition(SceneList.S_ROOM2, 325, 165, 53, 180, Jukebox.Sounds.DOOR0));
+        addTransitionRel(SceneList.S_ROOM2, 325, 165, 53, 180, Jukebox.Sounds.DOOR0);
 
         /* Start BG music. */
         // g.jukebox.play(Jukebox.Sounds.BG_MUSIC0, true);
