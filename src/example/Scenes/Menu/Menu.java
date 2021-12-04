@@ -3,6 +3,7 @@ package example.Scenes.Menu;
 
 import basicbackbonegame2d.BasicBackboneGame2D;
 import basicbackbonegame2d.GameFrame;
+import basicbackbonegame2d.Log;
 import basicbackbonegame2d.Scene;
 import basicbackbonegame2d.SceneManager;
 import basicbackbonegame2d.StateInfo;
@@ -157,8 +158,7 @@ public class Menu extends Scene {
         /* Music handling (if any) */
         // g.jukebox.stopAll();
 
-        // System.out.println("Menu last scene ID: " +
-        // stateInfo.vals[StateMap.LAST_SCENE.idx]);
+        Log.info("Menu last scene ID: " + stateInfo.vals[StateMap.LAST_SCENE.idx]);
 
         /* Standard scene drawing routines for top level scenes */
         refresh();
@@ -183,7 +183,7 @@ public class Menu extends Scene {
                 String fileName = fc.getSelectedFile().getAbsolutePath();
                 g.sm.saveState(fileName);
             } else {
-                System.out.println("Save aborted");
+                Log.info("Save aborted");
             }
 
         } else if ((evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON)
@@ -201,11 +201,10 @@ public class Menu extends Scene {
                     g.topLvlSceneIdx = stateInfo.vals[Top.StateMap.LAST_SCENE_ID.idx];
                     SceneManager.switchScene(g, SceneManager.SceneList.values()[g.topLvlSceneIdx]);
                 } catch (IOException ex) {
-                    System.out.println("File load error:");
-                    System.out.println(ex.getMessage());
+                    Log.error("File load error: " + ex.getMessage());
                 }
             } else {
-                System.out.println("Load aborted");
+                Log.info("Load aborted");
             }
 
         } else if ((evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON)
@@ -217,8 +216,7 @@ public class Menu extends Scene {
                 g.topLvlSceneIdx = stateInfo.vals[Top.StateMap.LAST_SCENE_ID.idx];
                 SceneManager.switchScene(g, SceneManager.SceneList.values()[g.topLvlSceneIdx]);
             } catch (IOException ex) {
-                System.out.println("New game error:");
-                System.out.println(ex.getMessage());
+                Log.error("New game error: " + ex.getMessage());
             }
 
         } else if ((evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON)

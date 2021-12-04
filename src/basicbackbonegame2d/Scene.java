@@ -172,7 +172,7 @@ public abstract class Scene {
     }
 
     public void draw() {
-        // System.out.println("Draw");
+        Log.trace("Draw");
         screen.repaint();
     }
 
@@ -286,9 +286,15 @@ public abstract class Scene {
     /* Base action handler, common to all scenes */
     public void actionHandler(BasicBackboneGame2D g, BasicBackboneGame2D.MouseActions evtType, int evtX, int evtY) {
 
-        /* Handle the event. */
-        // System.out.println(sceneName + ": evt " + evtType + ", (" + evtX + "," + evtY
-        // + ")");
+        // Movement is generated, surprisingly, even if the mouse is stationary.
+        // Only record movement events in the trace logs, i.e. when we don't care about
+        // flooding the logs.
+        String s = sceneName + ": evt " + evtType + ", (" + evtX + "," + evtY + ")";
+        if (evtType == BasicBackboneGame2D.MouseActions.MOVEMENT) {
+            Log.trace(s);
+        } else {
+            Log.debug(s);
+        }
 
         /*
          * Handling order: 1) Transitions 2) Custom Scene Handling 3) Recurse Through

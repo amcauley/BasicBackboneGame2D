@@ -6,8 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.event.MouseInputAdapter;
@@ -66,13 +65,13 @@ public class BasicBackboneGame2D implements ActionListener {
     public class gameMouseListener extends MouseInputAdapter {
 
         public gameMouseListener() {
-            // System.out.println("Instantiating gameMouseListener");
+            Log.info("Instantiating gameMouseListener");
         }
 
         @Override
         public void mousePressed(MouseEvent me) {
 
-            // System.out.println("mouse evt");
+            Log.trace("Mouse press: " + me.toString());
 
             if (SwingUtilities.isLeftMouseButton(me)) {
                 // Let the scene manager handle movement / clicks.
@@ -83,10 +82,6 @@ public class BasicBackboneGame2D implements ActionListener {
 
                 /* Enter menu */
                 SceneManager.switchScene(BasicBackboneGame2D.this, SceneManager.SceneList.MENU);
-
-                // topLvlScene.actionHandler(BasicBackboneGame2D.this,
-                // MouseActions.RIGHT_BUTTON,
-                // me.getX(), me.getY());
             }
 
         }
@@ -98,10 +93,10 @@ public class BasicBackboneGame2D implements ActionListener {
     }
 
     public BasicBackboneGame2D() {
-
     }
 
     public void run() throws IOException {
+        Log.info("Starting run()");
 
         gameFrame = new GameFrame();
         jukebox = new Jukebox();
@@ -115,8 +110,6 @@ public class BasicBackboneGame2D implements ActionListener {
 
         timer = new Timer(1000 / GameScreen.FRAMES_PER_SEC, this);
         Scene.screen.registerTimer(timer);
-
-        // System.out.println("Begin...");
 
         /* Add the static screen to this JFrame-based object. */
         gameFrame.add(Scene.screen);
@@ -153,7 +146,7 @@ public class BasicBackboneGame2D implements ActionListener {
      * no worries about race conditions.
      */
     public void actionPerformed(ActionEvent e) {
-        // System.out.println("Timer triggered");
+        Log.trace("Timer triggered");
 
         Scene.screen.fromTick = true;
         player.onTick();
@@ -166,10 +159,11 @@ public class BasicBackboneGame2D implements ActionListener {
      */
     public static void main(String[] args) {
         try {
+            Log.setLevel(Log.INFO);
             BasicBackboneGame2D game = new BasicBackboneGame2D();
             game.run();
         } catch (IOException ex) {
-            Logger.getLogger(BasicBackboneGame2D.class.getName()).log(Level.SEVERE, null, ex);
+            Log.error(ex.toString());
         }
     }
 

@@ -93,8 +93,8 @@ public class GameFrame extends JFrame {
         xPad = (int) ((scaleX - scale) * NOMINAL_WIDTH * 0.5);
         yPad = (int) ((scaleY - scale) * NOMINAL_HEIGHT * 0.5);
 
-        // System.out.println("Frame " + width + "x" + height + ", scale " + scale +
-        // ", xPad " + xPad + ", yPad " + yPad);
+        Log.trace("GameFrame scaling: " + width + "x" + height + ", scale " + scale + ", xPad " + xPad + ", yPad "
+                + yPad);
     }
 
     public GameFrame() {
@@ -127,18 +127,18 @@ public class GameFrame extends JFrame {
         framePadX = width - getContentPane().getWidth();
         framePadY = height - getContentPane().getHeight();
 
-        // System.out.println("framePadX " + framePadX + ", framePadY " + framePadY);
+        Log.debug("framePadX " + framePadX + ", framePadY " + framePadY);
 
         /* Listener for resizing */
         addComponentListener(new ComponentListener() {
             @Override
             public void componentHidden(ComponentEvent e) {
-                // System.out.println("Frame hidden");
+                Log.debug("Frame hidden");
             }
 
             @Override
             public void componentMoved(ComponentEvent e) {
-                // System.out.println("Frame moved");
+                Log.debug("Frame moved");
             }
 
             @Override
@@ -147,15 +147,14 @@ public class GameFrame extends JFrame {
                 height = getContentPane().getHeight();
                 scaleComp();
 
-                // System.out.println("Frame resized: " + getContentPane().getWidth() + "x" +
-                // getContentPane().getHeight());
+                Log.info("Frame resized: " + getContentPane().getWidth() + "x" + getContentPane().getHeight());
 
                 Scene.screen.repaint();
             }
 
             @Override
             public void componentShown(ComponentEvent e) {
-                // System.out.println("Frame shown");
+                Log.debug("Frame shown");
             }
         });
     }

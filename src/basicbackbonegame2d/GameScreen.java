@@ -76,9 +76,10 @@ public class GameScreen extends JPanel {
         }
 
         boolean equals(ImageContainer other) {
-            // System.out.println("Compare: " + str() + " vs. " + other.str());
-            return (x == other.x) && (y == other.y) && (depth == other.depth) && imgPath.equals(other.imgPath)
+            boolean eq = (x == other.x) && (y == other.y) && (depth == other.depth) && imgPath.equals(other.imgPath)
                     && id.equals(other.id);
+            Log.trace("Comparing " + str() + " vs. " + other.str() + ", match: " + eq);
+            return eq;
         }
 
         boolean equals(int xx, int yy, int dpth, String imagePath, String idStr) {
@@ -191,7 +192,7 @@ public class GameScreen extends JPanel {
 
             active = true;
 
-            // System.out.println("Animation created");
+            Log.trace("Created new animation: " + str());
         }
 
         /* Draw the current sceen and update info for the next frame to be drawn. */
@@ -219,8 +220,8 @@ public class GameScreen extends JPanel {
             int yIdx = curFrame / numXFrames;
             int xIdx = curFrame - yIdx * numXFrames;
 
-            // System.out.println("Animation frame " + (curFrame+1) + "/ " + numFrames + ",
-            // x " + xIdx + ", y " + yIdx);
+            Log.trace("Animation frame " + (curFrame + 1) + "/" + numFrames +
+                    ", x " + xIdx + ", y " + yIdx);
 
             return scaleBufferedImage(img.getSubimage(xIdx * xFrameSize, yIdx * yFrameSize, xFrameSize, yFrameSize),
                     scale);
@@ -281,8 +282,6 @@ public class GameScreen extends JPanel {
         }
 
         newImages.add(new ImageContainer(imgPath, x, y, depth, id));
-
-        // System.out.println(images.size() + " images");
     }
 
     public void addAnimationToDrawList(String imgPath, int x, int y, int frameSizeX, int frameSizeY,
@@ -320,14 +319,6 @@ public class GameScreen extends JPanel {
      * will keep running.
      */
     public void submitNewDrawList() {
-
-        /*
-         * System.out.println("submitNewDrawList images:"); for(ImageContainer i :
-         * images){ System.out.println("   " + i.id); }
-         * System.out.println("submitNewDrawList newImages:"); for(ImageContainer i :
-         * newImages){ System.out.println("   " + i.id); } //
-         */
-
         /* Remove any stale items from images. */
         for (Iterator<ImageContainer> oldIcIt = images.iterator(); oldIcIt.hasNext();) {
 
@@ -372,7 +363,7 @@ public class GameScreen extends JPanel {
     @Override
     public void paint(Graphics g) {
 
-        // System.out.println("painting GameScreen, fromTick " + fromTick);
+        Log.trace("Painting GameScreen, fromTick " + fromTick);
 
         /*
          * Draw background across entire drawable area. This will form the border
@@ -397,10 +388,8 @@ public class GameScreen extends JPanel {
             int startWidth = (int) (ic.width * ic.getScale());
             int startHeight = (int) (ic.height * ic.getScale());
 
-            // System.out.println(ic.imgPath);
-            // System.out.println(
-            // "x " + startX + ", y " + startY + ", w " + startWidth + ", h " + startHeight
-            // + ", frameScale " + frameScale + ", icScale " + ic.getScale());
+            Log.trace("Preparing to paint " + ic.imgPath + ", x " + startX + ", y " + startY + ", w " + startWidth
+                    + ", h " + startHeight + ", frameScale " + frameScale + ", icScale " + ic.getScale());
 
             /* Update animations (no-op for static images). */
             ic.update();
@@ -424,17 +413,17 @@ public class GameScreen extends JPanel {
         if (timer != null) { /* Make sure timer actually exists. */
             if (timer.isRunning()) {
                 if (needNextTimerTick) {
-                    // System.out.println("Timer running");
+                    Log.trace("Timer running");
                 } else {
-                    // System.out.println("Timer stopping");
+                    Log.debug("Timer stopping");
                     timer.stop();
                 }
             } else {
                 if (needNextTimerTick) {
-                    // System.out.println("Timer restart");
+                    Log.debug("Timer restart");
                     timer.restart();
                 } else {
-                    // System.out.println("Timer stopped");
+                    Log.trace("Timer stopped");
                 }
             }
         }
@@ -486,7 +475,7 @@ public class GameScreen extends JPanel {
                             new Point(hotSpotX, hotSpotY), "transitionCursor"));
                     break;
                 default:
-                    System.out.println("Undefined cursorType " + cursorType);
+                    Log.warning("Undefined cursorType " + cursorType);
                     break;
             }
 

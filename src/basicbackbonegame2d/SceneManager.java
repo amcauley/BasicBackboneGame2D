@@ -45,7 +45,7 @@ public class SceneManager {
         int thisIdx = 0;
         try (FileReader fr = new FileReader(fileName); BufferedReader br = new BufferedReader(fr);) {
             while ((thisLn = br.readLine()) != null) {
-                // System.out.println("loading state idx " + thisIdx);
+                Log.debug("Loading state idx " + thisIdx);
                 sl[thisIdx++].state.loadState(thisLn);
             }
         }
@@ -58,7 +58,7 @@ public class SceneManager {
         try (BufferedReader br = new BufferedReader(
                 new InputStreamReader(getClass().getClassLoader().getResourceAsStream(resourceName)));) {
             while ((thisLn = br.readLine()) != null) {
-                // System.out.println("loading state idx " + thisIdx);
+                Log.debug("Loading state resource idx " + thisIdx);
                 sl[thisIdx++].state.loadState(thisLn);
             }
         }
@@ -79,7 +79,7 @@ public class SceneManager {
         }
 
         try (PrintWriter out = new PrintWriter(fileName)) {
-            System.out.println("Saving to file " + fileName);
+            Log.info("Saving to file " + fileName);
 
             /*
              * Iterate over scenes and write their save state info out to file, one line per
@@ -87,8 +87,7 @@ public class SceneManager {
              * order for when we want to load state from this file later.
              */
             for (SceneList s : SceneList.values()) {
-                // For debugging: print out save info
-                // System.out.println(s.state.saveState());
+                Log.debug("Save state: " + s.state.saveState());
                 /* Write to file */
                 out.println(s.state.saveState());
             }
@@ -110,9 +109,8 @@ public class SceneManager {
         switch (sceneId) {
             case MENU: // Menu "Scene"
                 /* Store the scene we're leaving. */
-                // System.out.println("Lathing LAST_SCENE, old " +
-                // SceneList.MENU.state.vals[Menu.StateMap.LAST_SCENE.idx] +
-                // ", new " + g.topLvlSceneIdx);
+                Log.debug("Latching LAST_SCENE, old " + SceneList.MENU.state.vals[Menu.StateMap.LAST_SCENE.idx]
+                        + ", new " + g.topLvlSceneIdx);
 
                 /*
                  * If the current scene is already the menu, for example if the program
@@ -134,7 +132,7 @@ public class SceneManager {
                 g.topLvlScene = new S_Win();
                 break;
             default:
-                System.out.println("Invalid sceneId " + sceneId);
+                Log.error("Invalid sceneId " + sceneId);
                 break;
         }
 
@@ -149,7 +147,7 @@ public class SceneManager {
     }
 
     public void actionHandler(BasicBackboneGame2D g, BasicBackboneGame2D.MouseActions evtType, int evtX, int evtY) {
-        // System.out.println("SM evt " + evtType + " @ (" + evtX + ", " + evtY + ")");
+        Log.trace("SM evt " + evtType + " @ (" + evtX + ", " + evtY + ")");
 
         // Move player to the location.
         // TODO: Add pathing and transition animations.

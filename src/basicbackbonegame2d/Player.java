@@ -63,10 +63,8 @@ public class Player extends Scene {
             if (obstacle == null) {
                 return;
             } else if (obstacle.isClear(GameFrame.frameToNormalizedX(evtX), GameFrame.frameToNormalizedY(evtY))) {
-                // setLoc(GameFrame.getNativeX(evtX), GameFrame.getNativeY(evtY));
                 path.generatePath(obstacle, GameFrame.nativeToNormalizedX(xLoc), GameFrame.nativeToNormalizedY(yLoc),
                         GameFrame.frameToNormalizedX(evtX), GameFrame.frameToNormalizedY(evtY), 0.1);
-                // System.out.println(path.path);
             }
         }
     }
@@ -84,7 +82,7 @@ public class Player extends Scene {
     }
 
     public void onTick() {
-        // System.out.println("Player tick");
+        Log.trace("Player tick");
         double xLocNormalized = GameFrame.nativeToNormalizedX(xLoc);
         double yLocNormalized = GameFrame.nativeToNormalizedY(yLoc);
 
@@ -92,8 +90,8 @@ public class Player extends Scene {
         // required. Otherwise the player can glide around on their own.
         if (path.hasNext()) {
             Double nextLocation = path.getNext(xLocNormalized, yLocNormalized, 0.05);
-            // System.out.println("Player @ (" + xLocNormalized + ", " + yLocNormalized +
-            // "), moving to " + nextLocation);
+            Log.debug("Player @ (" + xLocNormalized + ", " + yLocNormalized +
+                    "), moving to " + nextLocation);
             setLocR(GameFrame.normalizedToNativeX(nextLocation.x), GameFrame.normalizedToNativeY(nextLocation.y));
 
             if (scaleMap != null) {

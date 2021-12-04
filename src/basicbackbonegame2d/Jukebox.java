@@ -69,7 +69,7 @@ public class Jukebox {
         while (it.hasNext()) {
             ClipInfo ci = it.next();
             if (!ci.clip.isActive()) {
-                // System.out.println("Removing inactive clip " + ci.fileName);
+                Log.debug("Removing inactive clip " + ci.fileName);
                 it.remove();
             }
         }
@@ -86,7 +86,7 @@ public class Jukebox {
          */
         for (ClipInfo c : clips) {
             if (c.fileName.equals(sound.fileName)) {
-                // System.out.println(sound.fileName + " already active");
+                Log.trace(sound.fileName + " already active");
                 return;
             }
         }
@@ -103,12 +103,11 @@ public class Jukebox {
                 newClip.start();
             }
 
-            // System.out.println("Playing " + sound.fileName);
+            Log.info("Playing " + sound.fileName);
             clips.add(new ClipInfo(sound.fileName, newClip));
 
         } catch (Exception ex) {
-            System.out.println("Error playing " + sound.fileName + ':');
-            System.out.println(ex.getMessage());
+            Log.error("Error playing " + sound.fileName + ": " + ex.getMessage());
         }
     }
 }

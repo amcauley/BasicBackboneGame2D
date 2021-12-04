@@ -15,13 +15,12 @@ public class Image {
         imgPath = pathName;
 
         try {
-            System.out.println("Loading image:" + imgPath);
+            Log.debug("Loading image:" + imgPath);
             img = ImageIO.read(getClass().getClassLoader().getResource(imgPath));
             width = img.getWidth();
             height = img.getHeight();
         } catch (IOException e) {
-            System.out.println("Error loading " + imgPath + ":");
-            System.out.println(e.getMessage());
+            Log.error("Error loading " + imgPath + ": " + e.getMessage());
         }
     }
 
@@ -31,8 +30,7 @@ public class Image {
                 Math.max(0, Math.min((int) (x * (width - 1)), width - 1)),
                 Math.max(0, Math.min((int) (y * (height - 1)), height - 1)));
 
-        // System.out.println("Check " + imgPath + " @ (" + x + ", " + y + "): " +
-        // String.format("0x%08X", argb));
+        Log.trace("Checking ARGB for " + imgPath + " @ (" + x + ", " + y + "): " + String.format("0x%08X", argb));
 
         return argb;
     }
