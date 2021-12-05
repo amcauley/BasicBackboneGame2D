@@ -7,6 +7,9 @@ public class Top extends Scene {
     static StateInfo stateInfo = new StateInfo_Top();
 
     public static StateInfo getStateInfo() {
+        if (stateInfo == null) {
+            stateInfo = new StateInfo_Top();
+        }
         return stateInfo;
     }
 
@@ -31,7 +34,7 @@ public class Top extends Scene {
             vals = new int[StateMap.values().length];
 
             /* Initialize state values. */
-            vals[StateMap.LAST_SCENE_ID.idx] = 1; // Default scene is Room1
+            vals[StateMap.LAST_SCENE_ID.idx] = SceneManager.MENU; // Default scene is the Menu.
             vals[StateMap.HAS_KEY.idx] = 0; // No key yet
             vals[StateMap.ROOM2_HAS_PWR.idx] = 0; // Not yet powered
             vals[StateMap.HAS_BAUBLE.idx] = 0; // Not collected

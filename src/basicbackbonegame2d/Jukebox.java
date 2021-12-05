@@ -103,7 +103,7 @@ public class Jukebox {
                 newClip.start();
             }
 
-            Log.info("Playing " + sound.fileName);
+            Log.debug("Playing " + sound.fileName);
             clips.add(new ClipInfo(sound.fileName, newClip));
 
         } catch (Exception ex) {

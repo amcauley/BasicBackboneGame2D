@@ -6,8 +6,6 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-import basicbackbonegame2d.SceneManager.SceneList;
-
 public abstract class Scene {
 
     public enum AnimationType {
@@ -167,7 +165,7 @@ public abstract class Scene {
         return subSceneRel(s, x, y, depth);
     }
 
-    public void addTransitionRel(SceneList sId, int x, int y, int w, int h, Jukebox.Sounds s) {
+    public void addTransitionRel(int sId, int x, int y, int w, int h, Jukebox.Sounds s) {
         transitions.add(new Transition(sId, xLoc + x, yLoc + y, w, h, s));
     }
 
@@ -223,7 +221,7 @@ public abstract class Scene {
      */
     public class Transition {
 
-        SceneList sceneId;
+        int sceneId;
         int xLoc;
         int yLoc;
         int width;
@@ -237,7 +235,7 @@ public abstract class Scene {
          * any scenes that call for the transition. Possible area of
          * cleanup/simplification later on.
          */
-        public Transition(SceneList sId, int x, int y, int w, int h, Jukebox.Sounds s) {
+        public Transition(int sId, int x, int y, int w, int h, Jukebox.Sounds s) {
             sceneId = sId;
             xLoc = x;
             yLoc = y;

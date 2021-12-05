@@ -10,16 +10,18 @@ import basicbackbonegame2d.Scene;
 import basicbackbonegame2d.SceneManager;
 import basicbackbonegame2d.StateInfo;
 import basicbackbonegame2d.Top;
-import basicbackbonegame2d.SceneManager.SceneList;
 import example.Scenes.S_Room1.S_Clock.S_Clock;
 import example.Scenes.S_Room1.S_Key.S_Key;
 import example.Scenes.S_Room1.S_Switch.S_Switch;
 
 public class S_Room1 extends Scene {
 
-    static StateInfo stateInfo = new StateInfo_Room1();
+    static StateInfo stateInfo;
 
     public static StateInfo getStateInfo() {
+        if (stateInfo == null) {
+            stateInfo = new StateInfo_Room1();
+        }
         return stateInfo;
     }
 
@@ -109,14 +111,14 @@ public class S_Room1 extends Scene {
         subScenes[SubSceneMap.KEY.idx] = subSceneRel(new S_Key(), 100, 280, 10);
 
         /* Set key invisible if it's been obtained already. */
-        if (SceneManager.SceneList.TOP.state.vals[Top.StateMap.HAS_KEY.idx] == 1) {
+        if (SceneManager.sceneTable.get(SceneManager.TOP).vals[Top.StateMap.HAS_KEY.idx] == 1) {
             subScenes[SubSceneMap.KEY.idx].setActiveState(false);
         }
 
         subScenes[SubSceneMap.SWITCH.idx] = subSceneRel(new S_Switch(), 223, 186);
 
         /* Set switch up (down by default) if it's been toggled. */
-        if (SceneManager.SceneList.TOP.state.vals[Top.StateMap.ROOM2_HAS_PWR.idx] == 1) {
+        if (SceneManager.sceneTable.get(SceneManager.TOP).vals[Top.StateMap.ROOM2_HAS_PWR.idx] == 1) {
             subScenes[SubSceneMap.SWITCH.idx].swapImage(S_Switch.imagePathMap.UP.str);
         }
 
@@ -124,7 +126,7 @@ public class S_Room1 extends Scene {
         subScenes[SubSceneMap.CLOCK.idx] = subSceneRel(new S_Clock(), 135, 135, 100);
 
         /* Add any starting transitions */
-        addTransitionRel(SceneList.S_ROOM2, 325, 165, 53, 180, Jukebox.Sounds.DOOR0);
+        addTransitionRel(SceneManager.S_ROOM2, 325, 165, 53, 180, Jukebox.Sounds.DOOR0);
 
         /* Start BG music. */
         // g.jukebox.play(Jukebox.Sounds.BG_MUSIC0, true);
@@ -144,7 +146,7 @@ public class S_Room1 extends Scene {
             subScenes[SubSceneMap.KEY.idx].setActiveState(false);
 
             /* Update state to reflect the fact that key is taken. */
-            SceneManager.SceneList.TOP.state.vals[Top.StateMap.HAS_KEY.idx] = 1;
+            SceneManager.sceneTable.get(SceneManager.TOP).vals[Top.StateMap.HAS_KEY.idx] = 1;
 
             /* Refresh the screen. */
             refresh();
@@ -155,10 +157,10 @@ public class S_Room1 extends Scene {
                 && subScenes[SubSceneMap.SWITCH.idx].isHit(evtX, evtY)) {
 
             /* Flip switch */
-            SceneManager.SceneList.TOP.state.vals[Top.StateMap.ROOM2_HAS_PWR.idx] ^= 0x1;
+            SceneManager.sceneTable.get(SceneManager.TOP).vals[Top.StateMap.ROOM2_HAS_PWR.idx] ^= 0x1;
 
             subScenes[SubSceneMap.SWITCH.idx]
-                    .swapImage((SceneManager.SceneList.TOP.state.vals[Top.StateMap.ROOM2_HAS_PWR.idx] == 1)
+                    .swapImage((SceneManager.sceneTable.get(SceneManager.TOP).vals[Top.StateMap.ROOM2_HAS_PWR.idx] == 1)
                             ? S_Switch.imagePathMap.UP.str
                             : S_Switch.imagePathMap.DOWN.str);
 

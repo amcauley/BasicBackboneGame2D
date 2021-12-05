@@ -6,6 +6,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.Hashtable;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import example.Scenes.Menu.Menu;
 import example.Scenes.S_Room1.S_Room1;
@@ -14,60 +18,66 @@ import example.Scenes.S_Win.S_Win;
 
 public class SceneManager {
 
-    // public static final String AUTOSAVE_FILENAME = "AutoSave.txt";
+    static final String AUTOSAVE_FILENAME = "AutoSave.txt";
+
+    public static final int TOP = 0;
+    public static final int MENU = 1;
+    public static final int S_ROOM1 = 2;
+    public static final int S_ROOM2 = 3;
+    public static final int S_WIN = 4;
+    public static final int SCENE_COUNT = 5;
+
+    public static Hashtable<Integer, StateInfo> sceneTable;
 
     public SceneManager() {
+        Log.info("Initializing SM");
+
+        sceneTable = new Hashtable<Integer, StateInfo>();
+        sceneTable.put(TOP, Top.getStateInfo());
+        sceneTable.put(MENU, Menu.getStateInfo());
+        sceneTable.put(S_ROOM1, S_Room1.getStateInfo());
+        sceneTable.put(S_ROOM2, S_Room2.getStateInfo());
+        sceneTable.put(S_WIN, S_Win.getStateInfo());
 
     }
 
-    /* Currently only need to list top-level scenes. */
-    public enum SceneList {
-        TOP(0, Top.getStateInfo()), // Pseudo-scene for top level management
-        MENU(1, Menu.getStateInfo()), // Menu "Scene"
-        S_ROOM1(2, S_Room1.getStateInfo()), // Room1
-        S_ROOM2(3, S_Room2.getStateInfo()), // Room2
-        S_WIN(4, S_Win.getStateInfo()); // Win screen
-
-        /* Each scene can have state associated with it. It also stores its index. */
-        public int idx;
-        public StateInfo state;
-
-        SceneList(int i, StateInfo si) {
-            idx = i;
-            state = si;
-        }
+    public Path getAutoSaveFilePath() {
+        return Paths.get(System.getProperty("user.dir"), AUTOSAVE_FILENAME);
     }
 
     /* Load saved state from file into each scene's state */
     public void loadState(String fileName) throws IOException {
-        SceneList[] sl = SceneList.values();
+        Log.info("Loading from file " + fileName);
         String thisLn;
         int thisIdx = 0;
         try (FileReader fr = new FileReader(fileName); BufferedReader br = new BufferedReader(fr);) {
             while ((thisLn = br.readLine()) != null) {
                 Log.debug("Loading state idx " + thisIdx);
-                sl[thisIdx++].state.loadState(thisLn);
+                sceneTable.get(thisIdx++).loadState(thisLn);
             }
         }
     }
 
     public void loadStateResource(String resourceName) throws IOException {
-        SceneList[] sl = SceneList.values();
         String thisLn;
         int thisIdx = 0;
         try (BufferedReader br = new BufferedReader(
                 new InputStreamReader(getClass().getClassLoader().getResourceAsStream(resourceName)));) {
             while ((thisLn = br.readLine()) != null) {
                 Log.debug("Loading state resource idx " + thisIdx);
-                sl[thisIdx++].state.loadState(thisLn);
+                sceneTable.get(thisIdx++).loadState(thisLn);
             }
         }
     }
 
     /* If no filename specified, use autosave file. */
     public void loadState() throws IOException {
-        // TBD need to work out how to handle this in distributed JAR
-        // loadState(AUTOSAVE_FILENAME);
+        Path filePath = getAutoSaveFilePath();
+        if (Files.exists(filePath)) {
+            loadState(filePath.toString());
+        } else {
+            Log.info("No AutoSave found");
+        }
     }
 
     /* Save state to file. */
@@ -86,10 +96,11 @@ public class SceneManager {
              * scene in the same order the scenes were declared (important to have fixed
              * order for when we want to load state from this file later.
              */
-            for (SceneList s : SceneList.values()) {
-                Log.debug("Save state: " + s.state.saveState());
+            for (int sIdx = 0; sIdx < SCENE_COUNT; sIdx++) {
+                String state = sceneTable.get(sIdx).saveState();
+                Log.debug("Save state: " + state);
                 /* Write to file */
-                out.println(s.state.saveState());
+                out.println(state);
             }
 
         } catch (IOException e) {
@@ -100,16 +111,15 @@ public class SceneManager {
 
     /* If no filename specified, use autosave file. */
     public void saveState() {
-        // TBD need to work out how to handle this in distributed JAR
-        // saveState(AUTOSAVE_FILENAME);
+        saveState(getAutoSaveFilePath().toString());
     }
 
-    public static void switchScene(BasicBackboneGame2D g, SceneList sceneId) {
+    public static void switchScene(BasicBackboneGame2D g, int sceneId) {
 
         switch (sceneId) {
             case MENU: // Menu "Scene"
                 /* Store the scene we're leaving. */
-                Log.debug("Latching LAST_SCENE, old " + SceneList.MENU.state.vals[Menu.StateMap.LAST_SCENE.idx]
+                Log.debug("Latching LAST_SCENE, old " + sceneTable.get(MENU).vals[Menu.StateMap.LAST_SCENE.idx]
                         + ", new " + g.topLvlSceneIdx);
 
                 /*
@@ -117,8 +127,8 @@ public class SceneManager {
                  * previously exited from the menu screen, don't latch menu into LAST_SCENE, or
                  * else we'll not be able to resume from the menu screen.
                  */
-                if (g.topLvlSceneIdx != SceneList.MENU.idx) {
-                    SceneList.MENU.state.vals[Menu.StateMap.LAST_SCENE.idx] = g.topLvlSceneIdx;
+                if (g.topLvlSceneIdx != MENU) {
+                    sceneTable.get(MENU).vals[Menu.StateMap.LAST_SCENE.idx] = g.topLvlSceneIdx;
                 }
                 g.topLvlScene = new Menu();
                 break;
@@ -137,10 +147,10 @@ public class SceneManager {
         }
 
         /* Latch new topLvlSceneIdx */
-        g.topLvlSceneIdx = sceneId.idx;
+        g.topLvlSceneIdx = sceneId;
 
         /* Update top level state. */
-        SceneList.TOP.state.vals[Top.StateMap.LAST_SCENE_ID.idx] = sceneId.idx;
+        sceneTable.get(TOP).vals[Top.StateMap.LAST_SCENE_ID.idx] = sceneId;
 
         g.player.setObstacle(g.topLvlScene.getObstacle());
         g.player.setScaleMap(g.topLvlScene.getScaleMap());

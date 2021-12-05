@@ -18,7 +18,6 @@ import java.io.IOException;
     --- Default behavior is to interpret file structure as scene / subscene
     - Move top level config to template/loader. Ex) starting scene and window size.
     - Animation update - don't reload image every time the player moves or is scaled.
-    - Investigate save/load system. Don't remember which parts are working.
     - Unit tests.
 */
 

@@ -8,9 +8,12 @@ import basicbackbonegame2d.StateInfo;
 
 public class S_Win extends Scene {
 
-    static StateInfo stateInfo = new S_Win.StateInfo_Win();
+    static StateInfo stateInfo;
 
     public static StateInfo getStateInfo() {
+        if (stateInfo == null) {
+            stateInfo = new StateInfo_Win();
+        }
         return stateInfo;
     }
 

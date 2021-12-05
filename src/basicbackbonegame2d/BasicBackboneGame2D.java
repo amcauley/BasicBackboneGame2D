@@ -62,7 +62,7 @@ public class BasicBackboneGame2D implements ActionListener {
             } else if (SwingUtilities.isRightMouseButton(me)) {
 
                 /* Enter menu */
-                SceneManager.switchScene(BasicBackboneGame2D.this, SceneManager.SceneList.MENU);
+                SceneManager.switchScene(BasicBackboneGame2D.this, SceneManager.MENU);
             }
 
         }
@@ -78,6 +78,7 @@ public class BasicBackboneGame2D implements ActionListener {
 
     public void run() throws IOException {
         Log.info("Starting run()");
+        Log.info("Launch directory: " + System.getProperty("user.dir"));
 
         gameFrame = new GameFrame();
         jukebox = new Jukebox();
@@ -103,16 +104,10 @@ public class BasicBackboneGame2D implements ActionListener {
          */
 
         /* Load game state from file, and set topLvlScene to the stored scene. */
-        // sm.loadState();
+        sm.loadState();
         topLvlSceneIdx = stateInfo.vals[Top.StateMap.LAST_SCENE_ID.idx];
 
-        /*
-         * Overwrite top level scene for now until AutoSave file handling for JAR
-         * distribution is figured out. Just load to room 0.
-         */
-        SceneManager.switchScene(this, SceneManager.SceneList.S_ROOM1);
-
-        SceneManager.switchScene(this, SceneManager.SceneList.values()[topLvlSceneIdx]);
+        SceneManager.switchScene(this, topLvlSceneIdx);
 
         /*
          * Mouse listener references topLvlScene, so this should come after topLvlScene

@@ -8,15 +8,17 @@ import basicbackbonegame2d.Scene;
 import basicbackbonegame2d.SceneManager;
 import basicbackbonegame2d.StateInfo;
 import basicbackbonegame2d.Top;
-import basicbackbonegame2d.SceneManager.SceneList;
 import example.Scenes.S_Room2.S_Bauble.S_Bauble;
 import example.Scenes.S_Room2.S_Key_In_Door.S_Key_In_Door;
 
 public class S_Room2 extends Scene {
 
-    static StateInfo stateInfo = new S_Room2.StateInfo_Room2();
+    static StateInfo stateInfo;
 
     public static StateInfo getStateInfo() {
+        if (stateInfo == null) {
+            stateInfo = new StateInfo_Room2();
+        }
         return stateInfo;
     }
 
@@ -101,7 +103,7 @@ public class S_Room2 extends Scene {
         subScenes[SubSceneMap.BAUBLE.idx] = subSceneRel(new S_Bauble(), 117, 293);
 
         /* Initialize this scene's image */
-        if (SceneManager.SceneList.TOP.state.vals[Top.StateMap.ROOM2_HAS_PWR.idx] == 0) {
+        if (SceneManager.sceneTable.get(SceneManager.TOP).vals[Top.StateMap.ROOM2_HAS_PWR.idx] == 0) {
             imagePath = imagePathMap.DARK.str;
             subScenes[SubSceneMap.KEY_IN_DOOR.idx].setActiveState(false);
             subScenes[SubSceneMap.BAUBLE.idx].setActiveState(false);
@@ -114,18 +116,18 @@ public class S_Room2 extends Scene {
             if (stateInfo.vals[StateMap.KEY_IN_DOOR.idx] == 1) {
                 // subScenes[SubSceneMap.KEY_IN_DOOR.idx].swapImage(S_Key_In_Door.imagePathMap.KEY_IN_DOOR.str);
                 subScenes[SubSceneMap.KEY_IN_DOOR.idx].setActiveState(false);
-                addTransitionRel(SceneList.S_WIN, 193, 164, 76, 122, Jukebox.Sounds.NONE);
+                addTransitionRel(SceneManager.S_WIN, 193, 164, 76, 122, Jukebox.Sounds.NONE);
             }
 
             /* Set bauble invisible if it's been obtained already. */
-            if (SceneManager.SceneList.TOP.state.vals[Top.StateMap.HAS_BAUBLE.idx] == 1) {
+            if (SceneManager.sceneTable.get(SceneManager.TOP).vals[Top.StateMap.HAS_BAUBLE.idx] == 1) {
                 subScenes[SubSceneMap.BAUBLE.idx].setActiveState(false);
             }
 
         }
 
         /* Add any starting transitions */
-        addTransitionRel(SceneList.S_ROOM1, 20, 168, 53, 180, Jukebox.Sounds.DOOR0);
+        addTransitionRel(SceneManager.S_ROOM1, 20, 168, 53, 180, Jukebox.Sounds.DOOR0);
 
         /* Start BG music. */
         g.jukebox.play(Jukebox.Sounds.BG_MUSIC0, true);
@@ -141,7 +143,7 @@ public class S_Room2 extends Scene {
         /* Handle key */
         if ((evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON)
                 && subScenes[SubSceneMap.KEY_IN_DOOR.idx].isHit(evtX, evtY)
-                && (SceneManager.SceneList.TOP.state.vals[Top.StateMap.HAS_KEY.idx] == 1)) {
+                && (SceneManager.sceneTable.get(SceneManager.TOP).vals[Top.StateMap.HAS_KEY.idx] == 1)) {
 
             stateInfo.vals[StateMap.KEY_IN_DOOR.idx] = 1;
             /*
@@ -152,7 +154,7 @@ public class S_Room2 extends Scene {
              */
             subScenes[SubSceneMap.KEY_IN_DOOR.idx].setActiveState(false);
 
-            addTransitionRel(SceneList.S_WIN, 193, 164, 76, 122, Jukebox.Sounds.NONE);
+            addTransitionRel(SceneManager.S_WIN, 193, 164, 76, 122, Jukebox.Sounds.NONE);
 
             refresh();
 
@@ -170,7 +172,7 @@ public class S_Room2 extends Scene {
             subScenes[SubSceneMap.BAUBLE.idx].setActiveState(false);
 
             /* Update state to reflect the fact that bauble is taken. */
-            SceneManager.SceneList.TOP.state.vals[Top.StateMap.HAS_BAUBLE.idx] = 1;
+            SceneManager.sceneTable.get(SceneManager.TOP).vals[Top.StateMap.HAS_BAUBLE.idx] = 1;
 
             /* Refresh the screen. */
             refresh();

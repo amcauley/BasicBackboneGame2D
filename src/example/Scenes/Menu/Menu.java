@@ -28,10 +28,13 @@ public class Menu extends Scene {
     static final int NUM_ITEM_SLOTS = 2;
 
     /* This holds the state info for Menu */
-    static StateInfo stateInfo = new Menu.StateInfo_Menu();
+    static StateInfo stateInfo;
 
     /* Return state info (to SceneManager) */
     public static StateInfo getStateInfo() {
+        if (stateInfo == null) {
+            stateInfo = new StateInfo_Menu();
+        }
         return stateInfo;
     }
 
@@ -141,11 +144,11 @@ public class Menu extends Scene {
 
         cntCheck = SubSceneMap.ITEM_SLOT0.idx;
 
-        if (SceneManager.SceneList.TOP.state.vals[Top.StateMap.HAS_KEY.idx] != 0) {
+        if (SceneManager.sceneTable.get(SceneManager.TOP).vals[Top.StateMap.HAS_KEY.idx] != 0) {
             subScenes[cntCheck].swapImage(ImagePathMap.KEY_ICON.str);
             subScenes[cntCheck++].setActiveState(true);
         }
-        if (SceneManager.SceneList.TOP.state.vals[Top.StateMap.HAS_BAUBLE.idx] != 0) {
+        if (SceneManager.sceneTable.get(SceneManager.TOP).vals[Top.StateMap.HAS_BAUBLE.idx] != 0) {
             subScenes[cntCheck].swapImage(ImagePathMap.BAUBLE_ICON.str);
             subScenes[cntCheck++].setActiveState(true);
         }
@@ -158,7 +161,7 @@ public class Menu extends Scene {
         /* Music handling (if any) */
         // g.jukebox.stopAll();
 
-        Log.info("Menu last scene ID: " + stateInfo.vals[StateMap.LAST_SCENE.idx]);
+        Log.debug("Menu last scene ID: " + stateInfo.vals[StateMap.LAST_SCENE.idx]);
 
         /* Standard scene drawing routines for top level scenes */
         refresh();
@@ -171,7 +174,7 @@ public class Menu extends Scene {
         if ((evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON)
                 && subScenes[SubSceneMap.RESUME.idx].isHit(evtX, evtY)) {
 
-            SceneManager.switchScene(g, SceneManager.SceneList.values()[stateInfo.vals[StateMap.LAST_SCENE.idx]]);
+            SceneManager.switchScene(g, stateInfo.vals[StateMap.LAST_SCENE.idx]);
         } else if ((evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON)
                 && subScenes[SubSceneMap.SAVE.idx].isHit(evtX, evtY)) {
 
@@ -199,7 +202,7 @@ public class Menu extends Scene {
                     g.sm.loadState(fileName);
                     /* State is loaded, now update topLvlScene based on loaded state. */
                     g.topLvlSceneIdx = stateInfo.vals[Top.StateMap.LAST_SCENE_ID.idx];
-                    SceneManager.switchScene(g, SceneManager.SceneList.values()[g.topLvlSceneIdx]);
+                    SceneManager.switchScene(g, g.topLvlSceneIdx);
                 } catch (IOException ex) {
                     Log.error("File load error: " + ex.getMessage());
                 }
@@ -214,7 +217,7 @@ public class Menu extends Scene {
                 g.sm.loadStateResource(NEW_GAME_FILENAME);
                 /* State is loaded, now update topLvlScene based on loaded state. */
                 g.topLvlSceneIdx = stateInfo.vals[Top.StateMap.LAST_SCENE_ID.idx];
-                SceneManager.switchScene(g, SceneManager.SceneList.values()[g.topLvlSceneIdx]);
+                SceneManager.switchScene(g, g.topLvlSceneIdx);
             } catch (IOException ex) {
                 Log.error("New game error: " + ex.getMessage());
             }
