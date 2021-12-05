@@ -13,17 +13,17 @@ public class Log {
     static Handler handler;
 
     // Something bad happened. Basic functionality is impacted.
-    static final int ERROR = 0;
+    public static final int ERROR = 0;
     // Something bad happened, but we may be able to recover without much impact.
-    static final int WARNING = 1;
+    public static final int WARNING = 1;
     // Something happened that isn't a common occurrence. This could be in response
     // to some event or class initialization.
-    static final int INFO = 2;
+    public static final int INFO = 2;
     // Getting into fine details and recurring events.
-    static final int DEBUG = 3;
+    public static final int DEBUG = 3;
     // Very fine details. These are probably only useful for debugging obscure
     // issues.
-    static final int TRACE = 4;
+    public static final int TRACE = 4;
 
     // Convert the internal levels into something the logger library understands.
     static Level toLibraryLevel(int level) {
