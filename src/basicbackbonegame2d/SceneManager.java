@@ -157,7 +157,10 @@ public class SceneManager {
     }
 
     public void actionHandler(BasicBackboneGame2D g, BasicBackboneGame2D.MouseActions evtType, int evtX, int evtY) {
-        Log.trace("SM evt " + evtType + " @ (" + evtX + ", " + evtY + ")");
+        int evtSceneX = GameScreen.windowToSceneX(evtX);
+        int evtSceneY = GameScreen.windowToSceneY(evtY);
+
+        Log.debug("SM evt " + evtType + " @ (" + evtX + "," + evtY + "), scene (" + evtSceneX + "," + evtSceneY + ")");
 
         // Move player to the location.
         // TODO: Add pathing and transition animations.
@@ -165,9 +168,9 @@ public class SceneManager {
         // any objects along the way.
         // Interaction could potentially be handled by the scenes themselves through
         // g.player.
-        g.player.actionHandler(g, evtType, evtX, evtY);
+        g.player.actionHandler(g, evtType, evtSceneX, evtSceneY);
 
         // Default scene handling.
-        g.topLvlScene.actionHandler(g, evtType, evtX, evtY);
+        g.topLvlScene.actionHandler(g, evtType, evtSceneX, evtSceneY);
     }
 }

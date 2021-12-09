@@ -11,6 +11,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.event.MouseInputAdapter;
 
+import basicbackbonegame2d.GameScreen.CameraType;
+
 public class BasicBackboneGame2D implements ActionListener {
 
     public GameFrame gameFrame;
@@ -54,6 +56,8 @@ public class BasicBackboneGame2D implements ActionListener {
 
             Log.trace("Mouse press: " + me.toString());
 
+            // TODO: Queue up events and process it from the main tick-handling thread.
+
             if (SwingUtilities.isLeftMouseButton(me)) {
                 // Let the scene manager handle movement / clicks.
                 // It'll have to coordinate information between the player and scene, ex. for
@@ -92,6 +96,9 @@ public class BasicBackboneGame2D implements ActionListener {
 
         timer = new Timer(1000 / GameScreen.FRAMES_PER_SEC, this);
         Scene.screen.registerTimer(timer);
+
+        // TODO: Fix access. Need to revisit Scene, Frame, etc. initialization.
+        Scene.screen.cameraType = CameraType.GLOBAL;
 
         /* Add the static screen to this JFrame-based object. */
         gameFrame.add(Scene.screen);

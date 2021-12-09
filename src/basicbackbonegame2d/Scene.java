@@ -116,8 +116,13 @@ public abstract class Scene {
             if (!isSubscene) {
                 Point mouseLoc = getPointerInfo().getLocation();
                 Point screenLoc = screen.getLocationOnScreen();
-                actionHandler(g, BasicBackboneGame2D.MouseActions.MOVEMENT, mouseLoc.x - screenLoc.x,
-                        mouseLoc.y - screenLoc.y);
+                int mvtX = (int) GameScreen.windowToSceneX(mouseLoc.x - screenLoc.x);
+                int mvtY = (int) GameScreen.windowToSceneY(mouseLoc.y - screenLoc.y);
+
+                Log.debug("mouseLoc (" + mouseLoc.x + "," + mouseLoc.y + "), screenLoc (" + screenLoc.x + ","
+                        + screenLoc.y + "), mvt (" + mvtX + "," + mvtY + ")");
+
+                actionHandler(g, BasicBackboneGame2D.MouseActions.MOVEMENT, mvtX, mvtY);
             }
         }
     }
@@ -203,8 +208,8 @@ public abstract class Scene {
          * Undo any scaling/padding on the location - all checks are based on nominal
          * scaling.
          */
-        x = GameFrame.frameToNativeX(x);
-        y = GameFrame.frameToNativeY(y);
+        // x = GameFrame.frameToNativeX(x);
+        // y = GameFrame.frameToNativeY(y);
 
         /* x/y locations were based on nominal scaling, so no conversion needed. */
         x -= xLoc;
@@ -249,8 +254,8 @@ public abstract class Scene {
             /*
              * Undo any scaling on the locations - all checks are based on nominal scaling.
              */
-            x = (int) ((float) (x - GameFrame.xPad) / GameFrame.scale);
-            y = (int) ((float) (y - GameFrame.yPad) / GameFrame.scale);
+            // x = (int) ((float) (x - GameFrame.xPad) / GameFrame.scale);
+            // y = (int) ((float) (y - GameFrame.yPad) / GameFrame.scale);
 
             /* x/y locations were based on nominal scaling, so no conversion needed. */
             x -= xLoc;
@@ -329,10 +334,14 @@ public abstract class Scene {
             return;
         }
 
+        Log.error("actionhandler----------" + imagePath);
         /* Check if any subscenes are hit and handle it if they are. */
         for (int scnIdx = 0; scnIdx < numSubScenes; scnIdx++) {
             Scene ss = subScenes[scnIdx];
+            Log.error("ssIdx " + scnIdx + "  " + evtX + "," + evtY + "   " + ss.xLoc + " " + ss.yLoc + " "
+                    + ss.isActive()); ///////////////// dbg
             if (ss.isHit(evtX, evtY)) {
+                Log.error("hit");//////////////////
                 ss.actionHandler(g, evtType, evtX, evtY);
                 if (!isSubscene) {
                     screen.updateCursor(GameScreen.CursorType.INSPECTION);
@@ -342,6 +351,9 @@ public abstract class Scene {
         }
 
         if ((!hit) && (!isSubscene)) {
+            if (screen.getActiveCursorType() == GameScreen.CursorType.INSPECTION) {
+                Log.error("DEACTIVATING!!!!!!!!!");
+            }
             screen.updateCursor(GameScreen.CursorType.DEFAULT);
         }
 

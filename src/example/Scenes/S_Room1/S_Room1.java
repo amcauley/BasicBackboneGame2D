@@ -123,7 +123,7 @@ public class S_Room1 extends Scene {
         }
 
         /* Clock animation. */
-        subScenes[SubSceneMap.CLOCK.idx] = subSceneRel(new S_Clock(), 135, 135, 100);
+        subScenes[SubSceneMap.CLOCK.idx] = subSceneRel(new S_Clock(), 128, 149, 100);
 
         /* Add any starting transitions */
         addTransitionRel(SceneManager.S_ROOM2, 325, 165, 53, 180, Jukebox.Sounds.DOOR0);

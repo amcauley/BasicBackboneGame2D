@@ -28,7 +28,7 @@ public class Launch {
      */
     public static void main(String[] args) {
         try {
-            Log.setLevel(Log.INFO);
+            Log.setLevel(Log.DEBUG);
             BasicBackboneGame2D game = new BasicBackboneGame2D();
             game.run();
         } catch (IOException ex) {
