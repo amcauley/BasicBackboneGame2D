@@ -73,7 +73,11 @@ public class BasicBackboneGame2D implements ActionListener {
 
         @Override
         public void mouseMoved(MouseEvent me) {
-            topLvlScene.actionHandler(BasicBackboneGame2D.this, MouseActions.MOVEMENT, me.getX(), me.getY());
+            // Convert to scene units. For mouse clicks, this is handled within
+            // SceneManager.
+            int mvtX = GameScreen.windowToSceneX(me.getX());
+            int mvtY = GameScreen.windowToSceneY(me.getY());
+            topLvlScene.actionHandler(BasicBackboneGame2D.this, MouseActions.MOVEMENT, mvtX, mvtY);
         }
     }
 
