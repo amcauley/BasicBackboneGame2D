@@ -92,8 +92,8 @@ public class S_Room2 extends Scene {
         sceneName = "S_Room2";
         isSubscene = false;
         animationType = Scene.AnimationType.NO_ANIMATION;
-        width = GameFrame.NOMINAL_WIDTH;
-        height = GameFrame.NOMINAL_HEIGHT;
+        width = 400;
+        height = 400;
 
         /* Create any subscenes and add to array */
         numSubScenes = SubSceneMap.values().length;

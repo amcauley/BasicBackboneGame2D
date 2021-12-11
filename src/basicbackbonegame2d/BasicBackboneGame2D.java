@@ -11,8 +11,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.event.MouseInputAdapter;
 
-import basicbackbonegame2d.GameScreen.CameraType;
-
 public class BasicBackboneGame2D implements ActionListener {
 
     public GameFrame gameFrame;
@@ -109,9 +107,6 @@ public class BasicBackboneGame2D implements ActionListener {
 
         timer = new Timer(1000 / GameScreen.FRAMES_PER_SEC, this);
         gs.registerTimer(timer);
-
-        // TODO: Fix access. Need to revisit Scene, Frame, etc. initialization.
-        gs.cameraType = CameraType.GLOBAL;
 
         gameFrame.setVisible(true);
 

@@ -109,10 +109,10 @@ public class Menu extends Scene {
         sceneName = "Menu";
         isSubscene = false;
         animationType = Scene.AnimationType.NO_ANIMATION;
-        xLoc = 0;
-        yLoc = 0;
-        width = GameFrame.NOMINAL_WIDTH;
-        height = GameFrame.NOMINAL_HEIGHT;
+        locX = 0;
+        locY = 0;
+        width = 400;
+        height = 400;
 
         /* Initialize this scene's image */
         imagePath = ImagePathMap.MENU.str;

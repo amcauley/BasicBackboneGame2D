@@ -75,8 +75,8 @@ public class S_Win extends Scene {
         sceneName = "S_Win";
         isSubscene = false;
         animationType = Scene.AnimationType.NO_ANIMATION;
-        width = GameFrame.NOMINAL_WIDTH;
-        height = GameFrame.NOMINAL_HEIGHT;
+        width = 400;
+        height = 400;
 
         /* Initialize this scene's image */
         imagePath = imagePathMap.WIN.str;

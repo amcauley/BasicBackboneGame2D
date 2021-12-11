@@ -32,9 +32,9 @@ public class Player extends Scene {
         sceneName = "Player";
         isSubscene = true;
         animationType = Scene.AnimationType.ANIMATED_WITH_LOOP;
-        xLoc = 130; // TODO: Locations should be normalized to the range [0, 1]. Currently their in
+        locX = 130; // TODO: Locations should be normalized to the range [0, 1]. Currently their in
                     // native format, i.e. ignoring padding and scaling.
-        yLoc = 150;
+        locY = 150;
         width = 32; /* For animations, this is the size of a single frame. */
         height = 32;
         depth = 100;
@@ -54,7 +54,7 @@ public class Player extends Scene {
          * multiple (sub)scenes use the same image.
          */
         String id = sceneName + "_" + imagePath;
-        screen.addAnimationToDrawList(imagePath, xLoc, yLoc, width, height, animationType, depth, scale, id);
+        screen.addAnimationToDrawList(imagePath, locX, locY, width, height, animationType, depth, scale, id);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class Player extends Scene {
             if (obstacle == null) {
                 return;
             } else if (obstacle.isClear(evtX, evtY)) {
-                path.generatePath(obstacle, xLoc / 400.0, yLoc / 400.0, evtX / 400.0, evtY / 400.0, 0.1);
+                path.generatePath(obstacle, locX / 400.0, locY / 400.0, evtX / 400.0, evtY / 400.0, 0.1);
             }
         }
     }
@@ -82,8 +82,8 @@ public class Player extends Scene {
 
     public void onTick() {
         Log.trace("Player tick");
-        double xLocNormalized = xLoc / 400.0;
-        double yLocNormalized = yLoc / 400.0;
+        double xLocNormalized = locX / 400.0;
+        double yLocNormalized = locY / 400.0;
 
         // Avoid precision errors with converting formats unless there's actual movement
         // required. Otherwise the player can glide around on their own.

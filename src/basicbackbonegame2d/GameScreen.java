@@ -26,12 +26,6 @@ public class GameScreen extends JPanel {
 
     private boolean fromTick = false;
 
-    public static enum CameraType {
-        GLOBAL, PLAYER
-    }
-
-    public CameraType cameraType;
-
     public enum CursorType {
         INVALID, DEFAULT, INSPECTION, TRANSITION
     }
@@ -76,7 +70,6 @@ public class GameScreen extends JPanel {
     private List<ImageContainer> refreshImages = new ArrayList<>();
 
     public GameScreen() {
-        cameraType = CameraType.PLAYER;
         activeCursorType = CursorType.INVALID; // init to invalid so we'll update at first chance
         setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
         viewportWidth = 0;
@@ -124,20 +117,30 @@ public class GameScreen extends JPanel {
         return viewportHeight;
     }
 
-    public double viewportToWindowScale() {
-        return Math.min(
-                (GameFrame.width - GameFrame.xPad * 2.0) / getViewportWidth(),
-                (GameFrame.height - GameFrame.yPad * 2.0) / getViewportHeight());
+    public double viewportToWindowScaleX() {
+        return (GameFrame.width - GameFrame.xPad * 2.0) / getViewportWidth();
+    }
+
+    public double viewportToWindowScaleY() {
+        return (GameFrame.height - GameFrame.yPad * 2.0) / getViewportHeight();
+    }
+
+    void setViewport(int centerX, int centerY, int width, int height) {
+        Log.error("viewport center (" + centerX + "," + centerY + "), dim (" + width + "," + height + ")");
+        viewportCenterX = centerX;
+        viewportCenterY = centerY;
+        viewportWidth = width;
+        viewportHeight = height;
     }
 
     public int windowToSceneX(int x) {
         double windowCenter = GameFrame.width / 2.0;
-        return (int) (getViewportCenterX() + (x - windowCenter) / viewportToWindowScale());
+        return (int) (getViewportCenterX() + (x - windowCenter) / viewportToWindowScaleX());
     }
 
     public int windowToSceneY(int y) {
         double windowCenter = GameFrame.height / 2.0;
-        return (int) (getViewportCenterY() + (y - windowCenter) / viewportToWindowScale());
+        return (int) (getViewportCenterY() + (y - windowCenter) / viewportToWindowScaleY());
     }
 
     public void addImgToDrawList(String imgPath, int x, int y, int depth, String id) {
@@ -237,33 +240,6 @@ public class GameScreen extends JPanel {
 
     }
 
-    // Update viewport position and scale based on the current draw list.
-    private void updateViewport() {
-        if (cameraType == CameraType.GLOBAL) {
-            // TODO: These should come from the image list. Need to tag top level scene and
-            // grab dimensions from there.
-            viewportCenterX = 200;
-            viewportCenterY = 200;
-
-            // TODO: viewport dimensions should match the image dimensions
-            viewportWidth = 400;
-            viewportHeight = 400;
-        } else {
-            for (int icIdx = 0; icIdx < images.size(); icIdx++) {
-                ImageContainer ic = images.get(icIdx);
-                // TODO: Tag the ic, don't rely on file names.
-                if (ic.imgPath.endsWith("Player.bmp")) {
-                    viewportCenterX = ic.x; // 130
-                    viewportCenterY = ic.y; // 150
-                }
-            }
-
-            // TODO: viewport dimensions be configurable by the scene.
-            viewportWidth = 181;
-            viewportHeight = 181;
-        }
-    }
-
     @Override
     public void paint(Graphics g) {
 
@@ -281,7 +257,7 @@ public class GameScreen extends JPanel {
         /* Draw all images (and animations) in the current screen. */
         boolean needNextTimerTick = false;
 
-        updateViewport();
+        // updateViewport();
 
         /*
          * Process images/animations in order (from background to foreground, already
@@ -298,17 +274,16 @@ public class GameScreen extends JPanel {
             int srcWidth = ic.width;
             int srcHeight = ic.height;
 
-            // Scaling is the smallest amount needed to get the camera to fill out a
-            // viewport dimension.
-            double cameraToScreenScale = viewportToWindowScale();
+            double cameraToScreenScaleX = viewportToWindowScaleX();
+            double cameraToScreenScaleY = viewportToWindowScaleY();
 
             int destX = (int) (GameFrame.width / 2.0
-                    + (srcX - getViewportCenterX()) * cameraToScreenScale);
-            int destWidth = (int) (srcWidth * cameraToScreenScale);
+                    + (srcX - getViewportCenterX()) * cameraToScreenScaleX);
+            int destWidth = (int) (srcWidth * cameraToScreenScaleX);
 
             int destY = (int) (GameFrame.height / 2.0
-                    + (srcY - getViewportCenterY()) * cameraToScreenScale);
-            int destHeight = (int) (srcHeight * cameraToScreenScale);
+                    + (srcY - getViewportCenterY()) * cameraToScreenScaleY);
+            int destHeight = (int) (srcHeight * cameraToScreenScaleY);
 
             Log.trace("Preparing to paint " + ic.imgPath + ", x " + srcX + ", y " + srcY + ", w " + srcWidth + ", h "
                     + srcHeight + ", destX " + destX + ", destY " + destY + ", destW " + destWidth + ", destH "

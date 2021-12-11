@@ -26,8 +26,8 @@ public abstract class Scene {
     public String sceneName = "default";
 
     public boolean isSubscene; // flag indicating that this scene is a subscene.
-    public int xLoc; // x location (ex top left corner for rectangular scenes)
-    public int yLoc; // y location
+    public int locX; // x location (ex top left corner for rectangular scenes)
+    public int locY; // y location
     public int width; // width
     public int height; // height
     public AnimationType animationType; // flag indicating the scene is an animation
@@ -45,6 +45,17 @@ public abstract class Scene {
 
     public boolean showPlayer;
 
+    public static enum CameraType {
+        GLOBAL, PLAYER
+    }
+
+    public CameraType cameraType;
+
+    // Viewport overrides. These will be 0 unless a scene sets type PLAYER and
+    // overrides them.
+    public int cameraViewportWidth;
+    public int cameraViewportHeight;
+
     /* Dynamic array of Transitions */
     public List<Transition> transitions = new ArrayList<>();
 
@@ -59,10 +70,17 @@ public abstract class Scene {
     /* Default scene constructor */
     public Scene() {
         numSubScenes = 0;
-        isActive = true;
+
         depth = DEFAULT_DEPTH;
+
         animationType = AnimationType.NO_ANIMATION;
+
+        isActive = true;
         showPlayer = false;
+
+        cameraType = CameraType.GLOBAL;
+        cameraViewportWidth = 0;
+        cameraViewportHeight = 0;
     }
 
     public void setGameScreen(GameScreen gameScreen) {
@@ -85,9 +103,9 @@ public abstract class Scene {
 
         /* Recurse to add images/animations to newDrawList */
         if (animationType != Scene.AnimationType.NO_ANIMATION) {
-            screen.addAnimationToDrawList(imagePath, xLoc, yLoc, width, height, animationType, depth, 1.0, id);
+            screen.addAnimationToDrawList(imagePath, locX, locY, width, height, animationType, depth, 1.0, id);
         } else {
-            screen.addImgToDrawList(imagePath, xLoc, yLoc, depth, id);
+            screen.addImgToDrawList(imagePath, locX, locY, depth, id);
         }
         for (int scnIdx = 0; scnIdx < numSubScenes; scnIdx++) {
             if (subScenes[scnIdx].isActive()) {
@@ -108,6 +126,13 @@ public abstract class Scene {
             // The scene should make sure the player gets drawn.
             if (showPlayer) {
                 g.player.updateDrawList();
+            }
+
+            // Set the viewport of the scene.
+            if (cameraType == CameraType.PLAYER) {
+                screen.setViewport(g.player.getLocX(), g.player.getLocY(), cameraViewportWidth, cameraViewportHeight);
+            } else if (cameraType == CameraType.GLOBAL) {
+                screen.setViewport((int) (getLocX() + width / 2.0), (int) (getLocY() + height / 2.0), width, height);
             }
         }
 
@@ -139,8 +164,8 @@ public abstract class Scene {
     }
 
     public void setLoc(int x, int y, int depth_) {
-        xLoc = x;
-        yLoc = y;
+        locX = x;
+        locY = y;
         depth = depth_;
     }
 
@@ -148,19 +173,27 @@ public abstract class Scene {
         setLoc(x, y, depth);
     }
 
+    public int getLocX() {
+        return locX;
+    }
+
+    public int getLocY() {
+        return locY;
+    }
+
     // Shift the scene location to the specified position and depth.
     // Additionally, check what the offset is between the old and new locations,
     // and apply this offset (R)ecursively to all subscenes.
     public void setLocR(int x, int y, int depth_) {
-        int deltaX = x - xLoc;
-        int deltaY = y - yLoc;
+        int deltaX = x - locX;
+        int deltaY = y - locY;
         int deltaD = depth_ - depth;
 
         setLoc(x, y, depth_);
 
         for (int scnIdx = 0; scnIdx < numSubScenes; scnIdx++) {
             Scene ss = subScenes[scnIdx];
-            ss.setLocR(ss.xLoc + deltaX, ss.yLoc + deltaY, ss.depth + deltaD);
+            ss.setLocR(ss.locX + deltaX, ss.locY + deltaY, ss.depth + deltaD);
         }
     }
 
@@ -173,7 +206,7 @@ public abstract class Scene {
     // any of their subscenes, etc.) accordingly. This is mainly helpful for
     // wrapping new scenes: Scene subscene = subSceneRel(new SubScene, x, y, depth);
     public Scene subSceneRel(Scene s, int x, int y, int depth_) {
-        s.setLocR(s.xLoc + x, s.yLoc + y, s.depth + depth_);
+        s.setLocR(s.locX + x, s.locY + y, s.depth + depth_);
         return s;
     }
 
@@ -182,7 +215,7 @@ public abstract class Scene {
     }
 
     public void addTransitionRel(int sId, int x, int y, int w, int h, Jukebox.Sounds s) {
-        transitions.add(new Transition(sId, xLoc + x, yLoc + y, w, h, s));
+        transitions.add(new Transition(sId, locX + x, locY + y, w, h, s));
     }
 
     public void draw() {
@@ -223,8 +256,8 @@ public abstract class Scene {
         // y = GameFrame.frameToNativeY(y);
 
         /* x/y locations were based on nominal scaling, so no conversion needed. */
-        x -= xLoc;
-        y -= yLoc;
+        x -= locX;
+        y -= locY;
 
         return isActive() && (x >= 0) && (x < width) && (y >= 0) && (y < height);
     }

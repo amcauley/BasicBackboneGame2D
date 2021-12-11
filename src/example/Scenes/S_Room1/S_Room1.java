@@ -95,8 +95,12 @@ public class S_Room1 extends Scene {
         isSubscene = false;
         showPlayer = true;
         animationType = Scene.AnimationType.NO_ANIMATION;
-        width = GameFrame.NOMINAL_WIDTH;
-        height = GameFrame.NOMINAL_HEIGHT;
+        width = 400;
+        height = 400;
+
+        cameraType = CameraType.PLAYER;
+        cameraViewportWidth = 350;
+        cameraViewportHeight = 350;
 
         /* Initialize this scene's image */
         imagePath = imagePathMap.ROOM1.str;

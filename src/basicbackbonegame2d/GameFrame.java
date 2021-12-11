@@ -9,8 +9,8 @@ public class GameFrame extends JFrame {
 
     // Nominal size of scene.
     // This is really only used for setting the aspect ratio.
-    public static final int NOMINAL_WIDTH = 16;
-    public static final int NOMINAL_HEIGHT = 9;
+    public static final int NOMINAL_WIDTH = 100;
+    public static final int NOMINAL_HEIGHT = 100;
 
     public GameScreen gs;
 
