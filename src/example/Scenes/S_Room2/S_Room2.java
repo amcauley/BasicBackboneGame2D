@@ -131,9 +131,6 @@ public class S_Room2 extends Scene {
 
         /* Start BG music. */
         g.jukebox.play(Jukebox.Sounds.BG_MUSIC0, true);
-
-        /* Standard scene drawing routines for top level scenes */
-        refresh();
     }
 
     @Override

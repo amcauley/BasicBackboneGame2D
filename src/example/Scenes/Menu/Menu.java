@@ -162,9 +162,6 @@ public class Menu extends Scene {
         // g.jukebox.stopAll();
 
         Log.debug("Menu last scene ID: " + stateInfo.vals[StateMap.LAST_SCENE.idx]);
-
-        /* Standard scene drawing routines for top level scenes */
-        refresh();
     }
 
     @Override

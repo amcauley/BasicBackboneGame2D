@@ -90,9 +90,6 @@ public class S_Win extends Scene {
         /* Victory music. */
         g.jukebox.stopAll();
         g.jukebox.play(Jukebox.Sounds.VICTORY, false);
-
-        /* Standard scene drawing routines for top level scenes */
-        refresh();
     }
 
 }

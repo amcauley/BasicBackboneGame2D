@@ -8,8 +8,10 @@ import javax.swing.JFrame;
 public class GameFrame extends JFrame {
 
     /* Nominal size of window and native image size. */
-    public static final int NOMINAL_WIDTH = 400;
-    public static final int NOMINAL_HEIGHT = 400;
+    public static final int NOMINAL_WIDTH = 300;
+    public static final int NOMINAL_HEIGHT = 300;
+
+    public GameScreen gs;
 
     // Store the actual, current width and height (including padding).
     // TODO: better naming / definitions. Maybe don't include padding.
@@ -105,7 +107,7 @@ public class GameFrame extends JFrame {
         scaleComp();
     }
 
-    public void init() {
+    public void init(GameScreen gameScreen) {
         setTitle("Default Title");
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -115,7 +117,8 @@ public class GameFrame extends JFrame {
         setLayout(new GridLayout(1, 1, 0, 0));
 
         /* Add the static screen to this JFrame-based object. */
-        add(Scene.screen);
+        gs = gameScreen;
+        add(gs);
 
         setVisible(true);
 
@@ -149,7 +152,7 @@ public class GameFrame extends JFrame {
 
                 Log.info("Frame resized: " + getContentPane().getWidth() + "x" + getContentPane().getHeight());
 
-                Scene.screen.repaint();
+                gs.repaint();
             }
 
             @Override

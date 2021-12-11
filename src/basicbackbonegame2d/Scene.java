@@ -21,7 +21,7 @@ public abstract class Scene {
     static public BasicBackboneGame2D g;
 
     /* Screen on which all scenes will draw */
-    static public GameScreen screen = new GameScreen();
+    public GameScreen screen;
 
     public String sceneName = "default";
 
@@ -63,6 +63,14 @@ public abstract class Scene {
         depth = DEFAULT_DEPTH;
         animationType = AnimationType.NO_ANIMATION;
         showPlayer = false;
+    }
+
+    public void setGameScreen(GameScreen gameScreen) {
+        screen = gameScreen;
+        // Update subscenes with the same screen object.
+        for (int scnIdx = 0; scnIdx < numSubScenes; scnIdx++) {
+            subScenes[scnIdx].setGameScreen(screen);
+        }
     }
 
     // Update the draw list with this scene's entries (and entries from sub-scenes).
@@ -116,10 +124,13 @@ public abstract class Scene {
             if (!isSubscene) {
                 Point mouseLoc = getPointerInfo().getLocation();
                 Point screenLoc = screen.getLocationOnScreen();
-                int mvtX = (int) GameScreen.windowToSceneX(mouseLoc.x - screenLoc.x);
-                int mvtY = (int) GameScreen.windowToSceneY(mouseLoc.y - screenLoc.y);
+                if ((mouseLoc.x > 600) && (mouseLoc.x < 615) && (mouseLoc.y > 280) && (mouseLoc.y < 300)) {
+                    Log.error("pause");
+                }
+                int mvtX = (int) screen.windowToSceneX(mouseLoc.x - screenLoc.x);
+                int mvtY = (int) screen.windowToSceneY(mouseLoc.y - screenLoc.y);
 
-                Log.debug("mouseLoc (" + mouseLoc.x + "," + mouseLoc.y + "), screenLoc (" + screenLoc.x + ","
+                Log.trace("mouseLoc (" + mouseLoc.x + "," + mouseLoc.y + "), screenLoc (" + screenLoc.x + ","
                         + screenLoc.y + "), mvt (" + mvtX + "," + mvtY + ")");
 
                 actionHandler(g, BasicBackboneGame2D.MouseActions.MOVEMENT, mvtX, mvtY);
@@ -334,14 +345,10 @@ public abstract class Scene {
             return;
         }
 
-        Log.error("actionhandler----------" + imagePath);
         /* Check if any subscenes are hit and handle it if they are. */
         for (int scnIdx = 0; scnIdx < numSubScenes; scnIdx++) {
             Scene ss = subScenes[scnIdx];
-            Log.error("ssIdx " + scnIdx + "  " + evtX + "," + evtY + "   " + ss.xLoc + " " + ss.yLoc + " "
-                    + ss.isActive()); ///////////////// dbg
             if (ss.isHit(evtX, evtY)) {
-                Log.error("hit");//////////////////
                 ss.actionHandler(g, evtType, evtX, evtY);
                 if (!isSubscene) {
                     screen.updateCursor(GameScreen.CursorType.INSPECTION);

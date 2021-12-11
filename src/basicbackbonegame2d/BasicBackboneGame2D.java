@@ -24,6 +24,8 @@ public class BasicBackboneGame2D implements ActionListener {
 
     public SceneManager sm;
 
+    public GameScreen gs;
+
     /*
      * Swing timer (not just regular util timer) for all our timing needs. Swing
      * timer operates from event dispatch thread, so same context as other event
@@ -75,8 +77,8 @@ public class BasicBackboneGame2D implements ActionListener {
         public void mouseMoved(MouseEvent me) {
             // Convert to scene units. For mouse clicks, this is handled within
             // SceneManager.
-            int mvtX = GameScreen.windowToSceneX(me.getX());
-            int mvtY = GameScreen.windowToSceneY(me.getY());
+            int mvtX = gs.windowToSceneX(me.getX());
+            int mvtY = gs.windowToSceneY(me.getY());
             topLvlScene.actionHandler(BasicBackboneGame2D.this, MouseActions.MOVEMENT, mvtX, mvtY);
         }
     }
@@ -90,22 +92,27 @@ public class BasicBackboneGame2D implements ActionListener {
 
         gameFrame = new GameFrame();
         jukebox = new Jukebox();
-        player = new Player();
-        sm = new SceneManager();
+        gs = new GameScreen();
 
-        gameFrame.init();
+        player = new Player();
+        player.setGameScreen(gs);
+
+        sm = new SceneManager();
+        sm.setGameScreen(gs);
+
+        gameFrame.init(gs);
 
         /* Register game object to scene. */
+        // TODO: Get rid of this static access, it makes ownership too difficult to
+        // manage.
         Scene.g = this;
 
         timer = new Timer(1000 / GameScreen.FRAMES_PER_SEC, this);
-        Scene.screen.registerTimer(timer);
+        gs.registerTimer(timer);
 
         // TODO: Fix access. Need to revisit Scene, Frame, etc. initialization.
-        Scene.screen.cameraType = CameraType.GLOBAL;
+        gs.cameraType = CameraType.GLOBAL;
 
-        /* Add the static screen to this JFrame-based object. */
-        gameFrame.add(Scene.screen);
         gameFrame.setVisible(true);
 
         /*
@@ -125,7 +132,7 @@ public class BasicBackboneGame2D implements ActionListener {
          * is initialized.
          */
         gameMouseListener mouseListener = new gameMouseListener();
-        Scene.screen.registerMouseListener(mouseListener);
+        gs.registerMouseListener(mouseListener);
     }
 
     /*
@@ -135,7 +142,7 @@ public class BasicBackboneGame2D implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Log.trace("Timer triggered");
 
-        Scene.screen.fromTick = true;
+        gs.fromTick = true;
         player.onTick();
         topLvlScene.updateScreen(true);
         topLvlScene.draw();

@@ -62,9 +62,8 @@ public class Player extends Scene {
         if (evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON) {
             if (obstacle == null) {
                 return;
-            } else if (obstacle.isClear(GameFrame.frameToNormalizedX(evtX), GameFrame.frameToNormalizedY(evtY))) {
-                path.generatePath(obstacle, GameFrame.nativeToNormalizedX(xLoc), GameFrame.nativeToNormalizedY(yLoc),
-                        GameFrame.frameToNormalizedX(evtX), GameFrame.frameToNormalizedY(evtY), 0.1);
+            } else if (obstacle.isClear(evtX, evtY)) {
+                path.generatePath(obstacle, xLoc / 400.0, yLoc / 400.0, evtX / 400.0, evtY / 400.0, 0.1);
             }
         }
     }
@@ -83,8 +82,8 @@ public class Player extends Scene {
 
     public void onTick() {
         Log.trace("Player tick");
-        double xLocNormalized = GameFrame.nativeToNormalizedX(xLoc);
-        double yLocNormalized = GameFrame.nativeToNormalizedY(yLoc);
+        double xLocNormalized = xLoc / 400.0;
+        double yLocNormalized = yLoc / 400.0;
 
         // Avoid precision errors with converting formats unless there's actual movement
         // required. Otherwise the player can glide around on their own.
@@ -92,7 +91,7 @@ public class Player extends Scene {
             Double nextLocation = path.getNext(xLocNormalized, yLocNormalized, 0.05);
             Log.debug("Player @ (" + xLocNormalized + ", " + yLocNormalized +
                     "), moving to " + nextLocation);
-            setLocR(GameFrame.normalizedToNativeX(nextLocation.x), GameFrame.normalizedToNativeY(nextLocation.y));
+            setLocR((int) (nextLocation.x * 400.0), (int) (nextLocation.y * 400.0));
 
             if (scaleMap != null) {
                 scale = scaleMap.getScalingFactor(nextLocation.x, nextLocation.y);

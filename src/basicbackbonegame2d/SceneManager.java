@@ -29,6 +29,8 @@ public class SceneManager {
 
     public static Hashtable<Integer, StateInfo> sceneTable;
 
+    public GameScreen gs;
+
     public SceneManager() {
         Log.info("Initializing SM");
 
@@ -39,6 +41,10 @@ public class SceneManager {
         sceneTable.put(S_ROOM2, S_Room2.getStateInfo());
         sceneTable.put(S_WIN, S_Win.getStateInfo());
 
+    }
+
+    public void setGameScreen(GameScreen gameScreen) {
+        gs = gameScreen;
     }
 
     public Path getAutoSaveFilePath() {
@@ -149,6 +155,9 @@ public class SceneManager {
         /* Latch new topLvlSceneIdx */
         g.topLvlSceneIdx = sceneId;
 
+        g.topLvlScene.setGameScreen(g.gs);
+        g.topLvlScene.refresh();
+
         /* Update top level state. */
         sceneTable.get(TOP).vals[Top.StateMap.LAST_SCENE_ID.idx] = sceneId;
 
@@ -157,8 +166,8 @@ public class SceneManager {
     }
 
     public void actionHandler(BasicBackboneGame2D g, BasicBackboneGame2D.MouseActions evtType, int evtX, int evtY) {
-        int evtSceneX = GameScreen.windowToSceneX(evtX);
-        int evtSceneY = GameScreen.windowToSceneY(evtY);
+        int evtSceneX = gs.windowToSceneX(evtX);
+        int evtSceneY = gs.windowToSceneY(evtY);
 
         Log.debug("SM evt " + evtType + " @ (" + evtX + "," + evtY + "), scene (" + evtSceneX + "," + evtSceneY + ")");
 
