@@ -142,7 +142,7 @@ public class BasicBackboneGame2D implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Log.trace("Timer triggered");
 
-        gs.fromTick = true;
+        gs.setFromTick(true);
         player.onTick();
         topLvlScene.updateScreen(true);
         topLvlScene.draw();

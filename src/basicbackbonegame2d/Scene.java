@@ -358,9 +358,6 @@ public abstract class Scene {
         }
 
         if ((!hit) && (!isSubscene)) {
-            if (screen.getActiveCursorType() == GameScreen.CursorType.INSPECTION) {
-                Log.error("DEACTIVATING!!!!!!!!!");
-            }
             screen.updateCursor(GameScreen.CursorType.DEFAULT);
         }
 

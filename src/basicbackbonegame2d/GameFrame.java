@@ -7,9 +7,10 @@ import javax.swing.JFrame;
 
 public class GameFrame extends JFrame {
 
-    /* Nominal size of window and native image size. */
-    public static final int NOMINAL_WIDTH = 300;
-    public static final int NOMINAL_HEIGHT = 300;
+    // Nominal size of scene.
+    // This is really only used for setting the aspect ratio.
+    public static final int NOMINAL_WIDTH = 16;
+    public static final int NOMINAL_HEIGHT = 9;
 
     public GameScreen gs;
 
@@ -27,63 +28,9 @@ public class GameFrame extends JFrame {
      */
     public static int yPad;
 
-    /* Padding due to window border/header. TODO: Need to study this more. */
+    /* Padding due to window border/header. */
     int framePadX;
     int framePadY;
-
-    /*
-     * Convert the game frame position into an unpadded/unscaled version, i.e. in
-     * game-native coordinates.
-     */
-    // TODO: Should convert most coordinates, ex. in the scene, to a normalized
-    // range [0, 1].
-    public static int frameToNativeX(int frameX) {
-        return (int) ((float) (frameX - GameFrame.xPad) / GameFrame.scale);
-    }
-
-    public static int frameToNativeY(int frameY) {
-        return (int) ((float) (frameY - GameFrame.yPad) / GameFrame.scale);
-    }
-
-    public static double frameToNormalizedX(int frameX) {
-        return (frameX - xPad) / (width - 2.0 * xPad);
-    }
-
-    public static double frameToNormalizedY(int frameY) {
-        return (frameY - yPad) / (height - 2.0 * yPad);
-    }
-
-    public static int nativeToFrameX(int nativeX) {
-        return (int) (nativeX * GameFrame.scale + GameFrame.xPad);
-    }
-
-    public static int nativeToFrameY(int nativeY) {
-        return (int) (nativeY * GameFrame.scale + GameFrame.yPad);
-    }
-
-    public static int normalizedToFrameX(double x) {
-        return (int) (x * (width - 2.0 * xPad) + xPad);
-    }
-
-    public static int normalizedToFrameY(double y) {
-        return (int) (y * (height - 2.0 * yPad) + yPad);
-    }
-
-    public static double nativeToNormalizedX(int nativeX) {
-        return frameToNormalizedX(nativeToFrameX(nativeX));
-    }
-
-    public static double nativeToNormalizedY(int nativeY) {
-        return frameToNormalizedY(nativeToFrameY(nativeY));
-    }
-
-    public static int normalizedToNativeX(double x) {
-        return frameToNativeX(normalizedToFrameX(x));
-    }
-
-    public static int normalizedToNativeY(double y) {
-        return frameToNativeY(normalizedToFrameY(y));
-    }
 
     public void scaleComp() {
         /* Compute scaling from native size to current target size. */
@@ -136,7 +83,7 @@ public class GameFrame extends JFrame {
         addComponentListener(new ComponentListener() {
             @Override
             public void componentHidden(ComponentEvent e) {
-                Log.debug("Frame hidden");
+                Log.info("Frame hidden");
             }
 
             @Override
@@ -157,7 +104,7 @@ public class GameFrame extends JFrame {
 
             @Override
             public void componentShown(ComponentEvent e) {
-                Log.debug("Frame shown");
+                Log.info("Frame shown");
             }
         });
     }
