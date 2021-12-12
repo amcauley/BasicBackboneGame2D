@@ -19,7 +19,7 @@ public class GameFrame extends JFrame {
     // TODO: maybe use getters and setters for these
     public static int width;
     public static int height;
-    public static float scale;
+    private static float scale;
 
     /* Horizontal padding. Amount of padding on the left of drawable image. */
     public static int xPad;

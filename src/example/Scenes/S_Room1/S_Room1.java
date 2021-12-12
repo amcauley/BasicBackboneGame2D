@@ -98,7 +98,7 @@ public class S_Room1 extends Scene {
         width = 400;
         height = 400;
 
-        cameraType = CameraType.PLAYER;
+        cameraType = CameraType.PLAYER_CONSTRAINED;
         cameraViewportWidth = 350;
         cameraViewportHeight = 350;
 

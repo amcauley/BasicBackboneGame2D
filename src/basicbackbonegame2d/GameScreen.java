@@ -126,7 +126,7 @@ public class GameScreen extends JPanel {
     }
 
     void setViewport(int centerX, int centerY, int width, int height) {
-        Log.error("viewport center (" + centerX + "," + centerY + "), dim (" + width + "," + height + ")");
+        Log.trace("viewport center (" + centerX + "," + centerY + "), dim (" + width + "," + height + ")");
         viewportCenterX = centerX;
         viewportCenterY = centerY;
         viewportWidth = width;
@@ -245,19 +245,8 @@ public class GameScreen extends JPanel {
 
         Log.trace("Painting GameScreen, fromTick " + fromTick);
 
-        /*
-         * Draw background across entire drawable area. This will form the border
-         * between the window frame and the scene itself.
-         */
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, GameFrame.width, GameFrame.height);
-
-        // float frameScale = GameFrame.scale;
-
         /* Draw all images (and animations) in the current screen. */
         boolean needNextTimerTick = false;
-
-        // updateViewport();
 
         /*
          * Process images/animations in order (from background to foreground, already
@@ -305,6 +294,13 @@ public class GameScreen extends JPanel {
                 needNextTimerTick = true;
             }
         }
+
+        // Draw horizontal and vertical padding, if any.
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, GameFrame.xPad, GameFrame.height);
+        g.fillRect(GameFrame.width - GameFrame.xPad, 0, GameFrame.xPad, GameFrame.height);
+        g.fillRect(0, 0, GameFrame.width, GameFrame.yPad);
+        g.fillRect(0, GameFrame.height - GameFrame.yPad, GameFrame.width, GameFrame.yPad);
 
         /* Update timer as needed for animations */
         if (timer != null) { /* Make sure timer actually exists. */

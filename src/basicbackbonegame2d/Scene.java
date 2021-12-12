@@ -46,7 +46,10 @@ public abstract class Scene {
     public boolean showPlayer;
 
     public static enum CameraType {
-        GLOBAL, PLAYER
+        GLOBAL, // The camera will show the entire top level scene at once
+        PLAYER, // The camera's viewport follows the player around the scene
+        PLAYER_CONSTRAINED // Similar to PLAYER, but the viewport won't show anything outside the bounds of
+                           // the scene
     }
 
     public CameraType cameraType;
@@ -129,10 +132,16 @@ public abstract class Scene {
             }
 
             // Set the viewport of the scene.
-            if (cameraType == CameraType.PLAYER) {
-                screen.setViewport(g.player.getLocX(), g.player.getLocY(), cameraViewportWidth, cameraViewportHeight);
-            } else if (cameraType == CameraType.GLOBAL) {
+            if (cameraType == CameraType.GLOBAL) {
                 screen.setViewport((int) (getLocX() + width / 2.0), (int) (getLocY() + height / 2.0), width, height);
+            } else if (cameraType == CameraType.PLAYER) {
+                screen.setViewport(g.player.getLocX(), g.player.getLocY(), cameraViewportWidth, cameraViewportHeight);
+            } else if (cameraType == CameraType.PLAYER_CONSTRAINED) {
+                int xx = Math.min((int) (width - cameraViewportWidth / 2.0),
+                        Math.max((int) (cameraViewportWidth / 2.0), g.player.getLocX()));
+                int yy = Math.min((int) (height - cameraViewportHeight / 2.0),
+                        Math.max((int) (cameraViewportHeight / 2.0), g.player.getLocY()));
+                screen.setViewport(xx, yy, cameraViewportWidth, cameraViewportHeight);
             }
         }
 
