@@ -224,7 +224,7 @@ public abstract class Scene {
     }
 
     public void addTransitionRel(int sId, int x, int y, int w, int h, Jukebox.Sounds s) {
-        transitions.add(new Transition(sId, locX + x, locY + y, w, h, s));
+        transitions.add(new Transition(g, sId, locX + x, locY + y, w, h, s));
     }
 
     public void draw() {
@@ -269,64 +269,6 @@ public abstract class Scene {
         y -= locY;
 
         return isActive() && (x >= 0) && (x < width) && (y >= 0) && (y < height);
-    }
-
-    /*
-     * Transition inner class - has isHit() and activate(). isHit() will return true
-     * if the input (x,y) coords are within the transition object. activate() will
-     * change the topLvlScene of the BasicBackboneGame2D class to the new scene
-     * we're transitioning to.
-     */
-    public class Transition {
-
-        int sceneId;
-        int xLoc;
-        int yLoc;
-        int width;
-        int height;
-
-        /* Sound to play on click activation. Set to NONE for no sound. */
-        Jukebox.Sounds sound;
-
-        /*
-         * Currently sceneId is only defined here and referenced as a magic number from
-         * any scenes that call for the transition. Possible area of
-         * cleanup/simplification later on.
-         */
-        public Transition(int sId, int x, int y, int w, int h, Jukebox.Sounds s) {
-            sceneId = sId;
-            xLoc = x;
-            yLoc = y;
-            width = w;
-            height = h;
-            sound = s;
-        }
-
-        /* isHit will return false if the (sub)scene is inactive. */
-        public boolean isHit(int x, int y) {
-            /*
-             * Undo any scaling on the locations - all checks are based on nominal scaling.
-             */
-            // x = (int) ((float) (x - GameFrame.xPad) / GameFrame.scale);
-            // y = (int) ((float) (y - GameFrame.yPad) / GameFrame.scale);
-
-            /* x/y locations were based on nominal scaling, so no conversion needed. */
-            x -= xLoc;
-            y -= yLoc;
-            return (x >= 0) && (x < width) && (y >= 0) && (y < height);
-        }
-
-        public void activate() {
-            /* Play sound, no looping. */
-            g.jukebox.play(sound, false);
-
-            /*
-             * Scene switching duty is handled within the SceneManager.java file in order to
-             * keep all scene enums and handoffs in one location. Makes manual editing
-             * easier.
-             */
-            SceneManager.switchScene(g, sceneId);
-        }
     }
 
     /*

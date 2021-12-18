@@ -104,7 +104,7 @@ public class SceneManager {
              */
             for (int sIdx = 0; sIdx < SCENE_COUNT; sIdx++) {
                 String state = sceneTable.get(sIdx).saveState();
-                Log.debug("Save state: " + state);
+                Log.debug("Scene " + sIdx + " save state: " + state);
                 /* Write to file */
                 out.println(state);
             }
