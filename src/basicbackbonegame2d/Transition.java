@@ -46,6 +46,6 @@ public class Transition {
          * keep all scene enums and handoffs in one location. Makes manual editing
          * easier.
          */
-        SceneManager.switchScene(bbg, sceneId);
+        bbg.sm.switchScene(bbg, sceneId);
     }
 }

@@ -2,7 +2,6 @@
 package example.Scenes.S_Room1;
 
 import basicbackbonegame2d.BasicBackboneGame2D;
-import basicbackbonegame2d.GameFrame;
 import basicbackbonegame2d.Jukebox;
 import basicbackbonegame2d.Obstacle;
 import basicbackbonegame2d.ScaleMap;

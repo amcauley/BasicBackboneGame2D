@@ -1,6 +1,8 @@
 
 package basicbackbonegame2d;
 
+import java.util.ArrayList;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -30,6 +32,10 @@ public class SceneManager {
     public static Hashtable<Integer, StateInfo> sceneTable;
 
     public GameScreen gs;
+
+    // Last processed event X, Y location, in window coordinates.
+    int lastEvtX;
+    int lastEvtY;
 
     public SceneManager() {
         Log.info("Initializing SM");
@@ -120,7 +126,7 @@ public class SceneManager {
         saveState(getAutoSaveFilePath().toString());
     }
 
-    public static void switchScene(BasicBackboneGame2D g, int sceneId) {
+    public void switchScene(BasicBackboneGame2D g, int sceneId) {
 
         switch (sceneId) {
             case MENU: // Menu "Scene"
@@ -155,6 +161,10 @@ public class SceneManager {
         /* Latch new topLvlSceneIdx */
         g.topLvlSceneIdx = sceneId;
 
+        // Issue a dummy movement command to trigger mouse cursor update.
+        actionHandler(g, BasicBackboneGame2D.MouseActions.MOVEMENT, lastEvtX, lastEvtY);
+
+        // Draw the new screen.
         g.topLvlScene.setGameScreen(g.gs);
         g.topLvlScene.refresh();
 
@@ -171,15 +181,68 @@ public class SceneManager {
 
         Log.debug("SM evt " + evtType + " @ (" + evtX + "," + evtY + "), scene (" + evtSceneX + "," + evtSceneY + ")");
 
+        lastEvtX = evtX;
+        lastEvtY = evtY;
+
         // Move player to the location.
         // TODO: Add pathing and transition animations.
-        // Also need to add mechanism for interacting with the destination object, and
-        // any objects along the way.
-        // Interaction could potentially be handled by the scenes themselves through
-        // g.player.
+        // Also need to add mechanism for interacting with the destination object.
         g.player.actionHandler(g, evtType, evtSceneX, evtSceneY);
 
-        // Default scene handling.
-        g.topLvlScene.actionHandler(g, evtType, evtSceneX, evtSceneY);
+        GameScreen.CursorType cursorType = GameScreen.CursorType.DEFAULT;
+
+        ArrayList<Scene> scenes = g.topLvlScene.getHitScenesR(evtSceneX, evtSceneY);
+        for (int scnIdx = 0; scnIdx < scenes.size(); scnIdx++) {
+            Scene s = scenes.get(scnIdx);
+
+            ArrayList<Transition> transitions = s.getHitTransitions(evtSceneX, evtSceneY);
+            for (int tIdx = 0; tIdx < transitions.size(); tIdx++) {
+                Transition t = transitions.get(tIdx);
+
+                if (evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON) {
+                    t.activate();
+
+                    /* Scene has switched, don't process any more in this scene. Do save, though. */
+                    saveState();
+                    return;
+
+                } else if (evtType == BasicBackboneGame2D.MouseActions.MOVEMENT) {
+                    // TODO: Move isSubscene to a method, i.e. isSubscene().
+                    if (!s.isSubscene) {
+                        cursorType = GameScreen.CursorType.TRANSITION;
+                    }
+                }
+            }
+
+            /*
+             * Custom handling for this scene. This gives each scene a chance to custom
+             * handle events before falling back on the default handling (other than
+             * transitions, which are handled first).
+             */
+            if (s.uniqueActionHandler(g, evtType, evtSceneX, evtSceneY) != 0) {
+                /* If return int is non-zero, further recursion/processing should be skipped. */
+                break;
+            }
+
+            // If we enter this section, we're processing a subscene hit.
+            // Don't override a transition.
+            if ((cursorType != GameScreen.CursorType.TRANSITION) && s.isSubscene) {
+                cursorType = GameScreen.CursorType.INSPECTION;
+            }
+        }
+
+        // Note: Using SM's copy of GameScreen isn't just clean design, it's
+        // functionally necessary. Scene's may not be fully set up up yet,
+        // ex. if switchScene() hasn't initialized their GameScreen instance yet.
+        gs.updateCursor(cursorType);
+
+        /*
+         * Save after handling any left clicks that hit something (a subscene), which
+         * could have updated state. Transition saves are handled separately earlier.
+         */
+        if ((evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON) && (scenes.size() > 1)) {
+            g.sm.saveState();
+        }
+
     }
 }

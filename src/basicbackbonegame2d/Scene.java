@@ -1,8 +1,6 @@
 
 package basicbackbonegame2d;
 
-import static java.awt.MouseInfo.getPointerInfo;
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -148,27 +146,7 @@ public abstract class Scene {
         updateDrawList();
 
         if (topLvlCall) {
-
             screen.submitNewDrawList();
-
-            /*
-             * Update cursor as well by issuing a dummy movement event at the current
-             * location.
-             */
-            if (!isSubscene) {
-                Point mouseLoc = getPointerInfo().getLocation();
-                Point screenLoc = screen.getLocationOnScreen();
-                if ((mouseLoc.x > 600) && (mouseLoc.x < 615) && (mouseLoc.y > 280) && (mouseLoc.y < 300)) {
-                    Log.error("pause");
-                }
-                int mvtX = (int) screen.windowToSceneX(mouseLoc.x - screenLoc.x);
-                int mvtY = (int) screen.windowToSceneY(mouseLoc.y - screenLoc.y);
-
-                Log.trace("mouseLoc (" + mouseLoc.x + "," + mouseLoc.y + "), screenLoc (" + screenLoc.x + ","
-                        + screenLoc.y + "), mvt (" + mvtX + "," + mvtY + ")");
-
-                actionHandler(g, BasicBackboneGame2D.MouseActions.MOVEMENT, mvtX, mvtY);
-            }
         }
     }
 
@@ -281,78 +259,45 @@ public abstract class Scene {
         return 0;
     }
 
-    /* Base action handler, common to all scenes */
-    public void actionHandler(BasicBackboneGame2D g, BasicBackboneGame2D.MouseActions evtType, int evtX, int evtY) {
+    // Return a list of any of any (sub)scenes where the provided location is a hit.
+    // Event positions are in scene units.
+    // Include this scene itself as the first entry if it's hit.
+    // The "R" suffix is a reminder that this is recursive.
+    public ArrayList<Scene> getHitScenesR(int evtX, int evtY) {
+        ArrayList<Scene> scenes = new ArrayList<Scene>();
 
-        // Movement is generated, surprisingly, even if the mouse is stationary.
-        // Only record movement events in the trace logs, i.e. when we don't care about
-        // flooding the logs.
-        String s = sceneName + ": evt " + evtType + ", (" + evtX + "," + evtY + ")";
-        if (evtType == BasicBackboneGame2D.MouseActions.MOVEMENT) {
-            Log.trace(s);
-        } else {
-            Log.debug(s);
-        }
-
-        /*
-         * Handling order: 1) Transitions 2) Custom Scene Handling 3) Recurse Through
-         * Subscenes
-         */
-
-        boolean hit = false; // Flag indicating if any subscene or transition returned true on their
-                             // isHit() methods. If not, we'll use the default cursor.
-
-        for (int tIdx = 0; tIdx < transitions.size(); tIdx++) {
-            Transition tt = transitions.get(tIdx);
-            if (tt.isHit(evtX, evtY)) {
-                if (evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON) {
-                    tt.activate();
-                    /* Scene has switched, don't process any more in this scene. Do save, though. */
-                    g.sm.saveState();
-                    return;
-                } else if (evtType == BasicBackboneGame2D.MouseActions.MOVEMENT) {
-                    if (!isSubscene) {
-                        screen.updateCursor(GameScreen.CursorType.TRANSITION);
-                    }
-                }
-                hit = true;
-            }
-        }
-
-        /*
-         * Custom handling for this scene. This gives each scene a chance to custom
-         * handle events before falling back on the default handling (other than
-         * transitions, which are handled first).
-         */
-        if (uniqueActionHandler(g, evtType, evtX, evtY) != 0) {
-            /* If return int is non-zero, further recursion/processing should be skipped. */
-            return;
+        // If this scene itself is hit, it'll be the first entry.
+        if (isHit(evtX, evtY)) {
+            scenes.add(this);
         }
 
         /* Check if any subscenes are hit and handle it if they are. */
         for (int scnIdx = 0; scnIdx < numSubScenes; scnIdx++) {
             Scene ss = subScenes[scnIdx];
-            if (ss.isHit(evtX, evtY)) {
-                ss.actionHandler(g, evtType, evtX, evtY);
-                if (!isSubscene) {
-                    screen.updateCursor(GameScreen.CursorType.INSPECTION);
-                }
-                hit = true;
+
+            ArrayList<Scene> subSceneHits = ss.getHitScenesR(evtX, evtY);
+            if (!subSceneHits.isEmpty()) {
+                scenes.addAll(subSceneHits);
             }
         }
 
-        if ((!hit) && (!isSubscene)) {
-            screen.updateCursor(GameScreen.CursorType.DEFAULT);
+        return scenes;
+    }
+
+    // Get a list of any transitions in this scene that are hit.
+    // Don't recurse into any subscenes.
+    public ArrayList<Transition> getHitTransitions(int evtX, int evtY) {
+        ArrayList<Transition> transitionHits = new ArrayList<Transition>();
+
+        for (int tIdx = 0; tIdx < transitions.size(); tIdx++) {
+            Transition tt = transitions.get(tIdx);
+
+            if (tt.isHit(evtX, evtY)) {
+                transitionHits.add(tt);
+            }
         }
 
-        /*
-         * Save after handling any left clicks that hit something, which could have
-         * updated state.
-         */
-        if (hit && (evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON) && (!isSubscene)) {
-            g.sm.saveState();
-        }
-
+        return transitionHits;
     }
 
     public Obstacle getObstacle() {

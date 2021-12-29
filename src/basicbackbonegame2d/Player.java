@@ -57,7 +57,6 @@ public class Player extends Scene {
         screen.addAnimationToDrawList(imagePath, locX, locY, width, height, animationType, depth, scale, id);
     }
 
-    @Override
     public void actionHandler(BasicBackboneGame2D g, BasicBackboneGame2D.MouseActions evtType, int evtX, int evtY) {
         if (evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON) {
             if (obstacle == null) {

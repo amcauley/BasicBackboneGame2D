@@ -1,7 +1,6 @@
 
 package example.Scenes.S_Win;
 
-import basicbackbonegame2d.GameFrame;
 import basicbackbonegame2d.Jukebox;
 import basicbackbonegame2d.Scene;
 import basicbackbonegame2d.StateInfo;

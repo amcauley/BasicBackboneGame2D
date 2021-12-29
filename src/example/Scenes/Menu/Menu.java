@@ -2,7 +2,6 @@
 package example.Scenes.Menu;
 
 import basicbackbonegame2d.BasicBackboneGame2D;
-import basicbackbonegame2d.GameFrame;
 import basicbackbonegame2d.Log;
 import basicbackbonegame2d.Scene;
 import basicbackbonegame2d.SceneManager;
@@ -171,7 +170,8 @@ public class Menu extends Scene {
         if ((evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON)
                 && subScenes[SubSceneMap.RESUME.idx].isHit(evtX, evtY)) {
 
-            SceneManager.switchScene(g, stateInfo.vals[StateMap.LAST_SCENE.idx]);
+            g.sm.switchScene(g, stateInfo.vals[StateMap.LAST_SCENE.idx]);
+
         } else if ((evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON)
                 && subScenes[SubSceneMap.SAVE.idx].isHit(evtX, evtY)) {
 
@@ -199,7 +199,7 @@ public class Menu extends Scene {
                     g.sm.loadState(fileName);
                     /* State is loaded, now update topLvlScene based on loaded state. */
                     g.topLvlSceneIdx = stateInfo.vals[Top.StateMap.LAST_SCENE_ID.idx];
-                    SceneManager.switchScene(g, g.topLvlSceneIdx);
+                    g.sm.switchScene(g, g.topLvlSceneIdx);
                 } catch (IOException ex) {
                     Log.error("File load error: " + ex.getMessage());
                 }
@@ -214,20 +214,17 @@ public class Menu extends Scene {
                 g.sm.loadStateResource(NEW_GAME_FILENAME);
                 /* State is loaded, now update topLvlScene based on loaded state. */
                 g.topLvlSceneIdx = stateInfo.vals[Top.StateMap.LAST_SCENE_ID.idx];
-                SceneManager.switchScene(g, g.topLvlSceneIdx);
+                g.sm.switchScene(g, g.topLvlSceneIdx);
             } catch (IOException ex) {
                 Log.error("New game error: " + ex.getMessage());
             }
 
-        } else if ((evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON)
-                && subScenes[SubSceneMap.ITEM_SLOT0.idx].isHit(evtX, evtY)) {
+        }
 
-            /* Stop further action processing, which will also prevent game being saved. */
-            return 1;
-        } else if ((evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON)
-                && subScenes[SubSceneMap.ITEM_SLOT1.idx].isHit(evtX, evtY)) {
-
-            /* Stop further action processing, which will also prevent game being saved. */
+        if (evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON) {
+            // Stop further action processing, which will also prevent game being saved.
+            // This will prevent cursor updates on the menu scene from overwriting
+            // the newly transitioned scene's cursor choices.
             return 1;
         }
 
