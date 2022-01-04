@@ -2,7 +2,6 @@
 package example.Scenes.S_Room1;
 
 import basicbackbonegame2d.BasicBackboneGame2D;
-import basicbackbonegame2d.GameFrame;
 import basicbackbonegame2d.Jukebox;
 import basicbackbonegame2d.Obstacle;
 import basicbackbonegame2d.ScaleMap;
@@ -95,13 +94,17 @@ public class S_Room1 extends Scene {
         isSubscene = false;
         showPlayer = true;
         animationType = Scene.AnimationType.NO_ANIMATION;
-        width = GameFrame.NOMINAL_WIDTH;
-        height = GameFrame.NOMINAL_HEIGHT;
+        width = 400;
+        height = 400;
+
+        cameraType = CameraType.PLAYER_CONSTRAINED;
+        cameraViewportWidth = 350;
+        cameraViewportHeight = 350;
 
         /* Initialize this scene's image */
         imagePath = imagePathMap.ROOM1.str;
 
-        obstacle = new Obstacle("resources/images/Room1_Obstacle.bmp");
+        obstacle = new Obstacle("resources/images/Room1_Obstacle.bmp", width, height);
         scaleMap = new ScaleMap("resources/images/Room1_ScaleMap.bmp");
 
         /* Create any subscenes and add to array */
@@ -123,16 +126,13 @@ public class S_Room1 extends Scene {
         }
 
         /* Clock animation. */
-        subScenes[SubSceneMap.CLOCK.idx] = subSceneRel(new S_Clock(), 135, 135, 100);
+        subScenes[SubSceneMap.CLOCK.idx] = subSceneRel(new S_Clock(), 128, 149, 100);
 
         /* Add any starting transitions */
         addTransitionRel(SceneManager.S_ROOM2, 325, 165, 53, 180, Jukebox.Sounds.DOOR0);
 
         /* Start BG music. */
         // g.jukebox.play(Jukebox.Sounds.BG_MUSIC0, true);
-
-        /* Standard scene drawing routines for top level scenes */
-        refresh();
     }
 
     @Override

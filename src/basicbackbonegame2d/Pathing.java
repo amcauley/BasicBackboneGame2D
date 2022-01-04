@@ -47,18 +47,18 @@ public class Pathing {
         return new Double(targetX, targetY);
     }
 
-    // Generate a path from start to end locations, with normalized steps of size
-    // [0.0, 1.0]. The first entry in the path list will be the starting location
+    // Generate a path from start to end locations, with steps of a given size.
+    // The first entry in the path list will be the starting location
     // and the last entry is the destination.
     void generatePath(Obstacle obstacle, double startX, double startY, double endX, double endY,
-            double stepSizeNormalized) {
+            double stepSize) {
         clear();
 
         Double current = new Double(startX, startY);
         path.add(current);
 
         while ((current.x != endX) || (current.y != endY)) {
-            current = stepToward(current.x, current.y, endX, endY, stepSizeNormalized);
+            current = stepToward(current.x, current.y, endX, endY, stepSize);
             path.add(current);
         }
 

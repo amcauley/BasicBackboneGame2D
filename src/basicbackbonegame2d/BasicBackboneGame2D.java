@@ -22,6 +22,8 @@ public class BasicBackboneGame2D implements ActionListener {
 
     public SceneManager sm;
 
+    public GameScreen gs;
+
     /*
      * Swing timer (not just regular util timer) for all our timing needs. Swing
      * timer operates from event dispatch thread, so same context as other event
@@ -54,22 +56,50 @@ public class BasicBackboneGame2D implements ActionListener {
 
             Log.trace("Mouse press: " + me.toString());
 
+            if (sm == null) {
+                Log.warning("Skipping mouse handling - SM not initialized");
+                return;
+            }
+
+            // TODO: Queue up events and process it from the main tick-handling thread.
+
             if (SwingUtilities.isLeftMouseButton(me)) {
                 // Let the scene manager handle movement / clicks.
                 // It'll have to coordinate information between the player and scene, ex. for
                 // pathing.
                 sm.actionHandler(BasicBackboneGame2D.this, MouseActions.LEFT_BUTTON, me.getX(), me.getY());
             } else if (SwingUtilities.isRightMouseButton(me)) {
-
-                /* Enter menu */
-                SceneManager.switchScene(BasicBackboneGame2D.this, SceneManager.MENU);
+                // TODO: Rework the logic so we don't need 2 calls to switchScene().
+                //
+                // - 1st switch() is so coordinate translation will load menu
+                // and use its coordinates.
+                //
+                // - actionHandler() will then use menu-translated coordinates for
+                // its mouse position update.
+                //
+                // - 2nd switch() will update the cursor now that location is updated.
+                //
+                // Testing note:
+                // 1) Enter menu while cursor is where the Resume button will be.
+                // 2) Resume.
+                // 3) Right click between where Resume and Save were.
+                // 4) Move mouse to where top of Save was.
+                // 5) Enter menu.
+                //
+                // Without the double switch(), the cursor wasn't blue for inspection.
+                // With the fix, it's properly blue, since it now knows it's over a button.
+                // Without double switch(), the character movement messes with coord checks.
+                // Repros with PLAYER_CONSTRAINED camera, not GLOBAL camera.
+                sm.switchScene(BasicBackboneGame2D.this, SceneManager.MENU);
+                sm.actionHandler(BasicBackboneGame2D.this, MouseActions.RIGHT_BUTTON, me.getX(), me.getY());
+                sm.switchScene(BasicBackboneGame2D.this, SceneManager.MENU);
             }
 
         }
 
         @Override
         public void mouseMoved(MouseEvent me) {
-            topLvlScene.actionHandler(BasicBackboneGame2D.this, MouseActions.MOVEMENT, me.getX(), me.getY());
+            sm.actionHandler(BasicBackboneGame2D.this, MouseActions.MOVEMENT, me.getX(), me.getY());
         }
     }
 
@@ -82,19 +112,24 @@ public class BasicBackboneGame2D implements ActionListener {
 
         gameFrame = new GameFrame();
         jukebox = new Jukebox();
-        player = new Player();
-        sm = new SceneManager();
+        gs = new GameScreen();
 
-        gameFrame.init();
+        player = new Player();
+        player.setGameScreen(gs);
+
+        sm = new SceneManager();
+        sm.setGameScreen(gs);
+
+        gameFrame.init(gs);
 
         /* Register game object to scene. */
+        // TODO: Get rid of this static access, it makes ownership too difficult to
+        // manage.
         Scene.g = this;
 
         timer = new Timer(1000 / GameScreen.FRAMES_PER_SEC, this);
-        Scene.screen.registerTimer(timer);
+        gs.registerTimer(timer);
 
-        /* Add the static screen to this JFrame-based object. */
-        gameFrame.add(Scene.screen);
         gameFrame.setVisible(true);
 
         /*
@@ -107,14 +142,14 @@ public class BasicBackboneGame2D implements ActionListener {
         sm.loadState();
         topLvlSceneIdx = stateInfo.vals[Top.StateMap.LAST_SCENE_ID.idx];
 
-        SceneManager.switchScene(this, topLvlSceneIdx);
+        sm.switchScene(this, topLvlSceneIdx);
 
         /*
          * Mouse listener references topLvlScene, so this should come after topLvlScene
          * is initialized.
          */
         gameMouseListener mouseListener = new gameMouseListener();
-        Scene.screen.registerMouseListener(mouseListener);
+        gs.registerMouseListener(mouseListener);
     }
 
     /*
@@ -124,7 +159,7 @@ public class BasicBackboneGame2D implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Log.trace("Timer triggered");
 
-        Scene.screen.fromTick = true;
+        gs.setFromTick(true);
         player.onTick();
         topLvlScene.updateScreen(true);
         topLvlScene.draw();

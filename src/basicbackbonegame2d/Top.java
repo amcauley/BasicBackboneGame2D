@@ -65,8 +65,8 @@ public class Top extends Scene {
         /* Basic initialization params */
         sceneName = "Top";
         isSubscene = false;
-        xLoc = 0;
-        yLoc = 0;
+        locX = 0;
+        locY = 0;
         width = 0;
         height = 0;
 

@@ -1,7 +1,6 @@
 
 package example.Scenes.S_Win;
 
-import basicbackbonegame2d.GameFrame;
 import basicbackbonegame2d.Jukebox;
 import basicbackbonegame2d.Scene;
 import basicbackbonegame2d.StateInfo;
@@ -75,8 +74,8 @@ public class S_Win extends Scene {
         sceneName = "S_Win";
         isSubscene = false;
         animationType = Scene.AnimationType.NO_ANIMATION;
-        width = GameFrame.NOMINAL_WIDTH;
-        height = GameFrame.NOMINAL_HEIGHT;
+        width = 400;
+        height = 400;
 
         /* Initialize this scene's image */
         imagePath = imagePathMap.WIN.str;
@@ -90,9 +89,6 @@ public class S_Win extends Scene {
         /* Victory music. */
         g.jukebox.stopAll();
         g.jukebox.play(Jukebox.Sounds.VICTORY, false);
-
-        /* Standard scene drawing routines for top level scenes */
-        refresh();
     }
 
 }

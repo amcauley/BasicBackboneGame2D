@@ -6,6 +6,9 @@ import java.awt.geom.Point2D.Double;
 // TODO: They should probably both derive from some common drawable/animatable base class.
 public class Player extends Scene {
 
+    static int PLAYER_SPEED = 30;
+    static int PATH_GRANULARITY = 10;
+
     // Player's view of any obstacles on the map.
     Obstacle obstacle;
 
@@ -32,9 +35,9 @@ public class Player extends Scene {
         sceneName = "Player";
         isSubscene = true;
         animationType = Scene.AnimationType.ANIMATED_WITH_LOOP;
-        xLoc = 130; // TODO: Locations should be normalized to the range [0, 1]. Currently their in
+        locX = 130; // TODO: Locations should be normalized to the range [0, 1]. Currently their in
                     // native format, i.e. ignoring padding and scaling.
-        yLoc = 150;
+        locY = 150;
         width = 32; /* For animations, this is the size of a single frame. */
         height = 32;
         depth = 100;
@@ -54,17 +57,15 @@ public class Player extends Scene {
          * multiple (sub)scenes use the same image.
          */
         String id = sceneName + "_" + imagePath;
-        screen.addAnimationToDrawList(imagePath, xLoc, yLoc, width, height, animationType, depth, scale, id);
+        screen.addAnimationToDrawList(imagePath, locX, locY, width, height, animationType, depth, scale, id);
     }
 
-    @Override
     public void actionHandler(BasicBackboneGame2D g, BasicBackboneGame2D.MouseActions evtType, int evtX, int evtY) {
         if (evtType == BasicBackboneGame2D.MouseActions.LEFT_BUTTON) {
             if (obstacle == null) {
                 return;
-            } else if (obstacle.isClear(GameFrame.frameToNormalizedX(evtX), GameFrame.frameToNormalizedY(evtY))) {
-                path.generatePath(obstacle, GameFrame.nativeToNormalizedX(xLoc), GameFrame.nativeToNormalizedY(yLoc),
-                        GameFrame.frameToNormalizedX(evtX), GameFrame.frameToNormalizedY(evtY), 0.1);
+            } else if (obstacle.isClear(evtX, evtY)) {
+                path.generatePath(obstacle, locX, locY, evtX, evtY, PATH_GRANULARITY);
             }
         }
     }
@@ -83,16 +84,13 @@ public class Player extends Scene {
 
     public void onTick() {
         Log.trace("Player tick");
-        double xLocNormalized = GameFrame.nativeToNormalizedX(xLoc);
-        double yLocNormalized = GameFrame.nativeToNormalizedY(yLoc);
 
         // Avoid precision errors with converting formats unless there's actual movement
         // required. Otherwise the player can glide around on their own.
         if (path.hasNext()) {
-            Double nextLocation = path.getNext(xLocNormalized, yLocNormalized, 0.05);
-            Log.debug("Player @ (" + xLocNormalized + ", " + yLocNormalized +
-                    "), moving to " + nextLocation);
-            setLocR(GameFrame.normalizedToNativeX(nextLocation.x), GameFrame.normalizedToNativeY(nextLocation.y));
+            Double nextLocation = path.getNext(locX, locY, PLAYER_SPEED);
+            Log.debug("Player @ (" + locX + ", " + locY + "), moving to " + nextLocation);
+            setLocR((int) nextLocation.x, (int) nextLocation.y);
 
             if (scaleMap != null) {
                 scale = scaleMap.getScalingFactor(nextLocation.x, nextLocation.y);

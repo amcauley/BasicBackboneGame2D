@@ -2,7 +2,6 @@
 package example.Scenes.S_Room2;
 
 import basicbackbonegame2d.BasicBackboneGame2D;
-import basicbackbonegame2d.GameFrame;
 import basicbackbonegame2d.Jukebox;
 import basicbackbonegame2d.Scene;
 import basicbackbonegame2d.SceneManager;
@@ -92,8 +91,8 @@ public class S_Room2 extends Scene {
         sceneName = "S_Room2";
         isSubscene = false;
         animationType = Scene.AnimationType.NO_ANIMATION;
-        width = GameFrame.NOMINAL_WIDTH;
-        height = GameFrame.NOMINAL_HEIGHT;
+        width = 400;
+        height = 400;
 
         /* Create any subscenes and add to array */
         numSubScenes = SubSceneMap.values().length;
@@ -131,9 +130,6 @@ public class S_Room2 extends Scene {
 
         /* Start BG music. */
         g.jukebox.play(Jukebox.Sounds.BG_MUSIC0, true);
-
-        /* Standard scene drawing routines for top level scenes */
-        refresh();
     }
 
     @Override
