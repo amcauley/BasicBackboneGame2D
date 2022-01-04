@@ -104,7 +104,7 @@ public class S_Room1 extends Scene {
         /* Initialize this scene's image */
         imagePath = imagePathMap.ROOM1.str;
 
-        obstacle = new Obstacle("resources/images/Room1_Obstacle.bmp");
+        obstacle = new Obstacle("resources/images/Room1_Obstacle.bmp", width, height);
         scaleMap = new ScaleMap("resources/images/Room1_ScaleMap.bmp");
 
         /* Create any subscenes and add to array */

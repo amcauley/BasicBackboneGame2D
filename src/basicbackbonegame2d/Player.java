@@ -6,6 +6,9 @@ import java.awt.geom.Point2D.Double;
 // TODO: They should probably both derive from some common drawable/animatable base class.
 public class Player extends Scene {
 
+    static int PLAYER_SPEED = 30;
+    static int PATH_GRANULARITY = 10;
+
     // Player's view of any obstacles on the map.
     Obstacle obstacle;
 
@@ -62,7 +65,7 @@ public class Player extends Scene {
             if (obstacle == null) {
                 return;
             } else if (obstacle.isClear(evtX, evtY)) {
-                path.generatePath(obstacle, locX / 400.0, locY / 400.0, evtX / 400.0, evtY / 400.0, 0.1);
+                path.generatePath(obstacle, locX, locY, evtX, evtY, PATH_GRANULARITY);
             }
         }
     }
@@ -81,16 +84,13 @@ public class Player extends Scene {
 
     public void onTick() {
         Log.trace("Player tick");
-        double xLocNormalized = locX / 400.0;
-        double yLocNormalized = locY / 400.0;
 
         // Avoid precision errors with converting formats unless there's actual movement
         // required. Otherwise the player can glide around on their own.
         if (path.hasNext()) {
-            Double nextLocation = path.getNext(xLocNormalized, yLocNormalized, 0.05);
-            Log.debug("Player @ (" + xLocNormalized + ", " + yLocNormalized +
-                    "), moving to " + nextLocation);
-            setLocR((int) (nextLocation.x * 400.0), (int) (nextLocation.y * 400.0));
+            Double nextLocation = path.getNext(locX, locY, PLAYER_SPEED);
+            Log.debug("Player @ (" + locX + ", " + locY + "), moving to " + nextLocation);
+            setLocR((int) nextLocation.x, (int) nextLocation.y);
 
             if (scaleMap != null) {
                 scale = scaleMap.getScalingFactor(nextLocation.x, nextLocation.y);
